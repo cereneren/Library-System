@@ -10,13 +10,15 @@ import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
 
 import { MemberService }        from './member.service';
+import { MemberComponent } from './member.component';
 
 @NgModule({
   declarations: [
     OverviewComponent,
     DetailComponent,
     CreateComponent,
-    EditComponent
+    EditComponent,
+    MemberComponent
   ],
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.

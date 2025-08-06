@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BookService }             from '../book.service';
 import { Book }                    from '../book';
 import {ActivatedRoute}            from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-detail',

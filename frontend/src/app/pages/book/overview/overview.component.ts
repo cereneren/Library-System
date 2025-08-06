@@ -1,7 +1,7 @@
 import { Component, OnInit }         from '@angular/core';
 import { BookService }             from '../book.service';
 import { Book }                    from '../book';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-book-overview',
