@@ -1,0 +1,5 @@
+.card-img-top {
+  width: 100%;            /* always stretch to card’s width */
+  height: 600px;          /* fix the height */
+  object-fit: cover;      /* crop/scale to cover the area */
+}
