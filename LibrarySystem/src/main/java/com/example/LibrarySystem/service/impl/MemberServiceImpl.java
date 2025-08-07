@@ -3,7 +3,6 @@ package com.example.LibrarySystem.service.impl;
 import com.example.LibrarySystem.exception.ResourceNotFoundException;
 import com.example.LibrarySystem.repository.UserRepository;
 import com.example.LibrarySystem.model.Member;
-import com.example.LibrarySystem.model.Role;
 import com.example.LibrarySystem.service.MemberService;
 import org.springframework.stereotype.Service;
 

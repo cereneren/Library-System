@@ -1,11 +1,13 @@
 package com.example.LibrarySystem.controller;
 
+import com.example.LibrarySystem.repository.UserRepository;
 import com.example.LibrarySystem.service.AuthenticationService;
 import com.example.LibrarySystem.jwt.JwtUtil;
 import com.example.LibrarySystem.dto.LoginDto;
 import com.example.LibrarySystem.dto.RegisterDto;
 import com.example.LibrarySystem.model.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +21,12 @@ import java.util.Map;
 public class AuthController {
     private final AuthenticationService authSvc;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepo;
 
-    public AuthController(AuthenticationService authSvc, JwtUtil jwtUtil) {
+    public AuthController(AuthenticationService authSvc, JwtUtil jwtUtil, UserRepository userRepo) {
         this.authSvc = authSvc;
         this.jwtUtil = jwtUtil;
+        this.userRepo = userRepo;
     }
 
     @PostMapping("/signup")
@@ -35,8 +39,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginDto dto) {
+        // authenticate and get the token
         String token = authSvc.login(dto, jwtUtil);
-        return Map.of("token", token);
+        User user = userRepo.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("…"));
+
+        return Map.of(
+                "token", token,
+                "user_type", user.getUserType()
+        );
     }
 }
 

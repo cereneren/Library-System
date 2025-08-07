@@ -3,6 +3,7 @@ package com.example.LibrarySystem.jwt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -12,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -42,17 +43,33 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtUtil, userDetailsService);
 
+        http
+                // stateless API
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // allow everything
+                // on authentication failures use our JSON entry point
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(entryPoint))
+
+                // authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                );
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,   "/api/books/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/books/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.POST,   "/api/members/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/members/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/members/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.GET,    "/api/members/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.GET,    "/api/books/**").hasAnyRole("MEMBER","STAFF")
+                        .anyRequest().authenticated()
+                )
+
+                // add JWT filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

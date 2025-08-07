@@ -9,4 +9,6 @@ public record UserDto(
         String        email,
         Role role,
         List<LoanDto> loans
-) {}
+) {
+
+}

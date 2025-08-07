@@ -1,12 +1,33 @@
-// src/app/app-routing.module.ts
 import { NgModule }           from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {LoginComponent} from './pages/login/login.component';
+import {LayoutComponent} from './pages/layout/layout.component';
+import {DashboardComponent} from './pages/dashboard/dashboard.component';
 
 
 const routes: Routes = [
-  // root-level redirect to “/members”
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
-  // lazy-load or eager-load your MemberRoutingModule
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+   {
+      path: 'login',
+      component: LoginComponent
+    },
+   {
+      path: '',
+      component: LayoutComponent,
+      children: [
+        {
+        path: 'dashboard',
+        component: DashboardComponent
+        }
+      ]
+    },
+  /* route everything else to login
+   {
+      path: '**',
+      component: LoginComponent
+    },
+  */
   {
     path: 'members',
     loadChildren: () =>

@@ -8,10 +8,20 @@ import { BookModule } from './pages/book/book.module';
 import { LoanModule } from './pages/loan/loan.module';
 import { AuthModule } from './pages/auth/auth.module';
 import { LibrarianModule } from './pages/librarian/librarian.module';
+import { LoginComponent } from './pages/login/login.component';
+import { LayoutComponent } from './pages/layout/layout.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { FormsModule} from '@angular/forms'
+import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'
+import { CustomeInterceptor } from './services/custome.interceptor'
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
+    LayoutComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -20,9 +30,17 @@ import { LibrarianModule } from './pages/librarian/librarian.module';
     BookModule,
     LoanModule,
     AuthModule,
-    LibrarianModule
+    LibrarianModule,
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: CustomeInterceptor,
+    multi: true
+  }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

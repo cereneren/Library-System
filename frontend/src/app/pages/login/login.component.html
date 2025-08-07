@@ -1,0 +1,79 @@
+<section class="vh-100" style="background-color: #214682;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <!-- your logo image -->
+        <div class="logo-wrapper d-flex justify-content-center mb-4">
+          <img src="assets/logo.png" alt="MyLibrary Logo" class="logo-img" />
+        </div>
+
+        <!-- give the whole card a light neutral tint -->
+        <div class="card" style="border-radius: 1rem; background-color: #f2f2f2;">
+          <div class="row g-0">
+            <!-- LEFT SIDE IMAGE: replace or remove entirely if you don’t want a picture there -->
+            <div class="col-md-6 col-lg-5 d-none d-md-block image-col">
+              <img
+                src="assets/istockphoto-949118068-612x612.png"
+                alt="login form"
+                class="img-fluid"
+              />
+            </div>
+
+            <!-- RIGHT SIDE FORM PANEL -->
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <!-- card-body background now inherits the card’s neutral color -->
+              <div class="card-body p-4 p-lg-5 text-black">
+
+                <form>
+
+                  <!-- HEADER: swap text logo for an <img> -->
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <!-- optional small site name next to it -->
+                    <span class="h3 fw-bold mb-0 text-dark">Library System</span>
+                  </div>
+
+                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
+                    Sign into your account
+                  </h5>
+
+                  <div class="form-outline mb-4">
+                    <input
+                      type="email"
+                      name="email"
+                      [(ngModel)]="loginObj.email"
+                      placeholder="Email Address"
+                      id="form2Example17"
+                      class="form-control form-control-lg"
+                    />
+                    <label class="form-label" for="form2Example17"></label>
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <input
+                      type="password"
+                      name="password"
+                      [(ngModel)]="loginObj.password"
+                      placeholder="Password"
+                      id="form2Example27"
+                      class="form-control form-control-lg"
+                    />
+                    <label class="form-label" for="form2Example27"></label>
+                  </div>
+
+                  <div class="pt-1 mb-4">
+                    <button (click)="onLogin()"
+                      class="btn btn-dark btn-lg btn-block"
+                      type="button"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
