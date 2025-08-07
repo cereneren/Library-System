@@ -14,15 +14,15 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "roles", discriminatorType = DiscriminatorType.STRING)
 @Getter @Setter
 public abstract class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_type", insertable = false, updatable = false)
-    private String userType;
+    @Column(name = "roles", insertable = false, updatable = false)
+    private String roles;
 
     @Column(name = "full_name")
     private String fullName;

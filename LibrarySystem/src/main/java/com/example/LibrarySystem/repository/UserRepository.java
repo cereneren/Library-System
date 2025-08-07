@@ -2,7 +2,6 @@ package com.example.LibrarySystem.repository;
 
 
 import com.example.LibrarySystem.model.Member;
-import com.example.LibrarySystem.model.Role;
 import com.example.LibrarySystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
