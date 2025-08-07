@@ -21,7 +21,7 @@ export class LoginComponent {
      if(res.token != null) {
       alert('Login is succesful');
       localStorage.setItem('loginTOken', res.token);
-        if(res.user_type === "MEMBER" || res.user_type === "LIBRARIAN") {
+        if(res.roles === "MEMBER" || res.roles === "LIBRARIAN") {
                 this.router.navigateByUrl('/dashboard');
         }
      }else {

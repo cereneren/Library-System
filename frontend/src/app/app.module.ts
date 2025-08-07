@@ -13,7 +13,9 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FormsModule} from '@angular/forms'
 import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'
-import { CustomeInterceptor } from './services/custome.interceptor'
+import { CustomeInterceptor } from './services/custome.interceptor';
+import { MemberComponent } from './pages/dashboard/member/member.component';
+import { LibrarianComponent } from './pages/dashboard/librarian/librarian.component'
 
 
 @NgModule({
@@ -22,6 +24,8 @@ import { CustomeInterceptor } from './services/custome.interceptor'
     LoginComponent,
     LayoutComponent,
     DashboardComponent,
+    MemberComponent,
+    LibrarianComponent,
   ],
   imports: [
     BrowserModule,

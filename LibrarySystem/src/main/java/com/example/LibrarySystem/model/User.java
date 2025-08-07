@@ -33,12 +33,6 @@ public abstract class User implements UserDetails {
     private String password;
     private boolean enabled;
 
-    @Column(name = "verification_code")
-    private String verificationCode;
-
-    @Column(name = "verification_expiration")
-    private LocalDate verificationCodeExpiresAt;
-
     protected User() { }
 
     public User(String fullName, String email, String password) {

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient }      from '@angular/common/http';
 
 @Component({
   selector: 'app-layout',
@@ -6,5 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-
 }
