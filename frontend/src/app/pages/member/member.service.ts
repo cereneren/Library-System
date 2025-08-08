@@ -1,41 +1,55 @@
 import { Injectable } from '@angular/core';
-import axios from 'axios'
-import {Member} from './member'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
+import { Member } from './member';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
 
-  constructor() {}
+  constructor(private http: HttpClient) { }
 
-  getAllMembers(): Promise<any> {
-    return axios.get('./api/members');
+  getAllMembers(): Observable<Member[]> {
+    return this.http.get<Member[]>('./api/members').pipe(
+      catchError(this.handleError)
+    );
   }
 
-  getMemberDetail(id: number): Promise<any> {
-    return axios.get(`./api/members/${id}`);
+  getMemberDetail(id: number): Observable<Member> {
+    return this.http.get<Member>(`./api/members/${id}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  updateMember(request: any): Promise<any> {
-    let reqData = {
-      fullName: request.fullName,
-      email: request.email,
-      password: request.password
+  updateMember(member: Member): Observable<Member> {
+    return this.http.put<Member>(`./api/members/${member.id}`, member).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createMember(member: Member): Observable<Member> {
+    return this.http.post<Member>('./api/members', member).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteMember(id: number): Observable<unknown> {
+    return this.http.delete(`./api/members/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    return axios.put(`./api/members/${request.id}`, reqData);
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
-
-  createMember(request: any): Promise<any>{
-        let reqData = {
-          fullName: request.fullName,
-          email: request.email,
-          password: request.password
-        }
-      return axios.post('./api/members', reqData)
-  }
-
-  deleteMember(id: number): Promise<any> {
-      return axios.delete(`./api/members/${id}`);
-    }
 }

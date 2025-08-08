@@ -1,7 +1,8 @@
 import { Component, OnInit }         from '@angular/core';
 import { MemberService }             from '../member.service';
 import { Member }                    from '../member';
-
+import { environment } from '../../../../environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-member-overview',
@@ -9,7 +10,9 @@ import { Member }                    from '../member';
   styleUrl: './overview.component.css'
 })
 export class OverviewComponent implements OnInit {
-  member: Member[] = [];
+  members: Member[] = [];
+
+  public apiUrl = environment.apiUrl;
 
   ngOnInit(): void{
     this.getAllMembers();
@@ -18,14 +21,15 @@ export class OverviewComponent implements OnInit {
   constructor(public memberService: MemberService) {}
 
   getAllMembers(){
-    this.memberService.getAllMembers()
-    .then((response)=> {
-      this.member = response.data;
-      console.log(response);
-    })
-    .catch((error)=> {
-      return error;
-    })
+    this.memberService.getAllMembers().subscribe({
+      next: (members: Member[]) => {
+        this.members = members;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error loading members:', error.message);
+        // Handle error
+      }
+    });
   }
 
 }
