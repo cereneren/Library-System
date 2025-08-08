@@ -10,13 +10,15 @@ import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
 
 import { BookService }        from './book.service';
+import { BookComponent } from './book.component';
 
 @NgModule({
   declarations: [
     OverviewComponent,
     DetailComponent,
     CreateComponent,
-    EditComponent
+    EditComponent,
+    BookComponent
   ],
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.

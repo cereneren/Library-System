@@ -70,7 +70,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,    "/api/members/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/api/members/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.GET,    "/api/members/**").hasAnyRole("LIBRARIAN")
-                        .requestMatchers(HttpMethod.GET,    "/api/books/**").hasAnyRole("MEMBER","STAFF")
+                        .requestMatchers(HttpMethod.GET,    "/api/books/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

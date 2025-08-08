@@ -2,6 +2,7 @@ import { Component, OnInit }         from '@angular/core';
 import { BookService }             from '../book.service';
 import { Book }                    from '../book';
 import { environment } from '../../../../environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-book-overview',
@@ -20,14 +21,15 @@ export class OverviewComponent implements OnInit {
   constructor(public bookService: BookService) {}
 
   getAllBooks(){
-    this.bookService.getAllBooks()
-    .then((response)=> {
-      this.books = response.data;
-      console.log(response);
-    })
-    .catch((error)=> {
-      return error;
-    })
+    this.bookService.getAllBooks().subscribe({
+      next: (books: Book[]) => {
+        this.books = books;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error loading books:', error.message);
+        // Handle error
+      }
+    });
   }
 
 }
