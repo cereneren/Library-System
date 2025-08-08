@@ -1,1 +1,18 @@
+/* Light theme */
+body {
+  background-color: #c2cad1; /* Light gray */
+  background-image: linear-gradient(to bottom right, #c2cad1, #e9ecef);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+/* Dark theme alternative */
+/*
+body {
+  background-color: #121212;
+  background-image: linear-gradient(to bottom right, #1a1a1a, #0d0d0d);
+  color: #ffffff;
+}
+*/

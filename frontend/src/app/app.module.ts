@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { MemberModule } from './pages/member/member.module';
 import { BookModule } from './pages/book/book.module';
 import { LoanModule } from './pages/loan/loan.module';
-import { LibrarianModule } from './pages/librarian/librarian.module';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -32,7 +31,6 @@ import { LibrarianComponent } from './pages/dashboard/librarian/librarian.compon
     MemberModule,
     BookModule,
     LoanModule,
-    LibrarianModule,
     FormsModule,
     HttpClientModule
   ],
