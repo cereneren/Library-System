@@ -1,36 +1,46 @@
+// create.component.ts
 import { Component } from '@angular/core';
-import { Member } from '../member';
 import { MemberService } from '../member.service';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-create',
   templateUrl: './create.component.html',
-  styleUrl: './create.component.css'
+  styleUrls: ['./create.component.css']   // <- plural
 })
 export class CreateComponent {
-  fullName: string = '';
-  email: string = '';
-  password: string = '';
-  isSubmitting: boolean = false; // ✅ Added
+  fullName = '';
+  email = '';
+  password = '';
+  isSubmitting = false;
 
-  constructor(public memberService: MemberService) {}
+  // 👇 add this line
+  showPassword = false;
+
+  constructor(private memberService: MemberService, private router: Router) {}
 
   createMember() {
+    if (this.isSubmitting) return;
     this.isSubmitting = true;
+
     this.memberService.createMember({
-      fullName: this.fullName,
-      email: this.email,
+      fullName: this.fullName.trim(),
+      email: this.email.trim(),
       password: this.password
-    }).subscribe({
-      next: () => {
-        Swal.fire('Success', 'Member created successfully!', 'success');
-        this.isSubmitting = false;
-      },
-      error: (err) => {
-        Swal.fire('Error', 'Failed to create member', 'error');
-        this.isSubmitting = false;
-      }
-    });
+    }).pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
+        next: () => {
+          Swal.fire('Success', 'Member created successfully!', 'success');
+          this.fullName = this.email = this.password = '';
+          this.router.navigate(['/members/overview']);
+        },
+        error: (err) => {
+          const msg = err?.error?.message ?? (typeof err?.error === 'string' ? err.error : 'Failed to create member');
+          Swal.fire('Error', msg, 'error');
+        }
+      });
   }
+
 }

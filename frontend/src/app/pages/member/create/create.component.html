@@ -1,1 +1,135 @@
-<p>create works!</p>
+<!-- create.component.html -->
+<div class="container">
+  <div class="main-body">
+
+    <!-- first row: two cards, same height -->
+    <div class="row gutters-sm mt-5 align-items-stretch">
+
+      <!-- left “avatar” card -->
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column align-items-center text-center mt-5">
+            <img
+              src="assets/profile-icon.png"
+              alt="user"
+              class="rounded-circle mb-3"
+              width="150"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- right “details/form” card -->
+      <div class="col-md-8 mb-3">
+        <div class="card h-100">
+          <div class="card">
+            <div class="card-body">
+
+              <form (ngSubmit)="createMember()" #f="ngForm" novalidate class="space-y-4">
+
+                <!-- Full Name -->
+                <div class="mb-3 mt-3">
+                  <h6 class="mb-2">Full Name</h6>
+                  <input
+                    name="fullName"
+                    [(ngModel)]="fullName"
+                    #fullNameCtrl="ngModel"
+                    required
+                    minlength="3"
+                    class="form-control"
+                    [class.is-invalid]="(fullNameCtrl.dirty || fullNameCtrl.touched || f.submitted) && fullNameCtrl.invalid"
+                  />
+                  <div *ngIf="f.submitted && fullNameCtrl.errors" class="invalid-feedback d-block">
+                    <span *ngIf="fullNameCtrl.errors?.['required']">Full name is required.</span>
+                    <span *ngIf="fullNameCtrl.errors?.['minlength']">At least 3 characters.</span>
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3 mt-3">
+                  <h6 class="mb-2">Email</h6>
+                  <input
+                    type="email"
+                    name="email"
+                    [(ngModel)]="email"
+                    #emailCtrl="ngModel"
+                    required
+                    email
+                    class="form-control"
+                    autocomplete="email"
+                  />
+                  <div *ngIf="f.submitted && emailCtrl.errors" class="invalid-feedback d-block">
+                    <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+                    <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email.</span>
+                  </div>
+                </div>
+
+
+                <!-- Password with show/hide -->
+                <div class="mb-3 mt-3">
+                  <h6 class="mb-2">Password</h6>
+
+                  <div class="input-group">
+                    <input
+                      [type]="showPassword ? 'text' : 'password'"
+                      name="password"
+                      [(ngModel)]="password"
+                      #passwordCtrl="ngModel"
+                      required
+                      minlength="6"
+                      autocomplete="new-password"
+                      class="form-control"
+                      [class.is-invalid]="(passwordCtrl.dirty || passwordCtrl.touched || f.submitted) && passwordCtrl.invalid"
+                    />
+
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      (click)="showPassword = !showPassword"
+                      [attr.aria-pressed]="showPassword"
+                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                      <ng-container *ngIf="!showPassword; else hideIcon">
+                        <!-- eye icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                             fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8"/>
+                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
+                        </svg>
+                      </ng-container>
+                      <ng-template #hideIcon>
+                        <!-- eye-slash icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                             fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
+                          <path d="M13.359 11.238C15.06 9.99 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.78.78A6.018 6.018 0 0 1 8 3.5c3.179 0 5.354 2.727 6.276 4.001a12.027 12.027 0 0 1-1.535 1.99l-.382.382z"/>
+                          <path d="M11.297 9.176a3.5 3.5 0 0 0-4.473-4.473l.86.86a2.5 2.5 0 0 1 2.752 2.752l.861.861zM3.35 5.47l-.7-.7-.708.707.7.7A12.3 12.3 0 0 0 0 8s3 5.5 8 5.5a7.03 7.03 0 0 0 3.252-.8l.7.7.707-.707-.7-.7a12.035 12.035 0 0 0 2.05-2.116l-.76-.76a10.944 10.944 0 0 1-2.153 2.14A6.02 6.02 0 0 1 8 12.5C4.821 12.5 2.646 9.773 1.724 8.5a12.029 12.029 0 0 1 1.626-1.975z"/>
+                        </svg>
+                      </ng-template>
+                    </button>
+                  </div>
+
+                  <div *ngIf="f.submitted && passwordCtrl.errors" class="invalid-feedback d-block">
+                    <span *ngIf="passwordCtrl.errors?.['required']">Password is required.</span>
+                  </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="mb-3 mt-3">
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    [disabled]="f.invalid || isSubmitting">
+                    <span *ngIf="!isSubmitting">Create Member</span>
+                    <span *ngIf="isSubmitting">Creating…</span>
+                  </button>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </div><!-- /main-body -->
+</div><!-- /container -->

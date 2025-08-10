@@ -7,3 +7,8 @@ export interface Member {
   dateCreated?: string;
   dateUpdated?: string;
 }
+export interface MemberCreateRequest {
+  fullName: string;
+  email: string;
+  password: string;
+}
