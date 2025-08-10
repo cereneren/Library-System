@@ -82,7 +82,6 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    /** stream the cover bytes out with correct MIME */
     @GetMapping(value = "/{id}/cover")
     public ResponseEntity<byte[]> getCover(@PathVariable Long id) {
         Book book = bookService.getBookById(id);

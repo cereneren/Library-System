@@ -1,6 +1,8 @@
 package com.example.LibrarySystem.service.impl;
 
 import com.example.LibrarySystem.exception.ResourceNotFoundException;
+import com.example.LibrarySystem.model.Member;
+import com.example.LibrarySystem.model.User;
 import com.example.LibrarySystem.repository.UserRepository;
 import com.example.LibrarySystem.model.Member;
 import com.example.LibrarySystem.service.MemberService;
@@ -37,5 +39,17 @@ public class MemberServiceImpl implements MemberService {
         userRepository.findByIdAndType(id, Member.class).orElseThrow(() ->
                 new ResourceNotFoundException("Member", "Id", id));
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public Member updateMember(Member member, long id) {
+        Member existingMember = userRepository.findByIdAndType(id, Member.class).orElseThrow(() ->
+                new ResourceNotFoundException("Member", "Id", id));
+
+        existingMember.setFullName(member.getFullName());
+        existingMember.setEmail(member.getEmail());
+
+        userRepository.save(existingMember);
+        return existingMember;
     }
 }

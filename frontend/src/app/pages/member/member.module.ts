@@ -8,6 +8,7 @@ import { OverviewComponent }    from './overview/overview.component';
 import { DetailComponent }      from './detail/detail.component';
 import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
+import { FormsModule} from '@angular/forms'
 
 import { MemberService }        from './member.service';
 import { MemberComponent } from './member.component';
@@ -23,7 +24,8 @@ import { MemberComponent } from './member.component';
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.
     HttpClientModule,     // for any HTTP calls
-    MemberRoutingModule   // your routes.forChild(...)
+    MemberRoutingModule,   // your routes.forChild(...)
+    FormsModule,
   ],
   providers: [
     MemberService         // so constructor(public memberService) works

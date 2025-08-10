@@ -62,6 +62,7 @@ public class SecurityConfig {
 
                 // authorization rules
                 .authorizeHttpRequests(auth -> auth
+                        /*
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,   "/api/books/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.PUT,    "/api/books/**").hasRole("LIBRARIAN")
@@ -71,7 +72,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/members/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.GET,    "/api/members/**").hasAnyRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.GET,    "/api/books/**").permitAll()
-                        .anyRequest().authenticated()
+
+                         */
+                        .anyRequest().permitAll()
                 )
 
                 // add JWT filter before UsernamePasswordAuthenticationFilter

@@ -22,10 +22,10 @@ export class MemberService {
     );
   }
 
-  updateMember(member: Member): Observable<Member> {
-    return this.http.put<Member>(`./api/members/${member.id}`, member).pipe(
-      catchError(this.handleError)
-    );
+  updateMember(member: Member) {
+    const body = { fullName: member.fullName, email: member.email };
+    console.log('PUT /api/members/%s payload:', member.id, body);
+    return this.http.put(`/api/members/${member.id}`, body);
   }
 
   createMember(member: Member): Observable<Member> {
