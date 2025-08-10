@@ -1,7 +1,8 @@
 package com.example.LibrarySystem.controller;
 
+import com.example.LibrarySystem.model.Loan;
 import com.example.LibrarySystem.model.Member;
-import com.example.LibrarySystem.model.User;
+import com.example.LibrarySystem.service.LoanService;
 import com.example.LibrarySystem.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("/api/members")
 public class MemberController {
     private MemberService memberService;
+    private LoanService loanService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, LoanService loanService) {
         this.memberService = memberService;
+        this.loanService = loanService;
     }
 
     // build create member REST API
@@ -53,4 +56,11 @@ public class MemberController {
     public ResponseEntity<Member> updateMember(@PathVariable("id") long memberId, @RequestBody Member member) {
         return new ResponseEntity<Member>(memberService.updateMember(member, memberId), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/loans")
+    public ResponseEntity<List<Loan>> getMemberLoans(@PathVariable("id") long memberId) {
+        List<Loan> loans = loanService.getLoansByMemberId(memberId);
+        return ResponseEntity.ok(loans);
+    }
+
 }

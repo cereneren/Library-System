@@ -3,9 +3,10 @@ import { Member } from '../member/member';
 
 export interface Loan {
   id: number;
-  book: Book;
-  member: Member;
-  loanDate: string; // ISO format date string (e.g., "2023-12-31")
-  dueDate: string;
-  returnDate: string | null;
+  book: { id: number; title: string; author?: string };
+  loanDate: string;   // ISO
+  dueDate: string;    // ISO
+  returnDate?: string | null;
+  overdue?: boolean;
 }
+

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Member } from './member';
+import { Loan } from '../loan/loan';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,13 @@ export class MemberService {
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
+  }
+
+  getMemberLoans(memberId: number) {
+    return this.http.get<Loan[]>(`/api/members/${memberId}/loans`);
+  }
+
+  returnLoan(loanId: number) {
+    return this.http.post(`/api/loans/${loanId}/return`, null);
   }
 }

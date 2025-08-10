@@ -90,13 +90,51 @@
               Loans
             </button>
 
-            <div class="collapse" id="myCollapse">
+            <div class="collapse show" id="myCollapse">
               <div class="card card-body">
-                <h5>Collapsed Content</h5>
-                <p>
-                  This content is hidden by default and will show when you click “Show More.”
-                  You can put any HTML here—text, images, forms, whatever you need.
-                </p>
+                <div *ngIf="loansLoading" class="text-muted">Loading loans…</div>
+
+                <div *ngIf="!loansLoading && loans.length === 0" class="text-muted">
+                  No loans for this member.
+                </div>
+
+                <div *ngIf="!loansLoading && loans.length > 0" class="table-responsive">
+                  <table class="table table-sm align-middle">
+                    <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Loaned</th>
+                      <th>Due</th>
+                      <th>Status</th>
+                      <th class="text-end"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let loan of loans">
+                      <td class="fw-semibold">{{ loan.book.title }}</td>
+                      <td>{{ loan.loanDate | date:'mediumDate' }}</td>
+                      <td>{{ loan.dueDate   | date:'mediumDate' }}</td>
+                      <td>
+              <span *ngIf="loan.returnDate" class="badge bg-success">
+                Returned {{ loan.returnDate | date:'mediumDate' }}
+              </span>
+                        <span *ngIf="!loan.returnDate && isOverdue(loan)" class="badge bg-danger">Overdue</span>
+                        <span *ngIf="!loan.returnDate && !isOverdue(loan)" class="badge bg-warning text-dark">On loan</span>
+                      </td>
+                      <td class="text-end">
+                        <button
+                          *ngIf="!loan.returnDate"
+                          class="btn btn-outline-primary btn-sm"
+                          (click)="onReturn(loan)"
+                          [disabled]="returning[loan.id]">
+                          {{ returning[loan.id] ? 'Returning…' : 'Return' }}
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+
               </div>
             </div>
 

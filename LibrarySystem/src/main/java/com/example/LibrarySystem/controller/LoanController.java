@@ -27,12 +27,6 @@ public class LoanController {
         return ResponseEntity.ok(loan);
     }
 
-    @GetMapping("/member/{memberId}")
-    public ResponseEntity<List<Loan>> getMemberLoansSimple(@PathVariable Long memberId) {
-        List<Loan> loans = loanService.getLoansByMemberId(memberId);
-        return ResponseEntity.ok(loans);
-    }
-
     @PostMapping("/{loanId}/return")
     public ResponseEntity<String> returnBook(@PathVariable Long loanId) {
         loanService.returnLoan(loanId);
@@ -49,14 +43,14 @@ public class LoanController {
     // build get loan by id REST API
     // http://localhost:8080/api/loan/1
     @GetMapping("/{id}")
-    public ResponseEntity<Loan> getBookById(@PathVariable("id") long id) {
+    public ResponseEntity<Loan> getLoanById(@PathVariable("id") long id) {
         return new ResponseEntity<Loan>(loanService.getLoanById(id), HttpStatus.OK);
     }
 
     // build delete loan REST API
     // http://localhost:8080/api/loan/1
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteLoan(@PathVariable("id") long id) {
         loanService.deleteLoan(id);
         return new ResponseEntity<String>("Loan deleted succesfully.", HttpStatus.OK);
     }
