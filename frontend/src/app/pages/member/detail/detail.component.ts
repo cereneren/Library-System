@@ -58,19 +58,16 @@ export class DetailComponent implements OnInit {
       });
     }
 
-      isOverdue(l: Loan) {
+     isOverdue(l: Loan) {
         return !l.returnDate && new Date(l.dueDate) < new Date();
-      }
+     }
 
-      onReturn(loan: Loan) {
-        this.returning[loan.id] = true;
-        this.memberService.returnLoan(loan.id).subscribe({
-          next: () => {
-            const id = this.member?.id;
-            if (id != null) this.loadLoans(id);   // narrow to number
-          },
-          error: (e) => console.error('Return failed', e),
-          complete: () => this.returning[loan.id] = false
-        });
-      }
+    onReturn(loan: Loan) {
+      this.returning[loan.id] = true;
+      this.memberService.returnLoan(loan.id).subscribe({
+        next: () => this.loadLoans(this.member.id!),   // ignore body
+        error: (e) => console.error('Return failed', e),
+        complete: () => this.returning[loan.id] = false
+      });
+    }
 }

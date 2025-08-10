@@ -59,6 +59,8 @@ export class MemberService {
   }
 
   returnLoan(loanId: number) {
-    return this.http.post(`/api/loans/${loanId}/return`, null);
+    return this.http.post(`/api/loans/${loanId}/return`, null, {
+      responseType: 'text' //
+    });
   }
 }
