@@ -28,10 +28,8 @@ export class BookService {
     );
   }
 
-  createBook(book: Book): Observable<Book> {
-    return this.http.post<Book>('./api/books', book).pipe(
-      catchError(this.handleError)
-    );
+  createBook(book: Partial<Book>): Observable<Book> {
+    return this.http.post<Book>('/api/books', book);  // no change here
   }
 
   deleteBook(id: number): Observable<unknown> {
