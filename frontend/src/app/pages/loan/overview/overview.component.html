@@ -1,1 +1,49 @@
-<p>overview works!</p>
+<!-- loans.component.html -->
+<div class="card mt-4 mb-4 m-4">
+  <div class="card-body">
+    <h5 class="mb-3">Loans</h5>
+
+    <div *ngIf="loading" class="text-muted">Loading…</div>
+    <div *ngIf="!loading && error" class="alert alert-danger py-2">{{ error }}</div>
+    <div *ngIf="!loading && loans.length === 0" class="text-muted">No loans found.</div>
+
+    <div *ngIf="!loading && loans.length" class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th *ngIf="isLibrarian">Member</th>
+          <th>Loaned</th>
+          <th>Due</th>
+          <th>Status</th>
+          <th class="text-end" *ngIf="isLibrarian"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let l of loans">
+          <td class="fw-semibold">{{ l.book.title }}</td>
+          <td *ngIf="isLibrarian">{{ l.member?.fullName || '—' }}</td>
+          <td>{{ l.loanDate | date:'mediumDate' }}</td>
+          <td>{{ l.dueDate   | date:'mediumDate' }}</td>
+          <td>
+              <span *ngIf="l.returnDate" class="badge bg-success">
+                Returned {{ l.returnDate | date:'mediumDate' }}
+              </span>
+            <span *ngIf="!l.returnDate && isOverdue(l)" class="badge bg-danger">Overdue</span>
+            <span *ngIf="!l.returnDate && !isOverdue(l)" class="badge bg-warning text-dark">On loan</span>
+          </td>
+          <td class="text-end" *ngIf="isLibrarian">
+            <button class="btn btn-outline-primary btn-sm"
+                    *ngIf="!l.returnDate"
+                    (click)="onReturn(l)"
+                    [disabled]="returning[l.id]">
+              {{ returning[l.id] ? 'Returning…' : 'Return' }}
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

@@ -1,44 +1,47 @@
+// src/app/pages/loan/loan.service.ts
 import { Injectable } from '@angular/core';
-import axios from 'axios'
-import {Loan} from './loan'
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+export interface Loan {
+  id: number;
+  loanDate: string;
+  dueDate: string;
+  returnDate?: string | null;
+  book: { id: number; title: string };
+  member?: { id: number; fullName: string };
+}
+
+@Injectable({ providedIn: 'root' })
 export class LoanService {
+  private base = environment.apiUrl || ''; // '' when using proxy
+  // If you don't want environments right now: private base = '';
 
-  constructor() { }
+  constructor(private http: HttpClient) {}
 
-   getAllLoans(): Promise<any> {
-      return axios.get('./api/loans');
+   getAllLoans(): Observable<Loan[]> {
+      return this.http.get<Loan[]>('/api/loans');
     }
 
-    getLoanDetail(id: number): Promise<any> {
-      return axios.get(`./api/loans/${id}`);
+    getLoansForMember(memberId: number): Observable<Loan[]> {
+      return this.http.get<Loan[]>(`/api/members/${memberId}/loans`);
     }
 
-    updateLoan(request: any): Promise<any> {
-      let reqData = {
-          title: request.title,
-          author: request.author,
-          available: request.available
+  getLoanDetail(id: number): Observable<Loan> {
+    return this.http.get<Loan>(`${this.base}/api/loans/${id}`);
+  }
 
-      }
-      return axios.put(`./api/loans/${request.id}`, reqData);
-    }
+  createLoan(memberId: number, bookId: number): Observable<Loan> {
+    return this.http.post<Loan>(`${this.base}/api/loans`, { memberId, bookId });
+  }
 
-    createLoan(request: any): Promise<any>{
-          let reqData = {
-              title: request.title,
-              author: request.author,
-              available: request.available
+  returnLoan(id: number): Observable<string> {
+    // If your backend returns plain text ("Book successfully returned")
+    return this.http.post(`${this.base}/api/loans/${id}/return`, {}, { responseType: 'text' });
+  }
 
-          }
-        return axios.post('./api/loans', reqData);
-    }
-
-    deleteLoan(id: number): Promise<any> {
-        return axios.delete(`./api/loans/${id}`);
-      }
-
+  deleteLoan(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/api/loans/${id}`);
+  }
 }

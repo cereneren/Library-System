@@ -27,7 +27,6 @@ public class Loan {
     // which member borrowed it
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    @JsonIgnore
     private User member;
 
     // when it was borrowed

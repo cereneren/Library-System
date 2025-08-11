@@ -8,6 +8,7 @@ import { OverviewComponent }    from './overview/overview.component';
 import { DetailComponent }      from './detail/detail.component';
 import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
+import { FormsModule } from '@angular/forms';
 
 import { LoanService }        from './loan.service';
 
@@ -21,7 +22,8 @@ import { LoanService }        from './loan.service';
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.
     HttpClientModule,     // for any HTTP calls
-    LoanRoutingModule   // your routes.forChild(...)
+    LoanRoutingModule,   // your routes.forChild(...)
+    FormsModule
   ],
   providers: [
     LoanService         // so constructor(public loanService) works
