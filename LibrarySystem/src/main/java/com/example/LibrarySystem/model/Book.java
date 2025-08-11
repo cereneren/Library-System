@@ -4,13 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "books")
 @Getter @Setter
+@SQLDelete(sql = "UPDATE books SET enabled = false WHERE id = ?")
+@Where(clause = "enabled = true")
 public class Book {
 
     @Id
@@ -26,6 +34,17 @@ public class Book {
 
     @Column(name = "availability_status")
     private boolean available;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private java.time.LocalDateTime dateCreated;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime dateUpdated;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
 
     @Lob
     @Column(name="cover_image", columnDefinition="LONGBLOB")

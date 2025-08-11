@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MemberModule } from './pages/member/member.module';
+import { LibrarianModule } from './pages/librarian/librarian.module';
 import { BookModule } from './pages/book/book.module';
 import { LoanModule } from './pages/loan/loan.module';
 import { LoginComponent } from './pages/login/login.component';
@@ -29,7 +30,7 @@ import { LibrarianComponent } from './pages/dashboard/librarian/librarian.compon
     BrowserModule,
     AppRoutingModule,
     MemberModule,
-    BookModule,
+    LibrarianModule,
     LoanModule,
     FormsModule,
     HttpClientModule

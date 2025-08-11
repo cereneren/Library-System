@@ -1,5 +1,12 @@
 <div class="container">
-  <h2 class="text-center mt-5 mb-3">Books Overview</h2>
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+    <h2 class="mb-0">All Books</h2>
+
+    <button class="btn btn-success btn-lg" [routerLink]="['..', 'create']">
+      Add Book
+    </button>
+  </div>
+
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let book of books">
       <div class="card h-100">
@@ -13,7 +20,7 @@
           <h5 class="text-center card-title">{{ book.title }}</h5>
           <p class="text-center card-text flex-grow-1">{{ book.author }}</p>
           <a [routerLink]="['..', book.id, 'detail']"
-             class="btn btn-primary mt-auto">
+             class="btn btn-secondary mt-auto">
             Details
           </a>
         </div>

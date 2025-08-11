@@ -11,6 +11,7 @@ import { EditComponent }        from './edit/edit.component';
 
 import { BookService }        from './book.service';
 import { BookComponent } from './book.component';
+import { FormsModule} from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BookComponent } from './book.component';
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.
     HttpClientModule,     // for any HTTP calls
-    BookRoutingModule   // your routes.forChild(...)
+    BookRoutingModule,   // your routes.forChild(...)
+    FormsModule
   ],
   providers: [
     BookService         // so constructor(public bookService) works

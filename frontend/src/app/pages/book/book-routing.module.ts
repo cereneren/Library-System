@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: ':id/detail',    component: DetailComponent },
   { path: 'create',         component: CreateComponent },
   { path: ':id/edit',       component: EditComponent },
+  { path: '**', redirectTo: 'books' }
 ];
 
 

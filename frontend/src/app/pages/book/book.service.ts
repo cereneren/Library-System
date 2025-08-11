@@ -52,4 +52,8 @@ export class BookService {
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
+
+  uploadCoverFromUrl(id: number, url: string) {
+    return this.http.post<void>(`/api/books/${id}/cover-from-url`, { url });
+  }
 }

@@ -1,9 +1,11 @@
 package com.example.LibrarySystem.controller;
 
+import com.example.LibrarySystem.dto.CoverUrlRequest;
+import com.example.LibrarySystem.exception.ResourceNotFoundException;
 import com.example.LibrarySystem.model.Book;
 import com.example.LibrarySystem.service.BookService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.apache.coyote.BadRequestException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,9 +49,13 @@ public class BookController {
     // build delete book REST API
     // http://localhost:8080/api/books/1
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable("id") long id) {
-        bookService.deleteBook(id);
-        return new ResponseEntity<String>("Book deleted succesfully.", HttpStatus.OK);
+    public ResponseEntity<Void> deleteBook(@PathVariable("id") long id) {
+        Book existing = bookService.getBookById(id);
+        if (existing == null || !existing.isEnabled()) {
+            throw new ResourceNotFoundException("Book", "id", id);
+        }
+        bookService.deleteBook(id); // implement as soft delete: enabled=false
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -93,4 +99,44 @@ public class BookController {
         headers.setContentType(MediaType.parseMediaType(book.getCoverContentType()));
         return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
+
+    @PostMapping("/{id}/cover-from-url")
+    public ResponseEntity<Void> uploadCoverFromUrl(@PathVariable Long id,
+                                                   @RequestBody CoverUrlRequest req) throws BadRequestException {
+        if (req == null || req.url() == null || req.url().isBlank()) {
+            throw new BadRequestException("URL required");
+        }
+        try {
+            var client = java.net.http.HttpClient.newHttpClient();
+            var request = java.net.http.HttpRequest.newBuilder(java.net.URI.create(req.url())).GET().build();
+            var response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
+
+            if (response.statusCode() >= 400) throw new BadRequestException("Could not fetch image (HTTP " + response.statusCode() + ")");
+
+            var contentType = response.headers().firstValue("content-type").orElse("application/octet-stream");
+            if (!contentType.startsWith("image/")) throw new BadRequestException("URL does not point to an image");
+
+            var bytes = response.body();
+            if (bytes == null || bytes.length == 0) throw new BadRequestException("Empty image");
+            if (bytes.length > 5_000_000) throw new BadRequestException("Image too large (max 5MB)");
+
+            var book = bookService.getBookById(id);
+            if (book == null || (book.isEnabled() == false)) {
+                throw new ChangeSetPersister.NotFoundException();
+            }
+
+            book.setCoverImage(bytes, contentType);
+            bookService.addBook(book); // or save/update
+            return ResponseEntity.noContent().build();
+
+        } catch (java.net.MalformedURLException e) {
+            throw new BadRequestException("Invalid URL");
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            throw new BadRequestException("Fetch interrupted");
+        } catch (IOException | ChangeSetPersister.NotFoundException ioe) {
+            throw new BadRequestException("Failed to read image");
+        }
+    }
+
 }

@@ -130,7 +130,7 @@ export class DetailComponent implements OnInit {
 
     const memberId = this.member?.id;
     if (!memberId || !this.selectedBookId) {
-      this.borrowError = 'Lütfen bir kitap seçin.';
+      this.borrowError = 'Please choose a book.';
       return;
     }
 

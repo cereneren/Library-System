@@ -6,4 +6,6 @@ export interface Book {
   coverUrl?: string;
   coverEndpoint?: string;
   summary?: string;
+  dateCreated: string;
+  dateUpdated: string;
 }

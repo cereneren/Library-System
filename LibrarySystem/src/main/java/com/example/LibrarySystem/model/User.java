@@ -3,16 +3,19 @@ package com.example.LibrarySystem.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "roles", discriminatorType = DiscriminatorType.STRING)
 @Getter @Setter
@@ -32,6 +35,14 @@ public abstract class User implements UserDetails {
 
     private String password;
     private boolean enabled;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private java.time.LocalDateTime dateCreated;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private java.time.LocalDateTime dateUpdated;
 
     protected User() { }
 
