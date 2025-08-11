@@ -3,10 +3,10 @@ import { MemberService } from '../member.service';
 import { BookService } from '../../book/book.service';
 import { Member } from '../member';
 import { Book } from '../../book/book';
-import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Loan } from '../../loan/loan';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -16,6 +16,8 @@ import { Loan } from '../../loan/loan';
 })
 export class DetailComponent implements OnInit {
   public apiUrl = environment.apiUrl;
+  deleting: Record<number, boolean> = {};
+  deleteError = '';
 
   member: Member = { id: 0, fullName: '', email: '', password: '' };
   members: Member[] = [];
@@ -35,7 +37,8 @@ export class DetailComponent implements OnInit {
     private memberService: MemberService,
     private bookService: BookService,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -146,5 +149,34 @@ export class DetailComponent implements OnInit {
           console.error('Borrow failed', err);              // debug only
         }
       });
+  }
+
+  onDelete(member: Member) {
+    this.deleteError = '';
+    const id = member.id as number | undefined;
+    if (id == null) return;
+
+    const ok = confirm(`Delete ${member.fullName}? This cannot be undone.`);
+    if (!ok) return;
+
+    this.deleting[id] = true;
+
+    this.memberService.deleteMember(id).subscribe({
+      next: () => {
+        // Option A: navigate to the list (two levels up to /members)
+        this.router.navigate(['../../'], {
+          relativeTo: this.route,
+          queryParams: { deleted: id } // optional: show a toast on the list page
+        });
+
+        // (If your detail route is only one level deep, use '../' instead.)
+      },
+      error: (err: HttpErrorResponse) => {
+        this.deleteError =
+          typeof err.error === 'string' ? err.error :
+          err.error?.message ?? 'Delete failed. Please try again.';
+      },
+      complete: () => { this.deleting[id] = false; }
+    });
   }
 }

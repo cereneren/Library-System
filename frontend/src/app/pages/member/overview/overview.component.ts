@@ -1,8 +1,7 @@
-import { Component, OnInit }         from '@angular/core';
-import { MemberService }             from '../member.service';
-import { Member }                    from '../member';
-import { environment } from '../../../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { MemberService } from '../member.service';
+import { Member } from '../member';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-member-overview',
@@ -11,25 +10,40 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 })
 export class OverviewComponent implements OnInit {
   members: Member[] = [];
-
-  public apiUrl = environment.apiUrl;
-
-  ngOnInit(): void{
-    this.getAllMembers();
-  }
+  deleting: Record<number, boolean> = {};
+  deleteError = '';
 
   constructor(public memberService: MemberService) {}
+  ngOnInit(): void { this.getAllMembers(); }
 
-  getAllMembers(){
+  getAllMembers() {
     this.memberService.getAllMembers().subscribe({
-      next: (members: Member[]) => {
-        this.members = members;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error loading members:', error.message);
-        // Handle error
-      }
+      next: (members) => this.members = members,
+      error: (e: HttpErrorResponse) => console.error('Error loading members:', e.message)
     });
   }
 
+  onDelete(member: Member) {
+    this.deleteError = '';
+    const id = member.id as number | undefined;
+    if (id == null) return;
+
+    const ok = confirm(`Delete ${member.fullName}? This cannot be undone.`);
+    if (!ok) return;
+
+    this.deleting[id] = true;
+
+    this.memberService.deleteMember(id).subscribe({
+      next: () => {
+        // remove from UI
+        this.members = this.members.filter(m => m.id !== id);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.deleteError =
+          typeof err.error === 'string' ? err.error :
+          err.error?.message ?? 'Delete failed. Please try again.';
+      },
+      complete: () => { this.deleting[id] = false; }
+    });
+  }
 }

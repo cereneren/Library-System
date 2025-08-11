@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Member } from './member';
+import { Member, MemberCreateRequest } from './member';
 import { Loan } from '../loan/loan';
 
 @Injectable({
@@ -29,16 +29,17 @@ export class MemberService {
     return this.http.put(`/api/members/${member.id}`, body);
   }
 
-  createMember(member: Member): Observable<Member> {
+  createMember(member: MemberCreateRequest): Observable<Member> {
     return this.http.post<Member>('./api/members', member).pipe(
       catchError(this.handleError)
     );
   }
 
-  deleteMember(id: number): Observable<unknown> {
-    return this.http.delete(`./api/members/${id}`).pipe(
-      catchError(this.handleError)
-    );
+  deleteMember(id: number) {
+    // Use /api not ./api if you’re proxying
+    return this.http.delete(`/api/members/${id}`, {
+      responseType: 'text' as const
+    });
   }
 
   private handleError(error: HttpErrorResponse) {

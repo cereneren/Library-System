@@ -128,7 +128,13 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  setAllFilters(v: boolean) {
-    this.filters = { returned: v, onLoan: v, overdue: v };
-  }
+
+   get allChecked()  { return this.filters.returned && this.filters.onLoan && this.filters.overdue; }
+   get noneChecked() { return !this.filters.returned && !this.filters.onLoan && !this.filters.overdue; }
+   get isCustom()    { return !this.allChecked && !this.noneChecked; } // for a nice indeterminate look
+
+   setAllFilters(v: boolean) {
+     this.filters = { returned: v, onLoan: v, overdue: v };
+   }
+
 }

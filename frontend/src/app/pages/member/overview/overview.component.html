@@ -12,9 +12,6 @@
           aria-label="Search members"
         >
         <button class="btn btn-outline-secondary" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg>
           <i class="bi bi-search"></i>
         </button>
       </div>
@@ -22,7 +19,7 @@
 
     <!-- Add Member -->
     <div class="flex-fill ms-5">
-      <a href="/members/create" class="btn btn-secondary btn-lg w-100"  [routerLink]="['..', 'create']">
+      <a href="/members/create" class="btn btn-primary btn-lg w-100"  [routerLink]="['..', 'create']">
         <i class="bi bi-person-plus-fill me-2"></i>
         Add Member
       </a>
@@ -34,18 +31,21 @@
   <div class="card bg-light mb-4 mx-auto w-75 position-relative" *ngFor="let member of members">
     <!-- Action buttons group -->
     <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
-
       <!-- Delete -->
       <button
         type="button"
         class="btn btn-danger btn-sm"
         title="Delete member"
+        (click)="onDelete(member)"
+        [disabled]="member.id == null || deleting[member.id]"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-        </svg>
+        <i class="bi bi-trash-fill"></i>
+        <ng-template #delBusy>Deleting…</ng-template>
       </button>
     </div>
+
+    <!-- Optional: friendly error under the card list -->
+    <div *ngIf="deleteError" class="alert alert-danger w-75 mx-auto mt-3">{{ deleteError }}</div>
 
     <!-- Card content -->
     <div class="row g-0 align-items-center">

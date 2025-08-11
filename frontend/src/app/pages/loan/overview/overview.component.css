@@ -1,0 +1,28 @@
+/* Center, add vertical margin, and spacing */
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;         /* wrap nicely on small screens */
+  gap: 1.25rem;            /* space between items */
+  margin: 2rem auto;       /* top/bottom margin + center block */
+  padding: 1rem 0;         /* breathing room */
+  text-align: center;
+}
+
+/* Bigger checkbox + label */
+.form-check-xl .form-check-input {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0;           /* align with label baseline */
+}
+
+.form-check-xl .form-check-label {
+  font-size: 1.125rem;     /* bigger label text */
+  margin-left: 0.5rem;
+}
+
+/* Optional: make the buttons feel balanced with big checkboxes */
+.filter-bar .btn {
+  min-width: 96px;
+}
