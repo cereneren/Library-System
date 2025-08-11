@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(long id) {
-        return userRepository.findByIdAndType(id, User.class)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User","Id",id));
     }
 

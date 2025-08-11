@@ -30,7 +30,6 @@ import { LibrarianComponent } from './pages/dashboard/librarian/librarian.compon
     BrowserModule,
     AppRoutingModule,
     MemberModule,
-    LibrarianModule,
     LoanModule,
     FormsModule,
     HttpClientModule
