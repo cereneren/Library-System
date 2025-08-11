@@ -3,15 +3,18 @@
 <div class="container w-75 mx-auto mb-4 ">
   <div class="d-flex gap-5 ">
     <!-- Search -->
-    <div class="flex-fill me-5  ">
-      <div class="input-group input-group-lg  w-100 ">
+    <div class="flex-fill me-5">
+      <div class="input-group input-group-lg w-100">
         <input
           type="text"
           class="form-control bg-light"
           placeholder="Search members…"
           aria-label="Search members"
+          [(ngModel)]="searchTerm"
+          name="memberSearch"
+          (keyup.enter)="onSearch()"
         >
-        <button class="btn btn-outline-secondary" type="button">
+        <button class="btn btn-outline-secondary" type="button" (click)="onSearch()">
           <i class="bi bi-search"></i>
         </button>
       </div>
@@ -28,7 +31,7 @@
 </div>
 
 
-  <div class="card bg-light mb-4 mx-auto w-75 position-relative" *ngFor="let member of members">
+  <div class="card bg-light mb-4 mx-auto w-75 position-relative" *ngFor="let member of displayedMembers">
     <!-- Action buttons group -->
     <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
       <!-- Delete -->

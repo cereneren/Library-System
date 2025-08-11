@@ -22,6 +22,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('../../loan/loan-routing.module').then(m => m.LoanRoutingModule)
   },
+  {
+    path: 'info',
+    loadChildren: () =>
+      import('../../librarian/librarian-routing.module').then(m => m.LibrarianRoutingModule)
+  },
+
 
   // Fallback route
   { path: '**', redirectTo: 'books' }

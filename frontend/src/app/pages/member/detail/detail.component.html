@@ -22,6 +22,11 @@
         <div class="card h-100">
           <div class="card-body">
             <div class="row mb-3">
+              <div class="col-sm-3"><h6 class="mb-0">Role</h6></div>
+              <div class="col-sm-9 text-secondary"> Member </div>
+            </div>
+            <hr>
+            <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">Full Name</h6></div>
               <div class="col-sm-9 text-secondary">{{ member.fullName }}</div>
             </div>
@@ -38,12 +43,12 @@
             <hr>
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">Date Created</h6></div>
-              <div class="col-sm-9 text-secondary">—</div>
+              <div class="col-sm-9 text-secondary"> {{ member.dateCreated | date:'medium' }}</div>
             </div>
             <hr>
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">Date Updated</h6></div>
-              <div class="col-sm-9 text-secondary">—</div>
+              <div class="col-sm-9 text-secondary"> {{ member.dateUpdated | date:'medium' }}</div>
             </div>
             <hr>
             <div class="row">
@@ -120,8 +125,14 @@
                 <div *ngIf="!loansLoading && loans.length > 0" class="table-responsive">
                   <table class="table table-sm align-middle">
                     <thead>
+                    <div class="d-flex flex-wrap gap-4 mb-2 m-1">
+                      <div class="fw-semibold">Total Loans: <span class="fw-normal">{{ totalLoans }}</span></div>
+                      <div class="fw-semibold">Active Loans: <span class="fw-normal">{{ activeLoans }}</span></div>
+                      <div class="fw-semibold text-danger">Overdue: <span class="fw-normal">{{ overdueLoans }}</span></div>
+                    </div>
                     <tr>
                       <th>Title</th>
+                      <th>Author</th>
                       <th>Loaned</th>
                       <th>Due</th>
                       <th>Status</th>
@@ -131,6 +142,7 @@
                     <tbody>
                     <tr *ngFor="let loan of loans">
                       <td class="fw-semibold">{{ loan.book.title }}</td>
+                      <td>{{ loan.book.author || '-' }}</td>
                       <td>{{ loan.loanDate | date:'mediumDate' }}</td>
                       <td>{{ loan.dueDate   | date:'mediumDate' }}</td>
                       <td>
@@ -166,10 +178,17 @@
                     class="form-select form-select-sm narrow-select"
                     id="bookSelect"
                     name="bookSelect"
-                    [(ngModel)]="selectedBookId">
-                    <option [ngValue]="null" disabled>Choose a book...</option>
-                    <option *ngFor="let b of books" [ngValue]="b.id">{{ b.title }}</option>
+                    [(ngModel)]="selectedBookId"
+                    [disabled]="borrowing || availableBooks.length === 0">
+                    <option [ngValue]="null" disabled selected>Choose a book...</option>
+                    <option *ngFor="let b of availableBooks" [ngValue]="b.id">
+                      {{ b.title }}
+                    </option>
                   </select>
+
+                  <div *ngIf="availableBooks.length === 0" class="text-muted small mt-1">
+                    No available books to borrow.
+                  </div>
                 </div>
 
                 <div class="d-flex gap-2 align-items-center">

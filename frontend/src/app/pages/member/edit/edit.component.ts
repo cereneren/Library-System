@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class EditComponent implements OnInit {
 
-  member: Member = { id: 0, fullName: '', email: '', password: '' };
+  member: Member = { id: 0, fullName: '', email: '', password: '', dateCreated: '', dateUpdated: ''};
   isSubmitting = false;
 
   constructor(

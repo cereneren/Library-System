@@ -1,5 +1,5 @@
 <!-- Filter bar -->
-<div class="filter-bar m-4" *ngIf="!loading && loans.length">
+<div class="filter-bar m-4 " *ngIf="!loading && loans.length">
   <div class="form-check form-check-inline form-check-xl mx-3">
     <input id="fReturned" class="form-check-input" type="checkbox" [(ngModel)]="filters.returned">
     <label class="form-check-label" for="fReturned">Returned</label>
@@ -43,11 +43,12 @@
 </div>
 
 <!-- Table -->
-<div *ngIf="!loading && filteredLoans.length" class="table-responsive mt-4 mb-4 m-4">
+<div *ngIf="!loading && filteredLoans.length" class="table-responsive mt-4 mb-4 m-4 text-xl">
   <table class="table table-sm align-middle">
     <thead>
     <tr>
       <th>Title</th>
+      <th>Author</th>
       <th *ngIf="isLibrarian">Member</th>
       <th>Loaned</th>
       <th>Due</th>
@@ -58,6 +59,7 @@
     <tbody>
     <tr *ngFor="let l of filteredLoans">
       <td class="fw-semibold">{{ l.book.title }}</td>
+      <td>{{ l.book.author || '-' }}</td>
       <td *ngIf="isLibrarian">{{ l.member?.fullName || '—' }}</td>
       <td>{{ l.loanDate | date:'mediumDate' }}</td>
       <td>{{ l.dueDate   | date:'mediumDate' }}</td>
@@ -69,7 +71,7 @@
         <span *ngIf="!l.returnDate && !isOverdue(l)" class="badge bg-warning text-dark">On loan</span>
       </td>
       <td class="text-end" *ngIf="isLibrarian">
-        <button class="btn btn-outline-primary btn-sm"
+        <button class="btn btn-outline-primary btn-sm text-xl"
                 *ngIf="!l.returnDate"
                 (click)="onReturn(l)"
                 [disabled]="returning[l.id]">

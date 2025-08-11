@@ -26,3 +26,9 @@
 .filter-bar .btn {
   min-width: 96px;
 }
+
+.text-xl {
+  font-size: 1.25rem;   /* ~20px */
+  line-height: 1.4;
+
+}

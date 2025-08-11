@@ -4,8 +4,8 @@ export interface Member {
   email: string,
   password: string,
   totalLoans?: number;
-  dateCreated?: string;
-  dateUpdated?: string;
+  dateCreated: string;
+  dateUpdated: string;
 }
 export interface MemberCreateRequest {
   fullName: string;

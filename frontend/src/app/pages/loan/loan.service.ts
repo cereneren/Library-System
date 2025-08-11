@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Book } from '../book/book';
 
 export interface Loan {
   id: number;
   loanDate: string;
   dueDate: string;
   returnDate?: string | null;
-  book: { id: number; title: string };
+  book: Book;
   member?: { id: number; fullName: string };
 }
 

@@ -46,4 +46,19 @@ export class OverviewComponent implements OnInit {
       complete: () => { this.deleting[id] = false; }
     });
   }
+
+  searchTerm = '';
+
+  get displayedMembers() {
+    const q = this.searchTerm.trim().toLowerCase();
+    if (!q) return this.members;
+    return this.members.filter(m =>
+      (m.fullName || '').toLowerCase().includes(q) ||
+      (m.email || '').toLowerCase().includes(q)
+    );
+  }
+
+  onSearch() {
+  }
+
 }

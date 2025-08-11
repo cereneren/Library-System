@@ -9,7 +9,8 @@ type Role = 'LIBRARIAN' | 'MEMBER';
 @Component({
   selector: 'app-loans',
   standalone: false,
-  templateUrl: './overview.component.html'
+  templateUrl: './overview.component.html',
+  styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
   loans: Loan[] = [];
@@ -113,7 +114,6 @@ export class OverviewComponent implements OnInit {
       complete: () => this.returning[l.id] = false
     });
   }
-
 
 
   get filteredLoans() {

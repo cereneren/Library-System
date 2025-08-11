@@ -3,7 +3,7 @@ import { Member } from '../member/member';
 
 export interface Loan {
   id: number;
-  book: { id: number; title: string; author?: string };
+  book: Book;
   loanDate: string;   // ISO
   dueDate: string;    // ISO
   returnDate?: string | null;

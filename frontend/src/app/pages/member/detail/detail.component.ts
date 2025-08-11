@@ -19,7 +19,7 @@ export class DetailComponent implements OnInit {
   deleting: Record<number, boolean> = {};
   deleteError = '';
 
-  member: Member = { id: 0, fullName: '', email: '', password: '' };
+  member: Member = { id: 0, fullName: '', email: '', password: '', dateCreated: '', dateUpdated: ''};
   members: Member[] = [];
   loans: Loan[] = [];
   books: Book[] = [];
@@ -139,14 +139,14 @@ export class DetailComponent implements OnInit {
       .subscribe({
         next: () => {
           this.borrowing = false;
-          this.borrowSuccess = 'Ödünç verildi.';
+          this.borrowSuccess = 'Book has been succesfully borrowed.';
           this.selectedBookId = null;
           this.loadLoans(memberId);
         },
         error: (err: HttpErrorResponse) => {
           this.borrowing = false;
           this.borrowError = this.formatBorrowError(err);   // 👈 friendly text
-          console.error('Borrow failed', err);              // debug only
+          console.error('Loan failed', err);              // debug only
         }
       });
   }
@@ -178,5 +178,21 @@ export class DetailComponent implements OnInit {
       },
       complete: () => { this.deleting[id] = false; }
     });
+  }
+
+  // detail.component.ts
+  get totalLoans(): number {
+    return this.loans?.length ?? 0;
+  }
+  get activeLoans(): number {
+    return (this.loans ?? []).filter(l => !l.returnDate).length;
+  }
+  get overdueLoans(): number {
+    const today = new Date();
+    return (this.loans ?? []).filter(l => !l.returnDate && new Date(l.dueDate) < today).length;
+  }
+
+  get availableBooks(): Book[] {
+    return (this.books ?? []).filter(b => b.available === true);
   }
 }
