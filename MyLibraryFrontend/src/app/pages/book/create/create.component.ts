@@ -11,14 +11,33 @@ export class CreateComponent {
   draft: Partial<Book> = {
     title: '',
     author: '',
-    coverUrl: '',
     summary: ''
   };
 
   saving = false;
+  uploadingCover = false;
+
+  // cover upload state
+  selectedCoverFile: File | null = null;
+  previewUrl: string | null = null;
+
   message: { type: 'success' | 'error', text: string } | null = null;
 
-  constructor(private bookService: BookService, private router: Router,  private route: ActivatedRoute) {}
+  constructor(
+    private bookService: BookService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  onCoverFileSelected(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0] || null;
+    this.selectedCoverFile = file;
+
+    // preview
+    if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+    this.previewUrl = file ? URL.createObjectURL(file) : null;
+  }
 
   save() {
     if (!this.draft.title || !this.draft.author) return;
@@ -26,31 +45,34 @@ export class CreateComponent {
     this.saving = true;
     this.message = null;
 
+    // 1) create the book (without cover)
     this.bookService.createBook(this.draft).subscribe({
       next: (createdBook) => {
-        this.saving = false;
-        this.message = { type: 'success', text: 'Book created successfully.' };
-
-        // navigate to overview
-        this.router.navigate(['../'], { relativeTo: this.route });
+        // 2) if a cover file is chosen, upload it like in detail page
+        if (this.selectedCoverFile) {
+          this.uploadingCover = true;
+          this.bookService.uploadCover(createdBook.id, this.selectedCoverFile).subscribe({
+            next: () => this.finishSuccess(),
+            error: () => this.finishError()
+          });
+        } else {
+          this.finishSuccess();
+        }
       },
-      error: () => {
-        this.saving = false;
-        this.message = { type: 'error', text: 'Failed to create book.' };
-      }
+      error: () => this.finishError()
     });
   }
 
-  importCoverFromUrl() {
-    if (this.draft.coverUrl) {
-      this.message = { type: 'success', text: 'Cover imported (not uploaded).' };
-    }
+  private finishSuccess() {
+    this.uploadingCover = false;
+    this.saving = false;
+    this.message = { type: 'success', text: 'Book created successfully.' };
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  imageError = false;
-
-  onImageError() {
-    this.imageError = true;
-    this.draft.coverUrl = ''; // optional: reset bad URL
+  private finishError() {
+    this.uploadingCover = false;
+    this.saving = false;
+    this.message = { type: 'error', text: 'Failed to create book.' };
   }
 }

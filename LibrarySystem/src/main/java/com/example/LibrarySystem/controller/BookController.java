@@ -26,6 +26,14 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    // POST or PUT: upload image file
+    @PutMapping(value = "/{id}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadCover(@PathVariable Long id,
+                                         @RequestParam("file") MultipartFile file) throws IOException {
+        bookService.setCover(id, file);
+        return ResponseEntity.ok().body("Cover saved");
+    }
+
     // build create member REST API
     @PostMapping
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
@@ -76,22 +84,10 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllTitles());
     }
 
-    /** upload a cover file into the BLOB column */
-    @PostMapping(path = "/{id}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadCover(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file
-    ) throws IOException {
-        Book book = bookService.getBookById(id);
-        book.setCoverImage(file.getBytes(), file.getContentType());
-        bookService.addBook(book);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping(value = "/{id}/cover")
     public ResponseEntity<byte[]> getCover(@PathVariable Long id) {
         Book book = bookService.getBookById(id);
-        byte[] data = book.getCoverImage();
+        byte[] data = book.getCover();
         if (data == null || data.length == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cover");
         }

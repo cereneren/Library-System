@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams  } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Book } from './book';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
-
+  private api = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   getAllBooks(): Observable<Book[]> {
@@ -51,7 +52,14 @@ export class BookService {
     return throwError(() => new Error(errorMessage));
   }
 
+  uploadCover(id: number, file: File) {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.put(`${this.api}/api/books/${id}/cover`, form, { responseType: 'text' });
+  }
+
   uploadCoverFromUrl(id: number, url: string) {
-    return this.http.post<void>(`/api/books/${id}/cover-from-url`, { url });
+    const params = new HttpParams().set('url', url);
+    return this.http.put(`/api/books/${id}/cover-url`, null, { params, responseType: 'text' });
   }
 }

@@ -5,28 +5,31 @@
     <!-- Left: Form -->
     <div class="col-md-8">
       <form (ngSubmit)="save()" #createForm="ngForm" novalidate>
-        <div class="row g-3">
+        <div class="row g-3 align-items-end">
           <div class="col-12">
             <label class="form-label">Title</label>
             <input class="form-control" name="title" [(ngModel)]="draft.title" required minlength="1">
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label">Author</label>
-            <input class="form-control" name="author" [(ngModel)]="draft.author" required>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Cover URL</label>
-            <div class="input-group">
-              <input class="form-control" name="coverUrl" [(ngModel)]="draft.coverUrl" placeholder="https://..."
-                     (ngModelChange)="imageError = false">
-              <button type="button" class="btn btn-outline-secondary"
-                      (click)="importCoverFromUrl()" [disabled]="!draft.coverUrl || saving">
-                Import
-              </button>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Author</label>
+              <input class="form-control" name="author" [(ngModel)]="draft.author" required>
             </div>
-            <div class="form-text">Paste an image link and click Import to store it.</div>
+
+            <!-- Cover upload (like detail) -->
+            <div class="col-md-6">
+              <label class="form-label">Cover</label>
+              <div class="input-group">
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/*"
+                  (change)="onCoverFileSelected($event)"
+                  [disabled]="saving || uploadingCover">
+              </div>
+              <div class="form-text">Choose an image to set as cover (PNG/JPG, ~5MB).</div>
+            </div>
           </div>
 
           <div class="col-12">
@@ -36,11 +39,10 @@
         </div>
 
         <div class="d-flex gap-2 mt-4">
-          <button type="submit" class="btn btn-primary"
-                  [disabled]="createForm.invalid || saving">
-            {{ saving ? 'Saving…' : 'Create Book' }}
+          <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid || saving || uploadingCover">
+            {{ (saving || uploadingCover) ? 'Saving…' : 'Create Book' }}
           </button>
-          <a class="btn btn-light" [routerLink]="['../overview']" [class.disabled]="saving">Cancel</a>
+          <a class="btn btn-light" [routerLink]="['../overview']" [class.disabled]="saving || uploadingCover">Cancel</a>
         </div>
       </form>
 
@@ -56,37 +58,12 @@
     <div class="col-md-4">
       <label class="form-label">Preview</label>
       <div style="
-    height: 400px;
-    width: 100%;
-    border: 1px dashed #ccc;
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-  ">
-        <img
-          *ngIf="draft.coverUrl && !imageError"
-          [src]="draft.coverUrl"
-          alt="Cover preview"
-          style="
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center;
-        display: block;
-      "
-          (error)="onImageError()"
-        />
-
-        <span
-          *ngIf="!draft.coverUrl || imageError"
-          class="text-muted text-center"
-          style="position: absolute; text-align: center;"
-        >
-      Image preview will appear here
-    </span>
+        height: 400px; width: 100%; border: 1px dashed #ccc; background: #f8f9fa;
+        display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+        <img *ngIf="previewUrl" [src]="previewUrl" alt="Cover preview"
+             style="width: 100%; height: 100%; object-fit: contain; object-position: center; display: block;" />
+        <span *ngIf="!previewUrl" class="text-muted text-center"
+              style="position: absolute; text-align: center;">Image preview will appear here</span>
       </div>
     </div>
   </div>

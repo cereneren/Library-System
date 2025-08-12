@@ -104,7 +104,7 @@ export class DetailComponent implements OnInit {
     }
 
     importCoverFromUrl() {
-      const id = this.book?.id;                 // ✅ narrow first
+      const id = this.book?.id;
       const url = this.draft?.coverUrl ?? '';
 
       if (!id || !url.startsWith('http')) return;
@@ -129,4 +129,50 @@ export class DetailComponent implements OnInit {
     usePlaceholder(ev: Event) {
       (ev.target as HTMLImageElement).src = 'assets/book-placeholder.png';
     }
+
+  selectedCoverFile?: File | null = null;
+  uploadingCover = false;
+
+  // add these methods inside the class
+  onCoverFileSelected(ev: Event) {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    this.selectedCoverFile = file ?? null;
+  }
+
+  uploadCover() {
+    if (!this.book?.id || !this.selectedCoverFile || this.uploadingCover) return;
+
+    this.uploadingCover = true;
+    this.message = null;
+
+    this.books.uploadCover(this.book.id, this.selectedCoverFile).subscribe({
+      next: () => {
+        this.uploadingCover = false;
+        this.selectedCoverFile = null;
+        this.message = { type: 'success', text: 'Cover uploaded.' };
+
+        // Refresh the shown image (cache-bust)
+        const img = document.querySelector<HTMLImageElement>('img.book-cover');
+        if (img) {
+          if (!this.book?.id) return;
+          const base = `/api/books/${this.book.id}/cover`;
+          img.src = `${base}?ts=${Date.now()}`;
+        }
+
+        // Optional: also bump book.dateUpdated if backend returns nothing else
+        // (If your PUT returns updated Book, set this.book = returnedBook instead)
+        this.book = {
+          ...(this.book as Book),
+          dateUpdated: new Date().toISOString()
+        };
+      },
+      error: (err) => {
+        this.uploadingCover = false;
+        const text = err?.error?.message || (typeof err?.error === 'string' ? err.error : 'Upload failed.');
+        this.message = { type: 'error', text };
+        console.error('Upload cover error', err);
+      }
+    });
+  }
 }

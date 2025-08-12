@@ -48,15 +48,17 @@ public class Book {
 
     @Lob
     @Column(name="cover_image", columnDefinition="LONGBLOB")
-    private byte[] coverImage;
+    private byte[] cover;
+
+    private String coverFilename;
 
     private String coverContentType;
 
     @Column(name = "summary")
     private String summary;
 
-    public void setCoverImage(byte[] coverImage, String contentType) {
-        this.coverImage       = coverImage;
+    public void setCoverImage(byte[] cover, String contentType) {
+        this.cover = cover;
         this.coverContentType = contentType;
     }
 
@@ -72,7 +74,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.available = true;
-        this.coverImage = coverImage != null ? coverImage.clone() : null;
+        this.cover = cover != null ? cover.clone() : null;
         this.summary = summary;
     }
 
