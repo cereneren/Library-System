@@ -15,13 +15,17 @@ export class LoginComponent {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  errorMessage = '';
+  showPassword = false; // for toggling password visibility
+
   onLogin() {
+    this.errorMessage = ''; // reset each attempt
     this.http.post('http://localhost:8080/api/auth/login', this.loginObj)
       .subscribe({
         next: (res: any) => {
-          const token: string | undefined = res?.token;
+          const token = res?.token;
           if (!token) {
-            alert(res?.message || 'Login failed');
+            this.errorMessage = res?.message || 'Login failed.';
             return;
           }
 
@@ -54,8 +58,6 @@ export class LoginComponent {
           // Persist compact user object for later pages (Loans, etc.)
           localStorage.setItem('user', JSON.stringify({ id, role }));
 
-          alert('Login is successful');
-
           // Route by role
           if (role === 'LIBRARIAN') {
             this.router.navigateByUrl('/dashboard/librarian');
@@ -66,10 +68,10 @@ export class LoginComponent {
             this.router.navigateByUrl('/');
           }
         },
-        error: (err) => {
-          alert(err?.error?.message || 'Login failed');
-        }
-      });
+      error: () => {
+        this.errorMessage = 'Email or password is invalid';
+      }
+             });
   }
 
   private decodeJwt(token: string): any {

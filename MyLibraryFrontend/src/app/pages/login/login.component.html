@@ -48,25 +48,38 @@
                     <label class="form-label" for="form2Example17"></label>
                   </div>
 
-                  <div class="form-outline mb-4">
+                  <div class="form-outline mb-4 position-relative">
                     <input
-                      type="password"
+                      [type]="showPassword ? 'text' : 'password'"
                       name="password"
                       [(ngModel)]="loginObj.password"
                       placeholder="Password"
                       id="form2Example27"
-                      class="form-control form-control-lg"
+                      class="form-control form-control-lg pe-5"
+                      required
                     />
-                    <label class="form-label" for="form2Example27"></label>
+                    <button
+                      type="button"
+                      (click)="showPassword = !showPassword"
+                      class="btn btn-sm btn-link position-absolute end-0 top-50 translate-middle-y me-2"
+                      style="text-decoration: none;"
+                    >
+                      {{ showPassword ? 'Hide' : 'Show' }}
+                    </button>
                   </div>
 
                   <div class="pt-1 mb-4">
                     <button (click)="onLogin()"
-                      class="btn btn-dark btn-lg btn-block"
-                      type="button"
+                            class="btn btn-dark btn-lg btn-block"
+                            type="button"
                     >
                       Login
                     </button>
+
+                    <!-- Reserved space for error message -->
+                    <div class="small mt-2" style="height: 1.25rem;">
+                      <span class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</span>
+                    </div>
                   </div>
                 </form>
               </div>
