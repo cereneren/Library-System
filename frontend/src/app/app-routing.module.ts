@@ -32,8 +32,8 @@ const routes: Routes = [
           path: 'member',
           component: MemberComponent,
           loadChildren: () =>
-                import('./pages/book/book-routing.module')
-                  .then(m => m.BookRoutingModule)
+                import('./pages/dashboard/member/member-routing.module')
+                  .then(m => m.MemberRoutingModule)
           },
           {
           path: 'librarian',

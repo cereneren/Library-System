@@ -1,6 +1,7 @@
 import { Component, OnInit }         from '@angular/core';
 import { BookService }             from '../book.service';
 import { Book }                    from '../book';
+import { AuthService } from '../../../services/auth.service';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -11,14 +12,21 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 })
 export class OverviewComponent implements OnInit {
   books: Book[] = [];
+  isMember = false;
+  loading = false;
+  error?: string;
 
   public apiUrl = environment.apiUrl;
 
-  ngOnInit(): void{
-    this.getAllBooks();
-  }
+  constructor(
+      private bookService: BookService,
+      private auth: AuthService
+    ) {}
 
-  constructor(public bookService: BookService) {}
+    ngOnInit(): void {
+      this.isMember = this.auth.isMember();     // hide Add for members
+      this.getAllBooks();                        // load books
+    }
 
   getAllBooks(){
     this.bookService.getAllBooks().subscribe({

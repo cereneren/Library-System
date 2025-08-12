@@ -32,10 +32,10 @@
               <div class="text-muted">{{ book.author || '—' }}</div>
             </div>
             <div class="d-flex gap-2">
-              <button class="btn btn-outline-primary btn-sm" (click)="toggleEdit()" [disabled]="saving || deleting">
+              <button *ngIf="!isMember" class="btn btn-outline-primary btn-sm"  (click)="toggleEdit()" [disabled]="saving || deleting">
                 {{ editMode ? 'Cancel' : 'Edit' }}
               </button>
-              <button class="btn btn-outline-danger btn-sm" (click)="confirmDelete()" [disabled]="saving || deleting">
+              <button *ngIf="!isMember" class="btn btn-outline-danger btn-sm" (click)="confirmDelete()" [disabled]="saving || deleting">
                 Delete
               </button>
             </div>

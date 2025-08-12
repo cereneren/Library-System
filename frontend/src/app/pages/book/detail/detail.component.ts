@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
+import { AuthService } from '../../../services/auth.service';
 import { Book } from '../book';
 
 @Component({
@@ -18,12 +19,16 @@ export class DetailComponent implements OnInit {
 
   message: { type: 'success' | 'error'; text: string } | null = null;
 
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private books: BookService
+    private books: BookService,
+    private auth: AuthService
   ) {}
+
+    get isMember(): boolean {
+      return this.auth.isMember();
+    }
 
    ngOnInit(): void {
       const id = Number(this.route.snapshot.paramMap.get('id'));
