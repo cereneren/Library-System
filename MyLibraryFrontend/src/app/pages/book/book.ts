@@ -5,7 +5,7 @@ export interface Book {
   available?: boolean;
   coverUrl?: string;
   coverEndpoint?: string;
-  summary?: string;
+  summary: string;
   dateCreated: string;
   dateUpdated: string;
 }
