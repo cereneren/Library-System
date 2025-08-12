@@ -1,6 +1,6 @@
 <nav class="navbar bg-dark navbar-expand-lg sticky-top" data-bs-theme="dark">
   <div class="container-fluid">
-    <!-- Toggler first -->
+    <!-- Toggler -->
     <button
       class="navbar-toggler"
       type="button"
@@ -13,18 +13,29 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Your nav links stay on the left -->
+    <!-- Nav links -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a routerLink="books"   class="nav-link">Books</a></li>
-        <li class="nav-item"><a routerLink="members" class="nav-link ">Members</a></li>
-        <li class="nav-item"><a routerLink="loans" class="nav-link ">Loans</a></li>
+        <li class="nav-item">
+          <a routerLink="books" routerLinkActive="active-link" class="nav-link">Books</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="members" routerLinkActive="active-link" class="nav-link">Members</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="loans" routerLinkActive="active-link" class="nav-link">Loans</a>
+        </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+          >
             Librarian
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLink="info" href="#">Info</a></li>
+            <li><a class="dropdown-item" routerLinkActive="active-link" routerLink="info">Info</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Log out</a></li>
           </ul>
@@ -32,14 +43,13 @@
       </ul>
     </div>
 
-    <!-- Brand moved here, with ms-lg-3 for a bit of breathing room -->
-    <a routerLink="books" class="navbar-brand ms-lg-3" href="#">
-      Library System
-    </a>
+    <!-- Logo + text -->
+    <div class="d-flex flex-column align-items-center">
+      <a routerLink="books" class="navbar-brand m-0 p-0" href="#">
+        Library System
+      </a>
+    </div>
   </div>
 </nav>
 
 <router-outlet></router-outlet>
-
-
-
