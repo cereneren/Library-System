@@ -12,17 +12,16 @@
           aria-label="Search members"
           [(ngModel)]="searchTerm"
           name="memberSearch"
-          (keyup.enter)="onSearch()"
         >
-        <button class="btn btn-outline-secondary" type="button" (click)="onSearch()">
-          <i class="bi bi-search"></i>
+        <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" [disabled]="!searchTerm">
+          ✕
         </button>
       </div>
     </div>
 
     <!-- Add Member -->
     <div class="flex-fill ms-5">
-      <a href="/members/create" class="btn btn-success btn-lg w-100"  [routerLink]="['..', 'create']">
+      <a class="btn btn-success btn-lg w-100" [routerLink]="['..', 'create']">
         <i class="bi bi-person-plus-fill me-2"></i>
         Add Member
       </a>

@@ -13,13 +13,19 @@ export class OverviewComponent implements OnInit {
   deleting: Record<number, boolean> = {};
   deleteError = '';
 
+  searchTerm = '';
+
   constructor(public memberService: MemberService) {}
-  ngOnInit(): void { this.getAllMembers(); }
+
+  ngOnInit(): void {
+    this.getAllMembers();
+  }
 
   getAllMembers() {
     this.memberService.getAllMembers().subscribe({
       next: (members) => this.members = members,
-      error: (e: HttpErrorResponse) => console.error('Error loading members:', e.message)
+      error: (e: HttpErrorResponse) =>
+        console.error('Error loading members:', e.message)
     });
   }
 
@@ -35,7 +41,6 @@ export class OverviewComponent implements OnInit {
 
     this.memberService.deleteMember(id).subscribe({
       next: () => {
-        // remove from UI
         this.members = this.members.filter(m => m.id !== id);
       },
       error: (err: HttpErrorResponse) => {
@@ -47,8 +52,6 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  searchTerm = '';
-
   get displayedMembers() {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.members;
@@ -58,7 +61,7 @@ export class OverviewComponent implements OnInit {
     );
   }
 
-  onSearch() {
+  clearSearch() {
+    this.searchTerm = '';
   }
-
 }
