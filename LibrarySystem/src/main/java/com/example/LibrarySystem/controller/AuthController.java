@@ -36,16 +36,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginDto dto) {
-        // authenticate and get the token
+    public Map<String, Object> login(@RequestBody LoginDto dto) {
+        // Authenticate and get the token
         String token = authSvc.login(dto, jwtUtil);
         User user = userRepo.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("…"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return Map.of(
                 "token", token,
-                "roles", user.getRoles()
+                "roles", user.getRoles(),
+                "id", user.getId() // <-- Include ID here
         );
     }
+
 }
 

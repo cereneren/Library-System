@@ -4,10 +4,11 @@ import {OverviewComponent} from './overview/overview.component';
 import {DetailComponent} from './detail/detail.component';
 import {CreateComponent} from './create/create.component';
 import {EditComponent} from './edit/edit.component';
+import {MemberComponent} from './member.component';
 
 const routes: Routes = [
   // when URL is /members → redirect to /members/overview
-  { path: '',  redirectTo: 'overview', pathMatch: 'full' },
+  { path: '',  component: MemberComponent },
   { path: 'overview',       component: OverviewComponent },
   { path: ':id/detail',    component: DetailComponent },
   { path: 'create',         component: CreateComponent },

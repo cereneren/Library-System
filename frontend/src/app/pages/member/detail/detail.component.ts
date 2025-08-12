@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Loan } from '../../loan/loan';
 import { Router, ActivatedRoute } from '@angular/router';
-
+type Role = 'LIBRARIAN' | 'MEMBER';
 
 @Component({
   selector: 'app-detail',
@@ -15,6 +15,29 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrl: './detail.component.css'
 })
 export class DetailComponent implements OnInit {
+
+
+  get session() {
+    try {
+      return JSON.parse(localStorage.getItem('user') || 'null') as { id: number; role: Role } | null;
+    } catch {
+      return null;
+    }
+  }
+
+  get role(): Role | null {
+    return this.session?.role ?? null;
+  }
+
+  get userId(): number | null {
+    return this.session?.id ?? null;
+  }
+
+  get isMemberSelf(): boolean {
+    return this.role === 'MEMBER' && this.member.id === this.userId;
+  }
+
+
   public apiUrl = environment.apiUrl;
   deleting: Record<number, boolean> = {};
   deleteError = '';

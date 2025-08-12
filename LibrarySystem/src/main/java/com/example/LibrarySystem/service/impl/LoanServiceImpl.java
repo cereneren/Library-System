@@ -75,4 +75,6 @@ public class LoanServiceImpl implements LoanService {
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
     }
+
+
 }
