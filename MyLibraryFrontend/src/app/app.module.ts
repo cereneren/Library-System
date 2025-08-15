@@ -15,7 +15,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'
 import { CustomeInterceptor } from './services/custome.interceptor';
 import { MemberComponent } from './pages/dashboard/member/member.component';
 import { LibrarianComponent } from './pages/dashboard/librarian/librarian.component'
-
+import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,14 @@ import { LibrarianComponent } from './pages/dashboard/librarian/librarian.compon
     MemberModule,
     LoanModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    TranslateModule.forRoot({
+      // v17 way: provider function (no token/provider array needed)
+      loader: provideTranslateHttpLoader({
+        prefix: '/assets/i18n/',
+        suffix: '.json',
+      }),
+    }),
   ],
   providers: [
   {

@@ -1,15 +1,52 @@
-
-.navbar {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+/* Adjustable sticky language switcher */
+.lang-stick {
+  position: sticky;
+  top: var(--lang-top, 64px);   /* distance from top (navbar height + gap) */
+  z-index: 1029;                /* just under Bootstrap .navbar (1030) */
 }
 
-.navbar .navbar-brand {
-  font-size: 1.75rem;
+/* Push to right and allow fine positioning with translate */
+.lang-stick-right {
+  display: flex;
+  justify-content: flex-end;    /* align to right */
+  transform: translate(var(--lang-x, 0), var(--lang-y, 0));
+}
+.lang-fixed {
+  position: fixed;           /* anchor to viewport */
+  z-index: 2000;             /* above page content, below modals */
 }
 
-.navbar .nav-link {
-  font-size: 1.1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+/* menu look */
+.lang-menu {
+  min-width: 130px;
+  width: auto;
+  color: #f8f9fa !important;
 }
+
+/* hover/active */
+.lang-menu .dropdown-item {
+  padding: .5rem .75rem;
+  color: #f8f9fa !important;
+}
+.lang-menu .dropdown-item:hover,
+.lang-menu .dropdown-item:focus {
+  background: #f1f3f5;
+  color: #000000  !important;
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-color: #212529;
+}
+
+/* if you need flag icon sizing */
+.flag {
+  display: inline-block;
+  width: 22px;
+  height: 16px;
+  background-size: cover;
+  border-radius: 2px;
+}
+.flag-turkey{background-image:url('/assets/flags/tr.png')}
+.flag-gb{background-image:url('/assets/flags/gb.png')}
+.flag-germany{background-image:url('/assets/flags/de.png')}
