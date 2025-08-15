@@ -20,23 +20,18 @@
 .lang-menu {
   min-width: 130px;
   width: auto;
-  color: #f8f9fa !important;
+  color: #f1f3f5 !important;
 }
 
 /* hover/active */
 .lang-menu .dropdown-item {
   padding: .5rem .75rem;
-  color: #f8f9fa !important;
+  color: #332D2D !important;
 }
 .lang-menu .dropdown-item:hover,
 .lang-menu .dropdown-item:focus {
   background: #f1f3f5;
-  color: #000000  !important;
-}
-
-.btn-dark {
-  background-color: #212529;
-  border-color: #212529;
+  color: #332D2D  !important;
 }
 
 /* if you need flag icon sizing */

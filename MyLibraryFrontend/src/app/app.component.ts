@@ -1,6 +1,8 @@
-// app.component.ts
+
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+
 
 /* ✅ Top-level types — NOT inside the class */
 type LangCode = 'en' | 'de' | 'tr';
@@ -23,8 +25,8 @@ export class AppComponent {
   supportedLangs: LangCode[] = ['en', 'de', 'tr'];
   currentLang: LangCode = 'en';
 
-  langTop = 25;    // px from top
-  langRight = 1270;  // px from right
+  langTop = 875;    // px from top
+  langRight = 10;  // px from right
 
   languages: Language[] = [
     { value: 'en', label: 'EN',  native: 'English',  flag: 'gb' },
@@ -32,7 +34,7 @@ export class AppComponent {
     { value: 'tr', label: 'TR',    native: 'Türkçe',     flag: 'turkey' },
   ];
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService, public router: Router) {
     this.translate.addLangs(this.supportedLangs);
     this.translate.setDefaultLang('en');
 
@@ -56,5 +58,9 @@ export class AppComponent {
   changeLang(code: LangCode) {
     this.translate.use(code);
     localStorage.setItem(LANG_KEY, code);
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
   }
 }

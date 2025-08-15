@@ -1,17 +1,17 @@
 <div class="d-flex flex-column min-vh-100">
   <main class="flex-fill">
     <div
-      class="lang-fixed"
+      class="lang-fixed" *ngIf="!isLoginPage()"
       [style.top.px]="langTop" [style.right.px]="langRight">
 
       <div class="dropdown">
-        <button class="btn btn-dark dropdown-toggle d-flex align-items-center gap-2 rounded-3 shadow-sm"
+        <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2 rounded-3 shadow-sm"
                 type="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="flag" [ngClass]="'flag-' + current.flag"></i>
           <span class="fw-semibold">{{ current.label }}</span>
         </button>
 
-        <ul class="dropdown-menu bg-dark text-light lang-menu shadow border-0 rounded-3 p-2">
+        <ul class="dropdown-menu bg-light text-light lang-menu shadow border-0 rounded-3 p-2">
           <li *ngFor="let lang of languages">
             <button class="dropdown-item d-flex align-items-center justify-content-between gap-3 rounded-3"
                     (click)="setLang(lang.value)">
