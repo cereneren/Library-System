@@ -1,9 +1,10 @@
-// create.component.ts
 import { Component } from '@angular/core';
 import { MemberService } from '../member.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-member-create',
@@ -14,33 +15,62 @@ export class CreateComponent {
   fullName = '';
   email = '';
   password = '';
+  showPassword = false;
   isSubmitting = false;
 
-  // 👇 add this line
-  showPassword = false;
+  constructor(
+    private memberService: MemberService,
+    private router: Router,
+    private translate: TranslateService
+  ) {}
 
-  constructor(private memberService: MemberService, private router: Router) {}
+   // simple, robust email check
+   private isValidEmail(e: string) {
+     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+   }
 
-  createMember() {
-    if (this.isSubmitting) return;
-    this.isSubmitting = true;
+   private t(key: string, params?: Record<string, any>) {
+     return this.translate.instant(key, params);
+   }
 
-    this.memberService.createMember({
-      fullName: this.fullName.trim(),
-      email: this.email.trim(),
-      password: this.password
-    }).pipe(finalize(() => this.isSubmitting = false))
-      .subscribe({
-        next: () => {
-          Swal.fire('Success', 'Member created successfully!', 'success');
-          this.fullName = this.email = this.password = '';
-          this.router.navigate(['/members/overview']);
-        },
-        error: (err) => {
-          const msg = err?.error?.message ?? (typeof err?.error === 'string' ? err.error : 'Failed to create member');
-          Swal.fire('Error', msg, 'error');
-        }
-      });
-  }
+   private toast = Swal.mixin({
+     toast: true, position: 'top-end', showConfirmButton: false, timer: 2500, timerProgressBar: true
+   });
 
-}
+   createMember() {
+     if (this.isSubmitting) return;
+
+     const fullName = this.fullName.trim();
+     const email = this.email.trim().toLowerCase();  // normalize
+     const password = this.password;
+
+     // ✅ All required
+     if (!fullName || !email || !password) {
+       Swal.fire({ icon: 'info', title: this.t('COMMON.INFO'), text: this.t('MEMBERS.MISSING_FIELDS') });
+       return;
+     }
+
+     // ✅ Email format must be valid
+     if (!this.isValidEmail(email)) {
+       Swal.fire({ icon: 'info', title: this.t('COMMON.INFO'), text: this.t('MEMBERS.INVALID_EMAIL') });
+       return;
+     }
+
+     this.isSubmitting = true;
+
+     this.memberService.createMember({ fullName, email, password })
+       .pipe(finalize(() => (this.isSubmitting = false)))
+       .subscribe({
+         next: () => {
+           this.toast.fire({ icon: 'success', title: this.t('MEMBERS.CREATE_SUCCESS') });
+           this.fullName = ''; this.email = ''; this.password = ''; this.showPassword = false;
+           this.router.navigate(['/members/overview']);
+         },
+         error: (err: HttpErrorResponse) => {
+           const msg = err?.error?.message ?? (typeof err?.error === 'string' ? err.error : this.t('MEMBERS.CREATE_FAILED'));
+           Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: msg });
+         }
+       });
+   }
+ }
+

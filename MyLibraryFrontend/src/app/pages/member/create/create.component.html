@@ -29,25 +29,21 @@
 
                 <!-- Full Name -->
                 <div class="mb-3 mt-3">
-                  <h6 class="mb-2">Full Name</h6>
+                  <h6 class="mb-2">{{ 'MEMBERS.FULL_NAME' | translate }}</h6>
                   <input
                     name="fullName"
                     [(ngModel)]="fullName"
                     #fullNameCtrl="ngModel"
                     required
                     minlength="3"
-                    class="form-control"
-                    [class.is-invalid]="(fullNameCtrl.dirty || fullNameCtrl.touched || f.submitted) && fullNameCtrl.invalid"
-                  />
-                  <div *ngIf="f.submitted && fullNameCtrl.errors" class="invalid-feedback d-block">
-                    <span *ngIf="fullNameCtrl.errors?.['required']">Full name is required.</span>
-                    <span *ngIf="fullNameCtrl.errors?.['minlength']">At least 3 characters.</span>
-                  </div>
+                    class="form-control"/>
+                  <!-- optional, subtle helper instead of red -->
+
                 </div>
 
-                <!-- Email -->
+                <!-- Email (required + valid) -->
                 <div class="mb-3 mt-3">
-                  <h6 class="mb-2">Email</h6>
+                  <h6 class="mb-2">{{ 'MEMBERS.EMAIL' | translate }}</h6>
                   <input
                     type="email"
                     name="email"
@@ -55,19 +51,14 @@
                     #emailCtrl="ngModel"
                     required
                     email
-                    class="form-control"
+                    inputmode="email"
                     autocomplete="email"
-                  />
-                  <div *ngIf="f.submitted && emailCtrl.errors" class="invalid-feedback d-block">
-                    <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
-                    <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email.</span>
-                  </div>
+                    class="form-control"/>
                 </div>
-
 
                 <!-- Password with show/hide -->
                 <div class="mb-3 mt-3">
-                  <h6 class="mb-2">Password</h6>
+                  <h6 class="mb-2">{{ 'MEMBERS.PASSWORD' | translate }}</h6>
 
                   <div class="input-group">
                     <input
@@ -78,9 +69,7 @@
                       required
                       minlength="6"
                       autocomplete="new-password"
-                      class="form-control"
-                      [class.is-invalid]="(passwordCtrl.dirty || passwordCtrl.touched || f.submitted) && passwordCtrl.invalid"
-                    />
+                      class="form-control"/>
 
                     <button
                       type="button"
@@ -106,10 +95,6 @@
                       </ng-template>
                     </button>
                   </div>
-
-                  <div *ngIf="f.submitted && passwordCtrl.errors" class="invalid-feedback d-block">
-                    <span *ngIf="passwordCtrl.errors?.['required']">Password is required.</span>
-                  </div>
                 </div>
 
                 <!-- Submit -->
@@ -118,8 +103,8 @@
                     type="submit"
                     class="btn btn-primary"
                     [disabled]="f.invalid || isSubmitting">
-                    <span *ngIf="!isSubmitting">Create Member</span>
-                    <span *ngIf="isSubmitting">Creating…</span>
+                    <span *ngIf="!isSubmitting">{{ 'MEMBERS.CREATE' | translate }}</span>
+                    <span *ngIf="isSubmitting">{{ 'MEMBERS.CREATING' | translate }}…</span>
                   </button>
                 </div>
 

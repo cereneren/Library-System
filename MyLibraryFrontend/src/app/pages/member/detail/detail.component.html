@@ -22,27 +22,27 @@
         <div class="card h-100">
           <div class="card-body">
             <div class="row mb-3">
-              <div class="col-sm-3"><h6 class="mb-0">Role</h6></div>
-              <div class="col-sm-9 text-secondary"> Member </div>
+              <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.ROLE' | translate }}</h6></div>
+              <div class="col-sm-9 text-secondary"> {{ 'MEMBERS.MEMBER' | translate }} </div>
             </div>
             <hr>
             <div class="row mb-3">
-              <div class="col-sm-3"><h6 class="mb-0">Full Name</h6></div>
+              <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.FULL_NAME' | translate }}</h6></div>
               <div class="col-sm-9 text-secondary">{{ member.fullName }}</div>
             </div>
             <hr>
             <div class="row mb-3">
-              <div class="col-sm-3"><h6 class="mb-0">Email</h6></div>
+              <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.EMAIL' | translate }}</h6></div>
               <div class="col-sm-9 text-secondary">{{ member.email }}</div>
             </div>
             <hr>
             <div class="row mb-3">
-              <div class="col-sm-3"><h6 class="mb-0">Date Created</h6></div>
+              <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.DATE_CREATED' | translate }}</h6></div>
               <div class="col-sm-9 text-secondary"> {{ member.dateCreated | date:'medium' }}</div>
             </div>
             <hr>
             <div class="row mb-3">
-              <div class="col-sm-3"><h6 class="mb-0">Date Updated</h6></div>
+              <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.DATE_UPDATED' | translate }}</h6></div>
               <div class="col-sm-9 text-secondary"> {{ member.dateUpdated | date:'medium' }}</div>
             </div>
             <hr>
@@ -65,7 +65,7 @@
                   [disabled]="member.id == null || deleting[member.id]"
                 >
                   <i class="bi bi-trash-fill"></i>
-                  <ng-template #delBusy>Deleting…</ng-template>
+                  <ng-template #delBusy>{{ 'MEMBERS.DELETING' | translate }}</ng-template>
                 </button>
               </div>
             </div>
@@ -91,7 +91,7 @@
                     data-bs-target="#loansCollapse"
                     aria-expanded="false"
                     aria-controls="loansCollapse">
-                    Loans
+                    {{ 'MEMBERS.LOANS' | translate }}
                   </button>
 
                   <button
@@ -101,7 +101,7 @@
                     data-bs-target="#borrowCollapse"
                     aria-expanded="false"
                     aria-controls="borrowCollapse">
-                    Borrow
+                    {{ 'MEMBERS.BORROW' | translate }}
                   </button>
                 </div>
           </div>
@@ -120,16 +120,16 @@
                   <table class="table table-sm align-middle">
                     <thead>
                     <div class="d-flex flex-wrap gap-4 mb-2 m-1">
-                      <div class="fw-semibold">Total Loans: <span class="fw-normal">{{ totalLoans }}</span></div>
-                      <div class="fw-semibold">Active Loans: <span class="fw-normal">{{ activeLoans }}</span></div>
-                      <div class="fw-semibold text-danger">Overdue: <span class="fw-normal">{{ overdueLoans }}</span></div>
+                      <div class="fw-semibold">{{ 'MEMBERS.TOTAL_LOANS' | translate }}: <span class="fw-normal">{{ totalLoans }}</span></div>
+                      <div class="fw-semibold">{{ 'MEMBERS.ACTIVE_LOANS' | translate }}: <span class="fw-normal">{{ activeLoans }}</span></div>
+                      <div class="fw-semibold text-danger">{{ 'MEMBERS.OVERDUE' | translate }}: <span class="fw-normal">{{ overdueLoans }}</span></div>
                     </div>
                     <tr>
-                      <th>Title</th>
-                      <th>Author</th>
-                      <th>Loaned</th>
-                      <th>Due</th>
-                      <th>Status</th>
+                      <th>{{ 'MEMBERS.TITLE' | translate }}</th>
+                      <th>{{ 'MEMBERS.AUTHOR' | translate }}</th>
+                      <th>{{ 'MEMBERS.LOANED' | translate }}</th>
+                      <th>{{ 'MEMBERS.DUE' | translate }}</th>
+                      <th>{{ 'MEMBERS.STATUS' | translate }}</th>
                       <th class="text-end"></th>
                     </tr>
                     </thead>
@@ -141,10 +141,10 @@
                       <td>{{ loan.dueDate   | date:'mediumDate' }}</td>
                       <td>
                       <span *ngIf="loan.returnDate" class="badge bg-success">
-                        Returned {{ loan.returnDate | date:'mediumDate' }}
+                        {{ 'MEMBERS.RETURNED' | translate }} {{ loan.returnDate | date:'mediumDate' }}
                       </span>
                         <span *ngIf="!loan.returnDate && isOverdue(loan)" class="badge bg-danger">Overdue</span>
-                        <span *ngIf="!loan.returnDate && !isOverdue(loan)" class="badge bg-warning text-dark">On loan</span>
+                        <span *ngIf="!loan.returnDate && !isOverdue(loan)" class="badge bg-warning text-dark">{{ 'MEMBERS.ON_LOAN' | translate }}</span>
                       </td>
                       <td class="text-end">
                         <button
@@ -152,7 +152,7 @@
                           class="btn btn-outline-primary btn-sm"
                           (click)="onReturn(loan)"
                           [disabled]="returning[loan.id]">
-                          {{ returning[loan.id] ? 'Returning…' : 'Return' }}
+                          {{ returning[loan.id] ?  ('MEMBERS.RETURNING' | translate) : ('MEMBERS.RETURN' | translate)}}
                         </button>
                       </td>
                     </tr>
@@ -167,21 +167,21 @@
             <div class="collapse" id="borrowCollapse" data-bs-parent="#toggleGroup">
               <div class="card card-body">
                 <div class="mb-3">
-                  <label for="bookSelect" class="form-label">Select Book</label>
+                  <label for="bookSelect" class="form-label">{{ 'MEMBERS.SELECT_BOOK' | translate }}</label>
                   <select
                     class="form-select form-select-sm narrow-select"
                     id="bookSelect"
                     name="bookSelect"
                     [(ngModel)]="selectedBookId"
                     [disabled]="borrowing || availableBooks.length === 0">
-                    <option [ngValue]="null" disabled selected>Choose a book...</option>
+                    <option [ngValue]="null" disabled selected>{{ 'MEMBERS.SELECT_MESSAGE' | translate }}</option>
                     <option *ngFor="let b of availableBooks" [ngValue]="b.id">
                       {{ b.title }}
                     </option>
                   </select>
 
                   <div *ngIf="availableBooks.length === 0" class="text-muted small mt-1">
-                    No available books to borrow.
+                    {{ 'MEMBERS.BORROW_ERROR' | translate }}
                   </div>
                 </div>
 
@@ -190,7 +190,7 @@
                     class="btn btn-primary btn-sm"
                     (click)="onBorrow()"
                     [disabled]="borrowing || !member.id || !selectedBookId">
-                    {{ borrowing ? 'Borrowing…' : 'Borrow' }}
+                    {{ borrowing ? ('MEMBERS.BORROWING' | translate) : ('MEMBERS.BORROW' | translate) }}
                   </button>
 
                   <span *ngIf="borrowSuccess" class="text-success small">{{ borrowSuccess }}</span>

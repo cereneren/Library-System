@@ -1,7 +1,7 @@
-// src/app/pages/loan/loan.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Book } from '../book/book';
 
@@ -42,7 +42,13 @@ export class LoanService {
     return this.http.post(`${this.base}/api/loans/${id}/return`, {}, { responseType: 'text' });
   }
 
-  deleteLoan(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/api/loans/${id}`);
+  getActiveLoanForBook(bookId: number): Observable<Loan | null> {
+    return this.http
+      .get<Loan | null>(`/api/books/${bookId}/loan`)
+      .pipe(
+        catchError((err: HttpErrorResponse) =>
+          err.status === 404 ? of(null) : throwError(() => err)
+        )
+      );
   }
 }

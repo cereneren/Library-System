@@ -9,7 +9,7 @@ import { DetailComponent }      from './detail/detail.component';
 import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
 import { FormsModule} from '@angular/forms'
-
+import { TranslateModule } from '@ngx-translate/core';
 import { MemberService }        from './member.service';
 import { MemberComponent } from './member.component';
 
@@ -26,6 +26,7 @@ import { MemberComponent } from './member.component';
     HttpClientModule,     // for any HTTP calls
     MemberRoutingModule,   // your routes.forChild(...)
     FormsModule,
+    TranslateModule
   ],
   providers: [
     MemberService         // so constructor(public memberService) works

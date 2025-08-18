@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { LibrarianRoutingModule } from './librarian-routing.module';
 import { DetailComponent } from './detail/detail.component';
 import { LibrarianComponent } from './librarian.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { LibrarianComponent } from './librarian.component';
   imports: [
     CommonModule,          // ✅ gives you the date pipe
     FormsModule,
-    LibrarianRoutingModule
+    LibrarianRoutingModule,
+    TranslateModule
   ]
 })
 export class LibrarianModule {}

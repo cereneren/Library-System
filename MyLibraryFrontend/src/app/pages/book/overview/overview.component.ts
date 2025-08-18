@@ -19,6 +19,8 @@ export class OverviewComponent implements OnInit {
   loading = false;
   error?: string;
 
+    private readonly PLACEHOLDER = 'assets/nocover.png';
+
   query = '';
   private search$ = new Subject<string>();
 
@@ -81,5 +83,18 @@ export class OverviewComponent implements OnInit {
       const isbn = (b as any).isbn ? String((b as any).isbn).toLowerCase() : '';
       return title.includes(q) || author.includes(q) || isbn.includes(q);
     });
+  }
+
+  coverUrl(book: Book): string {
+    if (!book?.id) return this.PLACEHOLDER;
+
+    const ts = book.dateUpdated ? Date.parse(book.dateUpdated) : Date.now();
+    return `/api/books/${book.id}/cover?ts=${ts}`;
+  }
+
+  onImgError(ev: Event) {
+    const img = ev.target as HTMLImageElement;
+    if (img.src.includes(this.PLACEHOLDER)) return; // avoid infinite loop
+    img.src = this.PLACEHOLDER;
   }
 }

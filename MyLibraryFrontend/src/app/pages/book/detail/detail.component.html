@@ -9,9 +9,9 @@
           <div class="ratio" style="--bs-aspect-ratio: 150%; max-width: 320px;">
             <img
               class="book-cover"
-              [src]="'/api/books/' + book.id + '/cover'"
-              (error)="usePlaceholder($event)"
-              [alt]="book.title + ' cover'"
+              [src]="coverUrl"
+              (error)="onImgError($event)"
+              [alt]="(book.title || 'Book') + ' cover'"
               style="width:100%; height:100%; object-fit:cover; border-radius:.5rem;"
               loading="lazy">
           </div>
@@ -50,7 +50,15 @@
           <div class="mt-3 small">
             <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.CREATED' | translate }}: {{ book.dateCreated | date:'medium' }}</div>
             <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.UPDATED' | translate }}: {{ book.dateUpdated | date:'medium' }}</div>
-            <div class="text-secondary">{{ 'BOOKS.DUE' | translate }}: {{ book.dateUpdated | date:'medium' }}</div>
+            <!-- Current loan due date -->
+            <div *ngIf="currentLoan?.dueDate as due" class="text-secondary mb-2">
+              {{ 'LOANS.EXPECTED_DUE' | translate }}: {{ due | date:'mediumDate' }}
+              <span *ngIf="isOverdue(due)" class="ms-2">
+                ({{ 'LOANS.OVERDUE' | translate }} —
+                 {{ daysOverdue(due) }}
+                 {{ daysOverdue(due) === 1 ? ('BOOKS.DAY' | translate) : ('BOOKS.DAYS' | translate) }})
+              </span>
+            </div>
           </div>
 
           <!-- Summary (read mode) -->
@@ -72,26 +80,19 @@
                 <input class="form-control" name="author" [(ngModel)]="draft.author" required>
               </div>
 
-              <div class="col-md-6">
+              <div class="mb-2">
                 <label class="form-label">{{ 'BOOKS.COVER' | translate }}</label>
-                <div class="input-group">
-                  <!-- Upload cover bar -->
-                  <div class="w-100" *ngIf="!isMember">
-                    <div class="input-group">
-                      <input type="file"
-                             class="form-control"
-                             accept="image/*"
-                             (change)="onCoverFileSelected($event)"
-                             [disabled]="uploadingCover">
-                      <button class="btn btn-outline-primary"
-                              type="button"
-                              (click)="uploadCover()"
-                              [disabled]="!selectedCoverFile || uploadingCover">
-                        {{ uploadingCover ? ('BOOKS.UPLOADING' | translate) :  ('BOOKS.UPLOAD' | translate) }}
-                      </button>
-                    </div>
-                    <div class="form-text">{{ 'BOOKS.CHOOSE_IMAGE' | translate }}</div>
-                  </div>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/jpeg,image/png,image/webp"
+                  (change)="onCoverFileSelected($event)"
+                  [disabled]="uploadingCover || saving" />
+                <div class="form-text">
+                  {{ 'BOOKS.COVER_HELP' | translate:{ ex:'JPG/PNG/WEBP', size:'5MB' } }}
+                </div>
+                <div *ngIf="uploadingCover" class="small text-muted mt-1">
+                  {{ 'BOOKS.UPLOADING' | translate }}…
                 </div>
               </div>
 

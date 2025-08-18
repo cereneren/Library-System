@@ -29,11 +29,11 @@
                   <!-- HEADER: swap text logo for an <img> -->
                   <div class="d-flex align-items-center mb-3 pb-1">
                     <!-- optional small site name next to it -->
-                    <span class="h3 fw-bold mb-0 text-dark">Library System</span>
+                    <span class="h3 fw-bold mb-0 text-dark">{{ 'LOGIN.TITLE' | translate }}</span>
                   </div>
 
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
-                    Sign into your account
+                    {{ 'LOGIN.TEXT' | translate }}
                   </h5>
 
                   <div class="form-outline mb-4">
@@ -64,7 +64,7 @@
                       class="btn btn-sm btn-link position-absolute end-0 top-50 translate-middle-y me-2"
                       style="text-decoration: none;"
                     >
-                      {{ showPassword ? 'Hide' : 'Show' }}
+                      {{ showPassword ? ('LOGIN.HIDE' | translate) : ('LOGIN.SHOW' | translate) }}
                     </button>
                   </div>
 
@@ -73,12 +73,12 @@
                             class="btn btn-dark btn-lg btn-block"
                             type="button"
                     >
-                      Login
+                      {{ 'LOGIN.LOGIN' | translate }}
                     </button>
 
                     <!-- Reserved space for error message -->
                     <div class="small mt-2" style="height: 1.25rem;">
-                      <span class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</span>
+                      <span class="text-danger" *ngIf="errorMessage">{{ 'LOGIN.ERROR' | translate }}</span>
                     </div>
                   </div>
                 </form>

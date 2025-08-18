@@ -27,7 +27,7 @@
               <!-- Full Name -->
               <div class="row mb-3">
                 <div class="col-sm-3">
-                  <h6 class="mb-0">Full Name</h6>
+                  <h6 class="mb-0">{{ 'MEMBERS.FULL_NAME' | translate }}</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
                   <input type="text" class="form-control" [(ngModel)]="member.fullName">
@@ -37,7 +37,7 @@
               <!-- Email -->
               <div class="row mb-3">
                 <div class="col-sm-3">
-                  <h6 class="mb-0">Email</h6>
+                  <h6 class="mb-0">{{ 'MEMBERS.EMAIL' | translate }}</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
                   <input type="text" class="form-control" [(ngModel)]="member.email">
@@ -47,7 +47,7 @@
               <!-- Date Created (immutable) -->
               <div class="row mb-3">
                 <div class="col-sm-3">
-                  <h6 class="mb-0">Date Created</h6>
+                  <h6 class="mb-0">{{ 'MEMBERS.DATE_CREATED' | translate }}</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
                   <input type="text" class="form-control" [value]="member.dateCreated | date:'yyyy-MM-dd HH:mm'" readonly>
@@ -57,7 +57,7 @@
               <!-- Date Updated (immutable) -->
               <div class="row mb-3">
                 <div class="col-sm-3">
-                  <h6 class="mb-0">Date Updated</h6>
+                  <h6 class="mb-0">{{ 'MEMBERS.DATE_UPDATED' | translate }}</h6>
                 </div>
                 <div class="col-sm-9 text-secondary">
                   <input type="text" class="form-control" [value]="member.dateUpdated | date:'yyyy-MM-dd HH:mm'" readonly>
@@ -68,9 +68,8 @@
               <div class="row">
                 <div class="col-sm-3"></div>
                 <div class="col-sm-9 text-secondary">
-                  <button class="btn btn-primary me-2" type="button" (click)="save()" [disabled]="isSubmitting">Save</button>
-                  <a class="btn btn-secondary" [routerLink]="['..','detail']">Cancel</a>
-
+                  <button class="btn btn-primary me-2" type="button" (click)="save()" [disabled]="isSubmitting">{{ 'MEMBERS.SAVE' | translate }}</button>
+                  <a class="btn btn-secondary" [routerLink]="['..','detail']">{{ 'MEMBERS.CANCEL' | translate }}</a>
                 </div>
               </div>
             </div>

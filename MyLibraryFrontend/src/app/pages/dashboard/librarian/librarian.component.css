@@ -12,8 +12,7 @@
 /* links bigger */
 .navbar .nav-link {
   font-size: 1.75rem;  /* was 1.1rem */
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
 }
 .active-link {
   color: #fff !important;       /* brighter text */
