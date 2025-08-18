@@ -18,13 +18,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a routerLink="books" routerLinkActive="active-link" class="nav-link">Books</a>
+          <a routerLink="books" routerLinkActive="active-link" class="nav-link">{{ 'NAVBAR.BOOKS' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a routerLink="members" routerLinkActive="active-link" class="nav-link">Members</a>
+          <a routerLink="members" routerLinkActive="active-link" class="nav-link">{{ 'NAVBAR.MEMBERS' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a routerLink="loans" routerLinkActive="active-link" class="nav-link">Loans</a>
+          <a routerLink="loans" routerLinkActive="active-link" class="nav-link">{{ 'NAVBAR.LOANS' | translate }}</a>
         </li>
         <li class="nav-item dropdown">
           <a
@@ -33,12 +33,12 @@
             role="button"
             data-bs-toggle="dropdown"
           >
-            Librarian
+            {{ 'NAVBAR.LIBRARIAN' | translate }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLinkActive="active-link" routerLink="info">Info</a></li>
+            <li><a class="dropdown-item" routerLinkActive="active-link" routerLink="info">{{ 'NAVBAR.INFO' | translate }}</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Log out</a></li>
+            <li><a class="dropdown-item" href="#">{{ 'NAVBAR.LOGOUT' | translate }}</a></li>
           </ul>
         </li>
       </ul>
@@ -47,7 +47,7 @@
     <!-- Logo + text -->
     <div class="d-flex flex-column align-items-center">
       <a routerLink="books" class="navbar-brand m-0 p-0" href="#">
-        {{ 'TITLE' | translate }}
+        {{ 'NAVBAR.TITLE' | translate }}
       </a>
     </div>
   </div>

@@ -16,16 +16,16 @@
     <!-- Your nav links stay on the left -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a routerLink="books"   class="nav-link">Books</a></li>
-        <li class="nav-item"><a routerLink="loans" class="nav-link ">Loans</a></li>
+        <li class="nav-item"><a routerLink="books"   class="nav-link">{{ 'NAVBAR.BOOKS' | translate }}</a></li>
+        <li class="nav-item"><a routerLink="loans" class="nav-link ">{{ 'NAVBAR.LOANS' | translate }}</a></li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Member
+            {{ 'NAVBAR.MEMBER' | translate }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLink="info" href="#">Info</a></li>
+            <li><a class="dropdown-item" routerLink="info" href="#">{{ 'NAVBAR.INFO' | translate }}</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Log out</a></li>
+            <li><a class="dropdown-item" href="#">{{ 'NAVBAR.LOGOUT' | translate }}</a></li>
           </ul>
         </li>
       </ul>
@@ -34,7 +34,7 @@
     <!-- Brand moved here, with ms-lg-3 for a bit of breathing room -->
     <div class="d-flex flex-column align-items-center">
       <a routerLink="books" class="navbar-brand m-0 p-0" href="#">
-        Library System
+        {{ 'NAVBAR.TITLE' | translate }}
       </a>
     </div>
 

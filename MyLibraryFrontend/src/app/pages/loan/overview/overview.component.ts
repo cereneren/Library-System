@@ -39,7 +39,7 @@ export class OverviewComponent implements OnInit {
 
     const user = this.getCurrentUser(); // { id: number|null, role: string|null } | null
     if (!user) {
-      this.error = 'Please sign in.';
+      this.error = 'User is not found.';
       this.loading = false;
       return;
     }
@@ -50,7 +50,7 @@ export class OverviewComponent implements OnInit {
       src$ = this.loanSvc.getAllLoans();
     } else if (user.role === 'MEMBER') {
       if (!user.id) {
-        this.error = 'Member id not found. Please sign in again.';
+        this.error = 'Member id not found.';
         this.loading = false;
         return;
       }

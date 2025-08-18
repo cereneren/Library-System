@@ -1,3 +1,57 @@
 {
-  "TITLE": "My Library"
+  "NAVBAR": {
+    "TITLE": "My Library",
+    "BOOKS": "Books",
+    "MEMBERS": "Members",
+    "LOANS": "Loans",
+    "LIBRARIAN": "Librarian",
+    "MEMBER": "Member",
+    "LOGOUT": "Logout",
+    "INFO": "Info"
+  },
+  "BOOKS": {
+    "ALL_BOOKS": "All Books",
+    "SEARCH_BAR": "Search by title or author",
+    "DETAILS": "Details",
+    "ADD_BOOK": "Add Book",
+    "AVAILABLE": "Available",
+    "LOANED_OUT": "Loaned Out",
+    "CREATED": "Created",
+    "UPDATED": "Updated",
+    "SUMMARY": "Summary",
+    "NO_SUMMARY": "No summary provided.",
+    "TITLE": "Title",
+    "AUTHOR": "Author",
+    "COVER": "Cover",
+    "CHOOSE_IMAGE": "Choose an image to set as cover (PNG/JPG, max ~5MB).",
+    "SAVE_CHANGES": "Save changes",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "UPLOAD": "Upload",
+    "UPLOADING": "Uploading...",
+    "LOAD": "Loading...",
+    "UPDATE_FAILED": "Update failed. Please try again.",
+    "CREATE_FAILED": "Failed to create book. Cover is either unsupported or larger than 5MB",
+    "LOAD_FAILED": "Failed to load books",
+    "PREVIEW": "Preview",
+    "PREVIEW_MESSAGE": "Image preview will appear here",
+    "CREATE": "Create Book"
+  },
+  "LOANS": {
+    "TITLE": "Title",
+    "AUTHOR": "Author",
+    "MEMBER": "Member",
+    "LOANED": "Loaned",
+    "DUE": "Due",
+    "STATUS": "Status",
+    "RETURNED": "Returned",
+    "OVERDUE": "Overdue",
+    "ON_LOAN": "On loan",
+    "RETURN": "Return",
+    "ALL": "All",
+    "NONE": "None",
+    "RETURNING": "Returning...",
+    "NO_LOANS_FOUND": "No loans found.",
+    "NO_LOANS_MATCHED": "No loans match the selected filters."
+  }
 }

@@ -67,7 +67,7 @@ export class OverviewComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error loading books:', error.message);
-        this.error = 'Failed to load books';
+        this.error = "'BOOKS.LOAD_FAILED' | translate";
         this.loading = false;
       }
     });

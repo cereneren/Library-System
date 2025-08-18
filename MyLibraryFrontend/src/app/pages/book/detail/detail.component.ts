@@ -159,9 +159,6 @@ export class DetailComponent implements OnInit {
           const base = `/api/books/${this.book.id}/cover`;
           img.src = `${base}?ts=${Date.now()}`;
         }
-
-        // Optional: also bump book.dateUpdated if backend returns nothing else
-        // (If your PUT returns updated Book, set this.book = returnedBook instead)
         this.book = {
           ...(this.book as Book),
           dateUpdated: new Date().toISOString()

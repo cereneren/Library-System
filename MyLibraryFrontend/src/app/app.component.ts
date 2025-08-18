@@ -29,7 +29,7 @@ export class AppComponent {
   langRight = 10;  // px from right
 
   languages: Language[] = [
-    { value: 'en', label: 'EN',  native: 'English',  flag: 'gb' },
+    { value: 'en', label: 'EN',  native: 'English(UK)',  flag: 'gb' },
     { value: 'de', label: 'DE',   native: 'Deutsch',   flag: 'germany' },
     { value: 'tr', label: 'TR',    native: 'Türkçe',     flag: 'turkey' },
   ];

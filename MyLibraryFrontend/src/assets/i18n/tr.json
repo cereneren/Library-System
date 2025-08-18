@@ -1,3 +1,57 @@
 {
-  "TITLE": "Benim Kütüphanem"
+  "NAVBAR": {
+    "TITLE": "Benim Kütüphanem",
+    "BOOKS": "Kitaplar",
+    "MEMBERS": "Üyeler",
+    "LOANS": "Ödünç İşlemleri",
+    "LIBRARIAN": "Kütüphaneci",
+    "MEMBER": "Üye",
+    "LOGOUT": "Çıkış yap",
+    "INFO": "Bilgi"
+  },
+  "BOOKS": {
+    "ALL_BOOKS": "Tüm Kitaplar",
+    "SEARCH_BAR": "Başlığa veya yazara göre arama yapın",
+    "DETAILS": "Detaylar",
+    "ADD_BOOK": "Kitap Ekle",
+    "AVAILABLE": "Mevcut",
+    "LOANED_OUT": "Ödünçte",
+    "CREATED": "Oluşturuldu",
+    "UPDATED": "Güncellendi",
+    "SUMMARY": "Özet",
+    "NO_SUMMARY": "Özet sağlanmadı.",
+    "TITLE": "Başlık",
+    "AUTHOR": "Yazar",
+    "COVER": "Kapak",
+    "CHOOSE_IMAGE": "Kapak olarak ayarlamak istediğiniz resmi seçin (PNG/JPG, maks. ~5MB).",
+    "SAVE_CHANGES": "Değişiklikleri kaydet",
+    "SAVING": "Kaydediliyor...",
+    "CANCEL": "İptal et",
+    "UPLOAD": "Yükle",
+    "UPLOADING": "Yükleniyor...",
+    "LOAD": "Yükleniyor...",
+    "UPDATE_FAILED": "Güncelleme başarısız oldu. Lütfen tekrar deneyin.",
+    "CREATE_FAILED": "Kitap oluşturulamadı. Kapak türü desteklenmiyor veya 5 MB'tan büyük.",
+    "LOAD_FAILED": "Kitaplar yüklenemedi.",
+    "PREVIEW": "Önizleme",
+    "PREVIEW_MESSAGE": "Görüntü önizlemesi burada görünecektir",
+    "CREATE": "Kitap Oluştur"
+  },
+  "LOANS": {
+    "TITLE": "Başlık",
+    "AUTHOR": "Yazar",
+    "MEMBER": "Üye",
+    "LOANED": "Ödünç verildi",
+    "DUE": "Bitiş tarihi",
+    "STATUS": "Durumu",
+    "RETURNED": "İade edildi",
+    "OVERDUE": "Gecikmiş",
+    "ON_LOAN": "Ödünç halinde",
+    "RETURN": "İade et",
+    "ALL": "Tümü",
+    "NONE": "Hiçbiri",
+    "RETURNING": "İade ediliyor...",
+    "NO_LOANS_FOUND": "Ödünç alınan kitap bulunamadı",
+    "NO_LOANS_MATCHED": "Filtrelere uygun kitap bulunamadı."
+  }
 }

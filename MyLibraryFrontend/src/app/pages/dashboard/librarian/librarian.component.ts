@@ -10,11 +10,4 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LibrarianComponent {
   constructor(private http: HttpClient, private router: Router){}
-
-  ngOnInit(): void {
-    this.loadBooks();
-  }
-  loadBooks(): void {
-      //this.router.navigate(['./books/overview']);
-  }
 }

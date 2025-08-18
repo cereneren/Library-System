@@ -9,9 +9,11 @@ import { DetailComponent }      from './detail/detail.component';
 import { CreateComponent }      from './create/create.component';
 import { EditComponent }        from './edit/edit.component';
 
+import { TranslateModule } from '@ngx-translate/core';
 import { BookService }        from './book.service';
 import { BookComponent } from './book.component';
 import { FormsModule} from '@angular/forms'
+
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { FormsModule} from '@angular/forms'
     CommonModule,         // *ngIf, *ngFor, etc.
     HttpClientModule,     // for any HTTP calls
     BookRoutingModule,   // your routes.forChild(...)
-    FormsModule
+    FormsModule,
+    TranslateModule
   ],
   providers: [
     BookService         // so constructor(public bookService) works
