@@ -48,8 +48,8 @@
 
           <!-- Meta -->
           <div class="mt-3 small">
-            <div class="text-secondary">Created: {{ book.dateCreated | date:'medium' }}</div>
-            <div class="text-secondary">Updated: {{ book.dateUpdated | date:'medium' }}</div>
+            <div class="text-secondary" *ngIf="!isMember">Created: {{ book.dateCreated | date:'medium' }}</div>
+            <div class="text-secondary" *ngIf="!isMember">Updated: {{ book.dateUpdated | date:'medium' }}</div>
           </div>
 
           <!-- Summary (read mode) -->
