@@ -65,6 +65,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/books/*/cover").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/books/*/cover").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/books/*/cover").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/books/*/cover").permitAll()
                         .requestMatchers(HttpMethod.GET,    "/api/books/**").hasAnyRole("LIBRARIAN", "MEMBER")
                         .requestMatchers(HttpMethod.POST,   "/api/books/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.PUT,    "/api/books/**").hasAnyRole("LIBRARIAN", "MEMBER")
