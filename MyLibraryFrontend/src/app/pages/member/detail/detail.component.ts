@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
+import { I18nService } from '../../../services/i18n.service';
 
 type Role = 'LIBRARIAN' | 'MEMBER';
 
@@ -19,7 +20,7 @@ type Role = 'LIBRARIAN' | 'MEMBER';
   styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
-
+  locale$ = this.i18n.locale$;
   member: Member = { id: 0, fullName: '', email: '', password: '', dateCreated: '', dateUpdated: '' };
   members: Member[] = [];
   loans: Loan[] = [];
@@ -46,7 +47,8 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private i18n: I18nService
   ) {}
 
   // ---------- helpers ----------

@@ -36,15 +36,17 @@
               <div class="col-sm-9 text-secondary">{{ member.email }}</div>
             </div>
             <hr>
+            <ng-container *ngIf="locale$ | async as locale">
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.DATE_CREATED' | translate }}</h6></div>
-              <div class="col-sm-9 text-secondary"> {{ member.dateCreated | date:'medium' }}</div>
+              <div class="col-sm-9 text-secondary">   {{ member.dateCreated | date:'medium':undefined:locale }} </div>
             </div>
             <hr>
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">{{ 'MEMBERS.DATE_UPDATED' | translate }}</h6></div>
-              <div class="col-sm-9 text-secondary"> {{ member.dateUpdated | date:'medium' }}</div>
+              <div class="col-sm-9 text-secondary"> {{ member.dateUpdated | date:'medium':undefined:locale }} </div>
             </div>
+            </ng-container>
             <hr>
             <div class="row">
               <div class="col-12 text-end m-3 d-flex gap-2">
@@ -135,17 +137,19 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let loan of loans">
+                      <ng-container *ngIf="locale$ | async as locale">
                       <td class="fw-semibold">{{ loan.book.title }}</td>
                       <td>{{ loan.book.author || '-' }}</td>
-                      <td>{{ loan.loanDate | date:'mediumDate' }}</td>
-                      <td>{{ loan.dueDate   | date:'mediumDate' }}</td>
+                      <td>{{ loan.loanDate | date:'mediumDate':undefined:locale }}</td>
+                      <td>{{ loan.dueDate   | date:'mediumDate':undefined:locale }}</td>
                       <td>
                       <span *ngIf="loan.returnDate" class="badge bg-success">
-                        {{ 'MEMBERS.RETURNED' | translate }} {{ loan.returnDate | date:'mediumDate' }}
+                        {{ 'MEMBERS.RETURNED' | translate }} {{ loan.returnDate | date:'mediumDate':undefined:locale }}
                       </span>
                         <span *ngIf="!loan.returnDate && isOverdue(loan)" class="badge bg-danger">Overdue</span>
                         <span *ngIf="!loan.returnDate && !isOverdue(loan)" class="badge bg-warning text-dark">{{ 'MEMBERS.ON_LOAN' | translate }}</span>
                       </td>
+                      </ng-container>
                       <td class="text-end">
                         <button
                           *ngIf="!loan.returnDate"

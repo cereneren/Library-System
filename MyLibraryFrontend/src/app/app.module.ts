@@ -17,6 +17,14 @@ import { MemberComponent } from './pages/dashboard/member/member.component';
 import { LibrarianComponent } from './pages/dashboard/librarian/librarian.component'
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { registerLocaleData } from '@angular/common';
+import localeEn from '@angular/common/locales/en';
+import localeDe from '@angular/common/locales/de';
+import localeTr from '@angular/common/locales/tr';
+
+registerLocaleData(localeTr);
+registerLocaleData(localeDe);
+registerLocaleData(localeEn);
 
 @NgModule({
   declarations: [

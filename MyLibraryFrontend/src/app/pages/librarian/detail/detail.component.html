@@ -36,15 +36,17 @@
               <div class="col-sm-9 text-secondary">{{ librarian.email }}</div>
             </div>
             <hr>
+            <ng-container *ngIf="locale$ | async as locale">
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">{{ 'LIBRARIANS.DATE_CREATED' | translate }}</h6></div>
-              <div class="col-sm-9 text-secondary"> {{ librarian.dateCreated | date:'medium' }}</div>
+              <div class="col-sm-9 text-secondary"> {{ librarian.dateCreated | date:'mediumDate':undefined:locale }}</div>
             </div>
             <hr>
             <div class="row mb-3">
               <div class="col-sm-3"><h6 class="mb-0">{{ 'LIBRARIANS.DATE_UPDATED' | translate }}</h6></div>
-              <div class="col-sm-9 text-secondary"> {{ librarian.dateUpdated | date:'medium' }}</div>
+              <div class="col-sm-9 text-secondary"> {{ librarian.dateUpdated | date:'mediumDate':undefined:locale }}</div>
             </div>
+            </ng-container>
             <hr>
 
           </div>

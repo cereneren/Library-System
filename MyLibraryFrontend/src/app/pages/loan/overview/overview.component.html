@@ -57,15 +57,16 @@
     </tr>
     </thead>
     <tbody>
+    <ng-container *ngIf="locale$ | async as locale">
     <tr *ngFor="let l of filteredLoans">
       <td class="fw-semibold">{{ l.book.title }}</td>
       <td>{{ l.book.author || '-' }}</td>
       <td *ngIf="isLibrarian">{{ l.member?.fullName || '—' }}</td>
-      <td>{{ l.loanDate | date:'mediumDate' }}</td>
-      <td>{{ l.dueDate   | date:'mediumDate' }}</td>
+      <td>{{ l.loanDate | date:'mediumDate':undefined:locale }}</td>
+      <td>{{ l.dueDate   | date:'mediumDate':undefined:locale }}</td>
       <td>
           <span *ngIf="l.returnDate" class="badge bg-success">
-            {{ 'LOANS.RETURNED' | translate }} {{ l.returnDate | date:'mediumDate' }}
+            {{ 'LOANS.RETURNED' | translate }} {{ l.returnDate | date:'mediumDate':undefined:locale }}
           </span>
         <span *ngIf="!l.returnDate && isOverdue(l)" class="badge bg-danger">{{ 'LOANS.OVERDUE' | translate }}</span>
         <span *ngIf="!l.returnDate && !isOverdue(l)" class="badge bg-warning text-dark">{{ 'LOANS.ON_LOAN' | translate }}</span>
@@ -79,6 +80,7 @@
         </button>
       </td>
     </tr>
+    </ng-container>
     </tbody>
   </table>
 </div>

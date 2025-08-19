@@ -3,6 +3,7 @@ import { LoanService, Loan } from '../loan.service';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { I18nService } from '../../../services/i18n.service';
 
 type Role = 'LIBRARIAN' | 'MEMBER';
 
@@ -13,6 +14,7 @@ type Role = 'LIBRARIAN' | 'MEMBER';
   styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
+  locale$ = this.i18n.locale$;
   loans: Loan[] = [];
   loading = false;
   error = '';
@@ -28,7 +30,7 @@ export class OverviewComponent implements OnInit {
   get userId(): number | null { return this.session?.id ?? null; }
   get isLibrarian() { return this.role === 'LIBRARIAN'; }
 
-  constructor(private loanSvc: LoanService) {}
+  constructor(private loanSvc: LoanService, private i18n: I18nService) {}
 
   ngOnInit() { this.load(); }
 

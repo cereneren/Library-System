@@ -42,27 +42,6 @@
                   <input type="text" class="form-control" [(ngModel)]="member.email">
                 </div>
               </div>
-
-              <!-- Date Created (immutable) -->
-              <div class="row mb-3">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">{{ 'MEMBERS.DATE_CREATED' | translate }}</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  <input type="text" class="form-control" [value]="member.dateCreated | date:'yyyy-MM-dd HH:mm'" readonly>
-                </div>
-              </div>
-
-              <!-- Date Updated (immutable) -->
-              <div class="row mb-3">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">{{ 'MEMBERS.DATE_UPDATED' | translate }}</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  <input type="text" class="form-control" [value]="member.dateUpdated | date:'yyyy-MM-dd HH:mm'" readonly>
-                </div>
-              </div>
-
               <!-- Save Button -->
               <div class="row">
                 <div class="col-sm-3"></div>

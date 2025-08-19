@@ -9,12 +9,14 @@ import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
+import { I18nService } from '../../../services/i18n.service';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
 })
 export class DetailComponent implements OnInit {
+  locale$ = this.i18n.locale$;
   book?: Book | null;
   draft!: Book;                 // local editable copy
   editMode = false;
@@ -29,13 +31,23 @@ export class DetailComponent implements OnInit {
 
   private readonly PLACEHOLDER = 'assets/nocover.png';
 
+   current = 'de-DE';
+    data = {
+      selDate: new Date()
+    };
+
+    switch(newLocale: string) {
+      this.current = newLocale;
+    }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private books: BookService,
     private auth: AuthService,
     private loans: LoanService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private i18n: I18nService
   ) {}
 
   // --- i18n + toast helpers ---

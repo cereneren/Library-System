@@ -47,12 +47,13 @@
           </div>
 
           <!-- Meta -->
+          <ng-container *ngIf="locale$ | async as locale">
           <div class="mt-3 small">
-            <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.CREATED' | translate }}: {{ book.dateCreated | date:'medium' }}</div>
-            <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.UPDATED' | translate }}: {{ book.dateUpdated | date:'medium' }}</div>
+            <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.CREATED' | translate }}: {{ book.dateCreated | date:'mediumDate':undefined:locale }}</div>
+            <div class="text-secondary" *ngIf="!isMember">{{ 'BOOKS.UPDATED' | translate }}: {{ book.dateUpdated | date:'mediumDate':undefined:locale }}</div>
             <!-- Current loan due date -->
             <div *ngIf="currentLoan?.dueDate as due" class="text-secondary mb-2">
-              {{ 'LOANS.EXPECTED_DUE' | translate }}: {{ due | date:'mediumDate' }}
+              {{ 'LOANS.EXPECTED_DUE' | translate }}: {{ due | date:'mediumDate':undefined:locale }}
               <span *ngIf="isOverdue(due)" class="ms-2">
                 ({{ 'LOANS.OVERDUE' | translate }} —
                  {{ daysOverdue(due) }}
@@ -60,6 +61,7 @@
               </span>
             </div>
           </div>
+          </ng-container>
 
           <!-- Summary (read mode) -->
           <div class="mt-4" *ngIf="!editMode">
