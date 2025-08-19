@@ -30,7 +30,7 @@ export class MemberService {
   }
 
   createMember(member: MemberCreateRequest): Observable<Member> {
-    return this.http.post<Member>('./api/members', member).pipe(
+    return this.http.post<Member>('./api/auth/signup', member).pipe(
       catchError(this.handleError)
     );
   }
