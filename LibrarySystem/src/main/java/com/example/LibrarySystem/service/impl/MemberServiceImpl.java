@@ -25,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> getAllMembers() {
-        return userRepository.findAllByType(Member.class);
+        return userRepository.findAllEnabledMembers();
     }
 
     @Override
@@ -36,9 +36,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(long id) {
-        userRepository.findByIdAndType(id, Member.class).orElseThrow(() ->
+        User user = userRepository.findByIdAndType(id, Member.class).orElseThrow(() ->
                 new ResourceNotFoundException("Member", "Id", id));
-        userRepository.deleteById(id);
+        user.setEnabled(false);
+        userRepository.save(user);
     }
 
     @Override

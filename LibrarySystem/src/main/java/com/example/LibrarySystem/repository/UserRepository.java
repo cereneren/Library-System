@@ -20,10 +20,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Member> findAllMembers();
 
     // Find all users of specific type using JPQL TYPE operator
-    @Query("SELECT u FROM User u WHERE TYPE(u) = :type")
-    <T extends User> List<T> findAllByType(@Param("type") Class<T> type);
+    @Query("SELECT m FROM Member m WHERE m.enabled = true")
+    List<Member> findAllEnabledMembers();
 
-    // Find specific user by ID and type
+    // Find spesific user by ID and type
     @Query("SELECT u FROM User u WHERE u.id = :id AND TYPE(u) = :type")
     <T extends User> Optional<T> findByIdAndType(@Param("id") Long id,
                                                  @Param("type") Class<T> type);

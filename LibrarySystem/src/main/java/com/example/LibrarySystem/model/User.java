@@ -34,7 +34,7 @@ public abstract class User implements UserDetails {
     private String email;
 
     private String password;
-    private boolean enabled;
+    private boolean enabled = true;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
