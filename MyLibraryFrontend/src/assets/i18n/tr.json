@@ -131,7 +131,10 @@
     "ACTIVE_LOANS": "Aktif",
     "TOTAL_LOANS": "Toplam",
     "MATCH_ERROR": "Bu kritere uygun üye bulunamadı ",
-    "SEARCH_BAR": "Üye ara..."
+    "SEARCH_BAR": "Üye ara...",
+    "PASSWORD_TOO_SHORT": "Şifre en az 6 karakter olmalı.",
+    "MISSING_PASSWORD": "Lütfen bir şifre giriniz.",
+    "MISSING_FULL_NAME": "Lütfen bir isim giriniz."
   },
   "COMMON": {
     "INFO": "Bilgi",

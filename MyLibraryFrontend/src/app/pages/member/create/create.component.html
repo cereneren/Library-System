@@ -29,6 +29,7 @@
               <form (ngSubmit)="createMember()" #f="ngForm" novalidate class="space-y-4">
 
                 <!-- Full Name -->
+                <!-- Full Name -->
                 <div class="mb-3 mt-3">
                   <h6 class="mb-2">{{ 'MEMBERS.FULL_NAME' | translate }}</h6>
                   <input
@@ -37,12 +38,19 @@
                     #fullNameCtrl="ngModel"
                     required
                     minlength="3"
-                    class="form-control"/>
-                  <!-- optional, subtle helper instead of red -->
+                    class="form-control"
+                  />
 
+                  <!-- Error messages -->
+                  <div class="text-danger mt-1" *ngIf="fullNameCtrl.invalid && (fullNameCtrl.touched || f.submitted)">
+                    <small *ngIf="fullNameCtrl.errors?.['required']">
+                      {{ 'MEMBERS.MISSING_FULL_NAME' | translate }}
+                    </small>
+                  </div>
                 </div>
 
-                <!-- Email (required + valid) -->
+                <!-- Email -->
+                <!-- Email -->
                 <div class="mb-3 mt-3">
                   <h6 class="mb-2">{{ 'MEMBERS.EMAIL' | translate }}</h6>
                   <input
@@ -51,16 +59,20 @@
                     [(ngModel)]="email"
                     #emailCtrl="ngModel"
                     required
-                    email
-                    inputmode="email"
-                    autocomplete="email"
-                    class="form-control"/>
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    class="form-control"
+                  />
+
+                  <!-- Error messages -->
+                  <div class="text-danger mt-1" *ngIf="emailCtrl.invalid && (emailCtrl.touched || f.submitted)">
+                    <small *ngIf="emailCtrl.errors?.['required']">{{ 'MEMBERS.MISSING_EMAIL' | translate }}</small>
+                    <small *ngIf="emailCtrl.errors?.['pattern']">{{ 'MEMBERS.INVALID_EMAIL' | translate }}</small>
+                  </div>
                 </div>
 
-                <!-- Password with show/hide -->
+                <!-- Password -->
                 <div class="mb-3 mt-3">
                   <h6 class="mb-2">{{ 'MEMBERS.PASSWORD' | translate }}</h6>
-
                   <div class="input-group">
                     <input
                       [type]="showPassword ? 'text' : 'password'"
@@ -70,31 +82,22 @@
                       required
                       minlength="6"
                       autocomplete="new-password"
-                      class="form-control"/>
+                      class="form-control"
+                    />
 
                     <button
                       type="button"
                       class="btn btn-outline-secondary"
                       (click)="showPassword = !showPassword"
-                      [attr.aria-pressed]="showPassword"
-                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
-                      <ng-container *ngIf="!showPassword; else hideIcon">
-                        <!-- eye icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                             fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8"/>
-                          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
-                        </svg>
-                      </ng-container>
-                      <ng-template #hideIcon>
-                        <!-- eye-slash icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                             fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
-                          <path d="M13.359 11.238C15.06 9.99 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.78.78A6.018 6.018 0 0 1 8 3.5c3.179 0 5.354 2.727 6.276 4.001a12.027 12.027 0 0 1-1.535 1.99l-.382.382z"/>
-                          <path d="M11.297 9.176a3.5 3.5 0 0 0-4.473-4.473l.86.86a2.5 2.5 0 0 1 2.752 2.752l.861.861zM3.35 5.47l-.7-.7-.708.707.7.7A12.3 12.3 0 0 0 0 8s3 5.5 8 5.5a7.03 7.03 0 0 0 3.252-.8l.7.7.707-.707-.7-.7a12.035 12.035 0 0 0 2.05-2.116l-.76-.76a10.944 10.944 0 0 1-2.153 2.14A6.02 6.02 0 0 1 8 12.5C4.821 12.5 2.646 9.773 1.724 8.5a12.029 12.029 0 0 1 1.626-1.975z"/>
-                        </svg>
-                      </ng-template>
+                    >
+                      {{ showPassword ? 'Hide' : 'Show' }}
                     </button>
+                  </div>
+
+                  <!-- Error message under box -->
+                  <div class="text-danger mt-1" *ngIf="passwordCtrl.invalid && (passwordCtrl.touched || f.submitted)">
+                    <small *ngIf="passwordCtrl.errors?.['required']">{{ 'MEMBERS.MISSING_PASSWORD' | translate }}</small>
+                    <small *ngIf="passwordCtrl.errors?.['minlength']">{{ 'MEMBERS.PASSWORD_TOO_SHORT' | translate }}</small>
                   </div>
                 </div>
 

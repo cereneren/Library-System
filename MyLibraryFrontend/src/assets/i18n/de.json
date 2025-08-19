@@ -130,7 +130,10 @@
     "DELETE_FAILED": "Löschen fehlgeschlagen. Bitte erneut versuchen.",
     "ACTIVE_LOANS": "Aktiv",
     "TOTAL_LOANS": "Gesamt",
-    "MATCH_ERROR": "Keine Mitglieder gefunden "
+    "MATCH_ERROR": "Keine Mitglieder gefunden ",
+    "PASSWORD_TOO_SHORT": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+    "MISSING_PASSWORD": "Bitte geben Sie ein Passwort ein.",
+    "MISSING_FULL_NAME": "Bitte geben Sie einen Namen ein."
   },
   "COMMON": {
     "INFO": "Info",

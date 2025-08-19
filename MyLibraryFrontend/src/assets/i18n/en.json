@@ -131,7 +131,10 @@
     "ACTIVE_LOANS": "Active",
     "TOTAL_LOANS": "Total",
     "MATCH_ERROR": "No members found ",
-    "SEARCH_BAR": "Search members..."
+    "SEARCH_BAR": "Search members...",
+    "PASSWORD_TOO_SHORT": "Password must be at least 6 characters.",
+    "MISSING_PASSWORD": "Please enter a password.",
+    "MISSING_FULL_NAME": "Please enter a name."
   },
   "COMMON": {
     "INFO": "Info",
