@@ -3,7 +3,10 @@ package com.example.LibrarySystem.controller;
 import com.example.LibrarySystem.dto.CoverUrlRequest;
 import com.example.LibrarySystem.exception.ResourceNotFoundException;
 import com.example.LibrarySystem.model.Book;
+import com.example.LibrarySystem.model.Loan;
+import com.example.LibrarySystem.repository.BookRepository;
 import com.example.LibrarySystem.service.BookService;
+import com.example.LibrarySystem.service.LoanService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
@@ -21,9 +24,13 @@ import java.util.List;
 @RequestMapping("/api/books")
 public class BookController {
     private BookService bookService;
+    private LoanService loanService;
+    private BookRepository bookRepository;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, LoanService loanService, BookRepository bookRepository) {
         this.bookService = bookService;
+        this.loanService = loanService;
+        this.bookRepository = bookRepository;
     }
 
     // POST or PUT: upload image file
@@ -133,6 +140,26 @@ public class BookController {
         } catch (IOException | ChangeSetPersister.NotFoundException ioe) {
             throw new BadRequestException("Failed to read image");
         }
+    }
+
+    @GetMapping("/{id}/loans")
+    public ResponseEntity<List<Loan>> getBookLoans(@PathVariable("id") long bookId) {
+        List<Loan> loans = loanService.getLoansByBookId(bookId);
+        return ResponseEntity.ok(loans);
+    }
+
+
+    @GetMapping("/{id}/loan")
+    public ResponseEntity<Loan> getActiveLoan(@PathVariable("id") Long bookId) {
+        // 404 if the book doesn't exist
+        if (!bookRepository.existsById(bookId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 204 if no active loan, else 200 with the loan
+        return loanService.getActiveLoanForBook(bookId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
 }

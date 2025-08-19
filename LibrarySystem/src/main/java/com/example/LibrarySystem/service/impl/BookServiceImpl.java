@@ -81,7 +81,6 @@ public class BookServiceImpl implements BookService {
         b.setCoverFilename(file.getOriginalFilename());
         // repo.save(b); // not needed with managed entity inside @Transactional
     }
-
 }
 
 

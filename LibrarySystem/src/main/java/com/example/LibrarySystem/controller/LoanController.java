@@ -54,6 +54,5 @@ public class LoanController {
         loanService.deleteLoan(id);
         return new ResponseEntity<String>("Loan deleted succesfully.", HttpStatus.OK);
     }
-
      */
 }

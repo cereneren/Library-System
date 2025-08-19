@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,18 @@ public class LoanServiceImpl implements LoanService {
             throw new EntityNotFoundException("Member not found with id: " + memberId);
         }
         return loanRepository.findLoansByMemberIdWithBooks(memberId);
+    }
+
+    @Transactional
+    public List<Loan> getLoansByBookId(Long bookId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw new EntityNotFoundException("Book not found with id: " + bookId);
+        }
+        return loanRepository.findLoansByBookIdWithMembers(bookId);
+    }
+
+    public Optional<Loan> getActiveLoanForBook(Long bookId) {
+        return loanRepository.findFirstByBook_IdAndReturnDateIsNullOrderByDueDateAsc(bookId);
     }
 
     @Transactional

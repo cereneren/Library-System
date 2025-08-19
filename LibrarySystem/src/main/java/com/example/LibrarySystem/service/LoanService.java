@@ -5,20 +5,13 @@ import com.example.LibrarySystem.model.Member;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface LoanService {
-    /*
-    Loan addLoan(Loan loan);
-
-    Loan getLoanById(long id);
-    List<Loan> getLoansByMember(Member member);
-    Loan returnLoan(long id);
-    boolean isOverdue(long id);
-    void deleteLoan(long id);
-
-     */
     Loan createLoan(Long bookId, Long memberId);
     List<Loan> getLoansByMemberId(Long memberId);
+    List<Loan> getLoansByBookId(Long bookId);
+    Optional<Loan> getActiveLoanForBook(Long bookId);
     void returnLoan(Long loanId);
     List<Loan> getAllLoans();
 }

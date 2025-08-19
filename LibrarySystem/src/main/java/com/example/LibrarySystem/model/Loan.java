@@ -1,6 +1,7 @@
 package com.example.LibrarySystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,11 +22,13 @@ public class Loan {
 
     // which book is being loaned
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"loans"})
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     // which member borrowed it
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"loans"})
     @JoinColumn(name = "member_id", nullable = false)
     private User member;
 
