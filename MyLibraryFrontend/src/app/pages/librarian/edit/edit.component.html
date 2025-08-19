@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="main-body">
+
+    <!-- first row: two cards, same height -->
+    <div class="row gutters-sm mt-5 align-items-stretch">
+
+      <!-- left “avatar” card -->
+      <div class="col-md-4 mb-3">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column align-items-center text-center mt-5">
+            <img src="assets/profile-icon.png"
+                 alt="user"
+                 class="rounded-circle mb-3"
+                 width="150">
+            <h4>{{ member.fullName || '—' }}</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- right “details” card -->
+      <div class="col-md-8 mb-3" *ngIf="member">
+        <div class="card h-100">
+          <div class="card">
+            <div class="card-body">
+
+              <!-- Full Name -->
+              <div class="row mb-3">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">{{ 'MEMBERS.FULL_NAME' | translate }}</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  <input type="text" class="form-control" [(ngModel)]="member.fullName">
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="row mb-3">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">{{ 'MEMBERS.EMAIL' | translate }}</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  <input type="text" class="form-control" [(ngModel)]="member.email">
+                </div>
+              </div>
+              <!-- Save Button -->
+              <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-9 text-secondary">
+                  <button class="btn btn-primary me-2" type="button" (click)="save()" [disabled]="isSubmitting">{{ 'MEMBERS.SAVE' | translate }}</button>
+                  <a class="btn btn-secondary" [routerLink]="['..','detail']">{{ 'MEMBERS.CANCEL' | translate }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

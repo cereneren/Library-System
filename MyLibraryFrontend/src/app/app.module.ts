@@ -12,7 +12,7 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FormsModule} from '@angular/forms'
 import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'
-import { CustomeInterceptor } from './services/custome.interceptor';
+import { AuthInterceptor } from './services/auth.interceptor';
 import { MemberComponent } from './pages/dashboard/member/member.component';
 import { LibrarianComponent } from './pages/dashboard/librarian/librarian.component'
 import { TranslateModule } from '@ngx-translate/core';
@@ -53,7 +53,7 @@ registerLocaleData(localeEn);
   providers: [
   {
     provide: HTTP_INTERCEPTORS,
-    useClass: CustomeInterceptor,
+    useClass: AuthInterceptor,
     multi: true
   }
   ],

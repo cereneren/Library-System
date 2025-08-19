@@ -5,7 +5,8 @@ import {LayoutComponent} from './pages/layout/layout.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {LibrarianComponent} from './pages/dashboard/librarian/librarian.component';
 import {MemberComponent} from './pages/dashboard/member/member.component';
-
+import { LibrarianGuard } from './core/guards/librarian.guard';
+import { MemberGuard } from './core/guards/member.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,14 +30,14 @@ const routes: Routes = [
         component: DashboardComponent,
         children: [
           {
-          path: 'member',
+          path: 'member', canActivate: [MemberGuard],
           component: MemberComponent,
           loadChildren: () =>
                 import('./pages/dashboard/member/member-routing.module')
                   .then(m => m.MemberRoutingModule)
           },
           {
-          path: 'librarian',
+          path: 'librarian', canActivate: [LibrarianGuard],
           component: LibrarianComponent,
           loadChildren: () =>
                 import('./pages/dashboard/librarian/librarian-routing.module')

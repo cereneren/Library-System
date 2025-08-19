@@ -62,19 +62,29 @@ public class SecurityConfig {
 
                 // authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        /*
+
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/books/*/cover").permitAll()
+                        .requestMatchers(HttpMethod.GET,    "/api/books/**").hasAnyRole("LIBRARIAN", "MEMBER")
                         .requestMatchers(HttpMethod.POST,   "/api/books/**").hasRole("LIBRARIAN")
-                        .requestMatchers(HttpMethod.PUT,    "/api/books/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/books/**").hasAnyRole("LIBRARIAN", "MEMBER")
                         .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("LIBRARIAN")
                         .requestMatchers(HttpMethod.POST,   "/api/members/**").hasRole("LIBRARIAN")
-                        .requestMatchers(HttpMethod.PUT,    "/api/members/**").hasRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/members/**").hasAnyRole("LIBRARIAN", "MEMBER")
                         .requestMatchers(HttpMethod.DELETE, "/api/members/**").hasRole("LIBRARIAN")
-                        .requestMatchers(HttpMethod.GET,    "/api/members/**").hasAnyRole("LIBRARIAN")
-                        .requestMatchers(HttpMethod.GET,    "/api/books/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,    "/api/members/**").hasAnyRole("LIBRARIAN", "MEMBER")
+                        .requestMatchers(HttpMethod.GET,    "/api/users/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.POST,    "/api/users/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/users/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE,    "/api/users/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.GET,    "/api/loans/**").hasAnyRole("LIBRARIAN", "MEMBER")
+                        .requestMatchers(HttpMethod.POST,    "/api/loans/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT,    "/api/loans/**").hasAnyRole("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE,    "/api/loans/**").hasAnyRole("LIBRARIAN")
 
-                         */
-                        .anyRequest().permitAll()
+
+
+
                 )
 
                 // add JWT filter before UsernamePasswordAuthenticationFilter

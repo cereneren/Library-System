@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MemberComponent }       from './member.component';
+import { LibrarianGuard } from '../../../core/guards/librarian.guard';
+import { MemberGuard } from '../../../core/guards/member.guard';
 
 const routes: Routes = [
   // Redirect empty path directly to books
@@ -8,17 +10,17 @@ const routes: Routes = [
 
   // Define child routes
   {
-    path: 'books',
+    path: 'books', canActivate: [MemberGuard],
     loadChildren: () =>
       import('../../book/book-routing.module').then(m => m.BookRoutingModule)
   },
   {
-    path: 'loans',
+    path: 'loans', canActivate: [MemberGuard],
     loadChildren: () =>
       import('../../loan/loan-routing.module').then(m => m.LoanRoutingModule)
   },
   {
-    path: 'info',
+    path: 'info', canActivate: [MemberGuard],
     loadChildren: () =>
       import('../../member/member-routing.module').then(m => m.MemberRoutingModule)
   },

@@ -56,7 +56,7 @@ export class LoginComponent {
           }
 
           // Persist compact user object for later pages (Loans, etc.)
-          localStorage.setItem('user', JSON.stringify({ id, role }));
+          localStorage.setItem('user', JSON.stringify({ id, role, token }));
 
           // Route by role
           if (role === 'LIBRARIAN') {
