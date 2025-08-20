@@ -1,7 +1,7 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { HttpClientModule }     from '@angular/common/http';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 import { MemberRoutingModule }  from './member-routing.module';
 
 import { OverviewComponent }    from './overview/overview.component';
@@ -24,6 +24,7 @@ import { MemberComponent } from './member.component';
   imports: [
     CommonModule,         // *ngIf, *ngFor, etc.
     HttpClientModule,     // for any HTTP calls
+    NgxPaginationModule,
     MemberRoutingModule,   // your routes.forChild(...)
     FormsModule,
     TranslateModule

@@ -17,6 +17,10 @@ export class OverviewComponent implements OnInit {
   filteredBooks: Book[] = []; // keep the array approach
   isMember = false;
   loading = false;
+
+  pageSize = 12;
+  currentPage = 1;
+
   // store the i18n key, use the |translate pipe in template
   errorKey?: string;
 
@@ -58,6 +62,7 @@ export class OverviewComponent implements OnInit {
 
   onQueryChange(value: string) {
     this.search$.next(value || '');
+    this.currentPage = 1;
   }
 
   clearQuery() {
@@ -68,22 +73,19 @@ export class OverviewComponent implements OnInit {
   // Call this when a checkbox changes
   onToggleFilters() {
     this.filteredBooks = this.filterBooks(this.query.trim().toLowerCase());
+    this.currentPage = 1;
   }
 
   getAllBooks() {
     this.loading = true;
     this.bookService.getAllBooks().subscribe({
-      next: (books: Book[]) => {
-        this.books = books ?? [];
-        // initialize with current query + filters
-        this.filteredBooks = this.filterBooks(this.query.trim().toLowerCase());
-        this.loading = false;
+      next: (books) => {
+        this.books = books.sort(
+          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+        );
+        this.filteredBooks = [...this.books];
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error loading books:', error.message);
-        this.errorKey = 'BOOKS.LOAD_FAILED';
-        this.loading = false;
-      }
+      error: (err) => console.error(err)
     });
   }
 
@@ -121,4 +123,31 @@ export class OverviewComponent implements OnInit {
     if (img.src.includes(this.PLACEHOLDER)) return; // avoid loop
     img.src = this.PLACEHOLDER;
   }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredBooks.length / this.pageSize));
+  }
+
+  get totalPagesArray(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedBooks() {
+    // clamp currentPage if data size changed (filters/search)
+    const clamped = Math.min(this.currentPage, this.totalPages);
+    if (clamped !== this.currentPage) this.currentPage = clamped;
+
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredBooks.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+
+    // scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
 }

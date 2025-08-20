@@ -21,6 +21,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
 import localeDe from '@angular/common/locales/de';
 import localeTr from '@angular/common/locales/tr';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 registerLocaleData(localeTr);
 registerLocaleData(localeDe);
@@ -38,6 +39,7 @@ registerLocaleData(localeEn);
   imports: [
     BrowserModule,
     AppRoutingModule,
+    NgxPaginationModule,
     MemberModule,
     LoanModule,
     FormsModule,
