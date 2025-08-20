@@ -1,18 +1,45 @@
 <div class="container">
-  <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 mb-4 gap-2">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 mb-4">
     <h2 class="mb-0">{{ 'BOOKS.ALL_BOOKS' | translate }}</h2>
 
-    <div class="input-group" style="width: 360px; max-width: 100%; min-height:45px;">
-      <input
-        type="text"
-        class="form-control"
-        [placeholder]="'BOOKS.SEARCH_BAR' | translate"
-        [(ngModel)]="query"
-        (ngModelChange)="onQueryChange($event)"
-      />
-      <button class="btn btn-outline-secondary" type="button" (click)="clearQuery()" [disabled]="!query">
-        ✕
-      </button>
+    <!-- Search bar and filter -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="input-group" style="width: 360px; max-width: 100%; min-height:45px;">
+        <input
+          type="text"
+          class="form-control"
+          [placeholder]="'BOOKS.SEARCH_BAR' | translate"
+          [(ngModel)]="query"
+          (ngModelChange)="onQueryChange($event)"
+        />
+        <button class="btn btn-outline-secondary" type="button" (click)="clearQuery()" [disabled]="!query">
+          ✕
+        </button>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-filter"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item">
+            <label class="form-check mb-0">
+              <input type="checkbox" class="form-check-input"
+                     [(ngModel)]="filters.available"
+                     (change)="onToggleFilters()">
+              <span class="ms-1">{{ 'BOOKS.AVAILABLE' | translate }}</span>
+            </label>
+          </a></li>
+          <li><a class="dropdown-item">
+            <label class="form-check mb-0">
+              <input type="checkbox" class="form-check-input"
+                     [(ngModel)]="filters.loanedOut"
+                     (change)="onToggleFilters()">
+              <span class="ms-1">{{ 'BOOKS.LOANED_OUT' | translate }}</span>
+            </label>
+          </a></li>
+        </ul>
+      </div>
     </div>
 
     <!-- Hide for MEMBER -->
@@ -28,29 +55,22 @@
     {{ 'BOOKS.MATCH_ERROR' | translate }}“{{ query }}”.
   </div>
 
-  <div class="row" *ngIf="filteredBooks.length > 0">
-    <div class="col-md-4 mb-4" *ngFor="let book of filteredBooks">
-      <div class="card h-100">
-        <img
-          *ngIf="book.id"
-          class="card-img-top book-cover"
-          [src]="coverUrl(book)"
-          (error)="onImgError($event)"
-          [alt]="book.title + ' cover'">
+  <!-- Error -->
+  <div *ngIf="errorKey" class="alert alert-danger">
+    {{ errorKey | translate }}
+  </div>
 
-        <div class="card-body d-flex flex-column">
-          <h5 class="text-center card-title">{{ book.title }}</h5>
-          <p class="text-center card-text flex-grow-1">{{ book.author }}</p>
-          <div class="text-center">
-            <span class="badge  mb-3"
-                  [ngClass]="book.available ? 'bg-success' : 'bg-danger'">
-              {{ book.available ? ('BOOKS.AVAILABLE' | translate) : ('BOOKS.LOANED_OUT' | translate) }}
-            </span>
-          </div>
-
-          <a [routerLink]="['..', book.id, 'detail']" class="btn btn-secondary mt-auto">
-            {{ 'BOOKS.DETAILS' | translate }}
-          </a>
+  <!-- Book cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-lg-4" *ngFor="let book of filteredBooks">
+      <div class="card h-100 shadow-sm">
+        <img class="card-img-top" [src]="coverUrl(book)" (error)="onImgError($event)" alt="cover">
+        <div class="card-body">
+          <h5 class="card-title mb-1">{{ book.title }}</h5>
+          <p class="text-muted mb-2">{{ book.author }}</p>
+          <span class="badge" [ngClass]="book.available ? 'bg-success' : 'bg-secondary'">
+          {{ book.available ? ('BOOKS.AVAILABLE' | translate) : ('BOOKS.LOANED_OUT' | translate) }}
+        </span>
         </div>
       </div>
     </div>

@@ -134,7 +134,8 @@
     "SEARCH_BAR": "Üye ara...",
     "PASSWORD_TOO_SHORT": "Şifre en az 6 karakter olmalı.",
     "MISSING_PASSWORD": "Lütfen bir şifre giriniz.",
-    "MISSING_FULL_NAME": "Lütfen bir isim giriniz."
+    "MISSING_FULL_NAME": "Lütfen bir isim giriniz.",
+    "CANNOT_DELETE_ACTIVE_LOANS": "Lütfen önce aktif ödünç işlemlerini tamamlayın."
   },
   "COMMON": {
     "INFO": "Bilgi",

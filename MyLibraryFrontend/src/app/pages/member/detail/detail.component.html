@@ -64,11 +64,13 @@
                   class="btn btn-danger btn-sm"
                   title="Delete member"
                   (click)="onDelete(member)"
-                  [disabled]="member.id == null || deleting[member.id]"
-                >
+                  [disabled]="member.id == null || deleting[member.id] || activeLoans > 0">
                   <i class="bi bi-trash-fill"></i>
-                  <ng-template #delBusy>{{ 'MEMBERS.DELETING' | translate }}</ng-template>
                 </button>
+
+                <small *ngIf="activeLoans > 0" class="text-muted d-block mt-1">
+                  {{ 'MEMBERS.CANNOT_DELETE_ACTIVE_LOANS' | translate }}
+                </small>
               </div>
             </div>
 

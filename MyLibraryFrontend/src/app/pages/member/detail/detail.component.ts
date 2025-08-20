@@ -209,9 +209,21 @@ export class DetailComponent implements OnInit {
       });
   }
 
+  // detail.component.ts
   onDelete(member: Member) {
     const id = member.id as number | undefined;
     if (id == null) return;
+
+    // 🔒 Abort if there are active loans
+    if (this.activeLoans > 0) {
+      Swal.fire({
+        icon: 'info',
+        title: this.t('MEMBERS.CANNOT_DELETE_TITLE'),      // e.g. "Cannot delete"
+        text:  this.t('MEMBERS.CANNOT_DELETE_ACTIVE_LOANS', // e.g. "This member has active loans. Return them first."
+                      { count: this.activeLoans })
+      });
+      return;
+    }
 
     Swal.fire({
       icon: 'warning',
@@ -229,13 +241,9 @@ export class DetailComponent implements OnInit {
         .subscribe({
           next: () => {
             this.toast.fire({ icon: 'success', title: this.t('MEMBERS.DELETE_SUCCESS') });
-            // navigate back to list
-            this.router.navigate(['../../'], {
-              relativeTo: this.route,
-              queryParams: { deleted: id }
-            });
+            this.router.navigate(['../../'], { relativeTo: this.route, queryParams: { deleted: id } });
           },
-          error: (err: HttpErrorResponse) => {
+          error: (err) => {
             const msg = typeof err.error === 'string'
               ? err.error
               : err.error?.message || this.t('MEMBERS.DELETE_FAILED');
@@ -244,4 +252,5 @@ export class DetailComponent implements OnInit {
         });
     });
   }
+
 }
