@@ -19,6 +19,7 @@ export class OverviewComponent implements OnInit {
   loading = false;
   error = '';
   returning: Record<number, boolean> = {};
+  page: number = 1; // current page
 
   filters = { returned: true, onLoan: true, overdue: true };
 
@@ -138,5 +139,10 @@ export class OverviewComponent implements OnInit {
    setAllFilters(v: boolean) {
      this.filters = { returned: v, onLoan: v, overdue: v };
    }
+
+  onPageChange(page: number) {
+    this.page = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
 }

@@ -13,7 +13,7 @@ export class OverviewComponent implements OnInit {
   members: Member[] = [];
   deleting: Record<number, boolean> = {};
   deleteError = '';
-  p: number = 1; // current page
+  page: number = 1; // current page
   searchTerm = '';
 
   constructor(public memberService: MemberService) {}
@@ -62,13 +62,19 @@ export class OverviewComponent implements OnInit {
     );
   }
 
-  clearSearch() {
-    this.searchTerm = '';
-  }
-
 
   onPageChange(page: number) {
-    this.p = page;
+    this.page = page;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.page = 1;
+  }
+
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+    this.page = 1; // jump to first page on any search change
   }
 }

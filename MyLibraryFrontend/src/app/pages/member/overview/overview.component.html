@@ -11,6 +11,7 @@
           placeholder="{{ 'MEMBERS.SEARCH_BAR' | translate }}"
           aria-label="Search members"
           [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
           name="memberSearch"
         >
         <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()" [disabled]="!searchTerm">
@@ -34,7 +35,9 @@
     {{ 'MEMBERS.MATCH_ERROR' | translate }} “{{ searchTerm }}”.
   </div>
 
-  <div class="card bg-light mb-4 mx-auto w-75 position-relative" *ngFor="let member of displayedMembers  | paginate : { itemsPerPage: 6, currentPage: p }">
+  <div class="card bg-light mb-4 mx-auto w-75 position-relative"
+       *ngFor="let member of displayedMembers
+              | paginate: { itemsPerPage: 3, currentPage: page, id: 'memberPager' }">
 
     <!-- Optional: friendly error under the card list -->
     <div *ngIf="deleteError" class="alert alert-danger w-75 mx-auto mt-3">{{ deleteError }}</div>
@@ -59,10 +62,58 @@
     </div>
   </div>
 
-  <pagination-controls
-    *ngIf="displayedMembers.length > 6"
-    class="d-flex justify-content-center"
-    (pageChange)="onPageChange($event)">
-  </pagination-controls>
+  <pagination-template
+    *ngIf="displayedMembers.length > 3"
+    #api="paginationApi"
+    [id]="'memberPager'"
+    (pageChange)="page = $event">
+
+    <nav class="d-flex justify-content-center mt-3" aria-label="Members pagination">
+      <ul class="pagination mb-0">
+
+        <!-- First -->
+        <li class="page-item" [class.disabled]="api.isFirstPage()">
+          <button class="page-link" (click)="api.setCurrent(1)">
+            <i class="bi bi-chevron-double-left" aria-hidden="true"></i>
+            <span class="visually-hidden">First</span>
+          </button>
+        </li>
+
+        <!-- Prev -->
+        <li class="page-item" [class.disabled]="api.isFirstPage()">
+          <button class="page-link" (click)="api.previous()">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            <span class="visually-hidden">Previous</span>
+          </button>
+        </li>
+
+        <!-- Numbers -->
+        <li class="page-item"
+            *ngFor="let pg of api.pages"
+            [class.active]="api.getCurrent() === pg.value">
+          <button class="page-link" (click)="api.setCurrent(pg.value)">
+            {{ pg.label }}
+          </button>
+        </li>
+
+        <!-- Next -->
+        <li class="page-item" [class.disabled]="api.isLastPage()">
+          <button class="page-link" (click)="api.next()">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </li>
+
+        <!-- Last -->
+        <li class="page-item" [class.disabled]="api.isLastPage()">
+          <button class="page-link" (click)="api.setCurrent(api.getLastPage())">
+            <i class="bi bi-chevron-double-right" aria-hidden="true"></i>
+            <span class="visually-hidden">Last</span>
+          </button>
+        </li>
+
+      </ul>
+    </nav>
+  </pagination-template>
 
 </div>
