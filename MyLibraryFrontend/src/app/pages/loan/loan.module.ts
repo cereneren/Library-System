@@ -11,6 +11,7 @@ import { EditComponent }        from './edit/edit.component';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoanService }        from './loan.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { LoanService }        from './loan.service';
     HttpClientModule,     // for any HTTP calls
     LoanRoutingModule,   // your routes.forChild(...)
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    NgxPaginationModule
   ],
   providers: [
     LoanService         // so constructor(public loanService) works

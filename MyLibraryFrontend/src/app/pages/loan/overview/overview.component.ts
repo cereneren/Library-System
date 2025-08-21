@@ -145,4 +145,11 @@ export class OverviewComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  clearSearch() {
+    this.page = 1;
+  }
+
+  onSearchChange(term: string) {
+    this.page = 1; // jump to first page on any search change
+  }
 }

@@ -27,6 +27,7 @@ export class DetailComponent implements OnInit {
   books: Book[] = [];
   loansLoading = false;
   returning: Record<number, boolean> = {};
+  page: number = 1; // current page
 
   selectedMemberId: number | null = null;
   selectedBookId: number | null = null;
@@ -252,5 +253,21 @@ export class DetailComponent implements OnInit {
         });
     });
   }
+  onPageChange(page: number) {
+    this.page = page;
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 0);
+  }
 
+  clearSearch() {
+    this.page = 1;
+  }
+
+  onSearchChange(term: string) {
+    this.page = 1; // jump to first page on any search change
+  }
 }
