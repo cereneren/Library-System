@@ -32,6 +32,8 @@ export class DetailComponent implements OnInit {
   selectedMemberId: number | null = null;
   selectedBookId: number | null = null;
   borrowing = false;
+  bookQuery = '';
+  selectedBookTitle: string | null = null;
 
   // legacy string holders (not used for popups anymore, but kept if your template references them)
   borrowSuccess = '';
@@ -89,7 +91,11 @@ export class DetailComponent implements OnInit {
   // ---------- lifecycle ----------
   ngOnInit(): void {
     this.getAllMembers();
-    this.getAllBooks();
+
+    const session = JSON.parse(localStorage.getItem('user') || 'null');
+    if (session?.role === 'LIBRARIAN') {
+      this.getAllBooks();
+    }
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -270,4 +276,17 @@ export class DetailComponent implements OnInit {
   onSearchChange(term: string) {
     this.page = 1; // jump to first page on any search change
   }
+
+  get filteredBooks() {
+    const q = (this.bookQuery || '').toLowerCase().trim();
+    return !q
+      ? this.availableBooks
+      : this.availableBooks.filter(b => (b.title || '').toLowerCase().includes(q));
+  }
+
+  chooseBook(b: { id: number; title: string }) {
+    this.selectedBookId = b.id;
+    this.selectedBookTitle = b.title;
+  }
+
 }

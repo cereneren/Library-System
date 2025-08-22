@@ -15,10 +15,10 @@
           <li *ngFor="let lang of languages">
             <button class="dropdown-item d-flex align-items-center justify-content-between gap-3 rounded-3"
                     (click)="setLang(lang.value)">
-        <span class="d-flex align-items-center gap-2">
-          <i class="flag" [ngClass]="'flag-' + lang.flag"></i>
-          <span class="text-capitalize">{{ lang.native }}</span>
-        </span>
+              <span class="d-flex align-items-center gap-2">
+                <i class="flag" [ngClass]="'flag-' + lang.flag"></i>
+                <span class="text-capitalize">{{ lang.native }}</span>
+              </span>
             </button>
           </li>
         </ul>

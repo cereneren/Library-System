@@ -42,10 +42,15 @@ public class AuthenticationService {
     }
 
     public String login(LoginDto dto, JwtUtil jwtUtil) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
-        var userDetails = repo.findByEmail(dto.email()).get();
-        return jwtUtil.generateToken(userDetails);
+        var auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.email(), dto.password())
+        );
+
+        // principal implements UserDetails (e.g., your Member)
+        var principal = (org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal();
+
+        return jwtUtil.generateToken(principal);
     }
+
 }
 

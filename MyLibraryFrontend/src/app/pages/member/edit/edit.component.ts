@@ -7,10 +7,9 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-member-edit',
   templateUrl: './edit.component.html',
-  styleUrl: './edit.component.css'
+  styleUrls: ['./edit.component.css']   // <- plural
 })
 export class EditComponent implements OnInit {
-
   member: Member = { id: 0, fullName: '', email: '', password: '', dateCreated: '', dateUpdated: ''};
   isSubmitting = false;
 
@@ -26,30 +25,37 @@ export class EditComponent implements OnInit {
       console.error('No member ID in route');
       return;
     }
-
     this.memberService.getMemberDetail(id).subscribe({
-      next: (m: Member) => this.member = m,
+      next: (m) => this.member = m,
       error: (err) => console.error('Failed to load member', err)
     });
   }
 
-   async save() {
-      this.isSubmitting = true;
-      const payload: Member = {
-        id: this.member.id,
-        fullName: this.member.fullName?.trim() ?? '',
-        email: this.member.email?.trim() ?? ''
-      } as Member;
+  async save() {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
 
-      try {
-        await firstValueFrom(this.memberService.updateMember(payload));
-        await this.router.navigate(['..','detail'], { relativeTo: this.route });
-      } catch (e) {
-        console.error('Update failed', e);
-      } finally {
-        this.isSubmitting = false;
+    const payload = {
+      id: this.member.id,
+      fullName: (this.member.fullName || '').trim(),
+      email: (this.member.email || '').trim()
+    };
+
+    try {
+      const res = await firstValueFrom(this.memberService.updateMember(payload));
+
+      const auth = res.headers.get('Authorization');
+      if (auth?.startsWith('Bearer ')) {
+        localStorage.setItem('token', auth.substring(7));
       }
+      this.member = res.body ?? this.member;
+
+      // navigate back to detail (optional)
+      // await this.router.navigate(['../', this.member.id], { relativeTo: this.route });
+    } catch (e) {
+      console.error('Update failed', e);
+    } finally {
+      this.isSubmitting = false;
     }
-
-
+  }
 }

@@ -1,10 +1,12 @@
 package com.example.LibrarySystem.controller;
 
+import com.example.LibrarySystem.jwt.JwtUtil;
 import com.example.LibrarySystem.model.Loan;
 import com.example.LibrarySystem.model.Member;
 import com.example.LibrarySystem.service.LoanService;
 import com.example.LibrarySystem.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +18,12 @@ import java.util.List;
 public class MemberController {
     private MemberService memberService;
     private LoanService loanService;
+    private JwtUtil jwtUtil;
 
-    public MemberController(MemberService memberService, LoanService loanService) {
+    public MemberController(MemberService memberService, LoanService loanService, JwtUtil jwtUtil) {
         this.memberService = memberService;
         this.loanService = loanService;
+        this.jwtUtil = jwtUtil;
     }
 
     // build create member REST API
@@ -54,8 +58,14 @@ public class MemberController {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @PutMapping("/{id}")
     public ResponseEntity<Member> updateMember(@PathVariable("id") long memberId, @RequestBody Member member) {
-        return new ResponseEntity<Member>(memberService.updateMember(member, memberId), HttpStatus.OK);
+        Member updated = memberService.updateMember(member, memberId);
+        String newJwt = jwtUtil.generateToken(updated); // still using email inside for now
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + newJwt)
+                .body(updated);
     }
+
 
     @GetMapping("/{id}/loans")
     public ResponseEntity<List<Loan>> getMemberLoans(@PathVariable("id") long memberId) {
