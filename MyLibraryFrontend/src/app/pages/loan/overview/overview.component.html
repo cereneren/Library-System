@@ -76,22 +76,39 @@
         <td>{{ l.book.author || '-' }}</td>
         <td *ngIf="isLibrarian">{{ l.member?.fullName || '—' }}</td>
         <td>{{ l.loanDate | date:'mediumDate':undefined:locale }}</td>
-        <td>{{ l.dueDate   | date:'mediumDate':undefined:locale }}</td>
+        <td>{{ l.dueDate | date:'mediumDate':undefined:locale }}</td>
+
+
         <td>
-            <span *ngIf="l.returnDate" class="badge bg-success">
-              {{ 'LOANS.RETURNED' | translate }} {{ l.returnDate | date:'mediumDate':undefined:locale }}
-            </span>
-          <span *ngIf="!l.returnDate && isOverdue(l)" class="badge bg-danger">{{ 'LOANS.OVERDUE' | translate }}</span>
-          <span *ngIf="!l.returnDate && !isOverdue(l)" class="badge bg-warning text-dark">{{ 'LOANS.ON_LOAN' | translate }}</span>
+          <span *ngIf="l.returnDate" class="badge bg-success">
+            {{ 'LOANS.RETURNED' | translate }}
+            {{ l.returnDate | date:'mediumDate':undefined:locale }}
+          </span>
+
+          <span *ngIf="!l.returnDate && isOverdue(l.dueDate)" class="badge bg-danger">
+            {{ 'LOANS.OVERDUE' | translate }} (
+            {{ 'LOANS.PAST_DUE' | translate }}
+            {{ daysOverdue(l.dueDate) }}
+            {{ daysOverdue(l.dueDate) === 1 ? ('BOOKS.DAY' | translate) : ('BOOKS.DAYS' | translate) }} )
+          </span>
+
+          <span *ngIf="!l.returnDate && !isOverdue(l.dueDate)" class="badge bg-warning text-dark">
+            {{ 'LOANS.ON_LOAN' | translate }} (
+            {{ 'LOANS.DUE_IN' | translate }}
+            {{ daysUntil(l.dueDate) }}
+            {{ daysUntil(l.dueDate) === 1 ? ('BOOKS.DAY' | translate) : ('BOOKS.DAYS' | translate) }} )
+          </span>
         </td>
+
         <td class="text-end" *ngIf="isLibrarian">
-          <button class="btn btn-outline-primary btn-sm text-xl"
+          <button class="btn btn-outline-primary btn-sm text-xl me-3"
                   *ngIf="!l.returnDate"
                   (click)="onReturn(l)"
                   [disabled]="returning[l.id]">
             {{ returning[l.id] ? ('LOANS.RETURNING' | translate) : ('LOANS.RETURN' | translate) }}
           </button>
         </td>
+
       </tr>
     </ng-container>
     </tbody>

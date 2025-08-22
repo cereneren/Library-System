@@ -18,7 +18,7 @@ export class OverviewComponent implements OnInit {
   isMember = false;
   loading = false;
 
-  pageSize = 12;
+  pageSize = 9;
   currentPage = 1;
 
   // store the i18n key, use the |translate pipe in template

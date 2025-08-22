@@ -56,7 +56,7 @@
     "COVER_UNSUPPORTED_TYPE": "Unsupported image type. Allowed: JPG, PNG, WEBP.",
     "MATCH_ERROR": "No matches",
     "SELECT_BOX_MESSAGE": "Select a member",
-    "SELECT_MEMBER": "Please choose a member.",
+    "SELECT_MEMBER": "Please choose a member."
   },
   "LOANS": {
     "TITLE": "Title",
@@ -76,7 +76,9 @@
     "RETURNING": "Returning...",
     "NO_LOANS_FOUND": "No loans found.",
     "NO_LOANS_MATCHED": "No loans match the selected filters.",
-    "LOAD_FAILED": "Failed to load loans."
+    "LOAD_FAILED": "Failed to load loans.",
+    "DUE_IN": "Due in",
+    "PAST_DUE": "Past due"
   },
   "MEMBERS": {
     "TITLE": "Title",

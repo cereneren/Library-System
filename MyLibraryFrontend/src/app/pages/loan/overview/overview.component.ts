@@ -40,7 +40,7 @@ export class OverviewComponent implements OnInit {
     this.error = '';
     this.loans = [];
 
-    const user = this.getCurrentUser(); // { id: number|null, role: string|null } | null
+    const user = this.getCurrentUser();
     if (!user) {
       this.error = 'User is not found.';
       this.loading = false;
@@ -89,7 +89,6 @@ export class OverviewComponent implements OnInit {
       }
     } catch {}
 
-    // Fallback: decode access token if present
     const token = localStorage.getItem('access_token');
     if (token) {
       try {
@@ -106,8 +105,6 @@ export class OverviewComponent implements OnInit {
     return null;
   }
 
-  isOverdue(l: Loan) { return !l.returnDate && new Date(l.dueDate) < new Date(); }
-
   onReturn(l: Loan) {
     if (!this.isLibrarian) return;
     this.returning[l.id] = true;
@@ -118,38 +115,59 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-
   get filteredLoans() {
     return this.loans.filter(l => {
       const isReturned = !!l.returnDate;
-      const isOverdue  = !isReturned && this.isOverdue(l);
-      const isOnLoan   = !isReturned && !isOverdue;
+      const overdue    = !isReturned && this.isOverdue(l.dueDate);
+      const onLoan     = !isReturned && !overdue;
 
       return (isReturned && this.filters.returned)
-          || (isOnLoan   && this.filters.onLoan)
-          || (isOverdue  && this.filters.overdue);
+          || (onLoan     && this.filters.onLoan)
+          || (overdue    && this.filters.overdue);
     });
   }
 
+  get allChecked()  { return this.filters.returned && this.filters.onLoan && this.filters.overdue; }
+  get noneChecked() { return !this.filters.returned && !this.filters.onLoan && !this.filters.overdue; }
+  get isCustom()    { return !this.allChecked && !this.noneChecked; }
 
-   get allChecked()  { return this.filters.returned && this.filters.onLoan && this.filters.overdue; }
-   get noneChecked() { return !this.filters.returned && !this.filters.onLoan && !this.filters.overdue; }
-   get isCustom()    { return !this.allChecked && !this.noneChecked; } // for a nice indeterminate look
-
-   setAllFilters(v: boolean) {
-     this.filters = { returned: v, onLoan: v, overdue: v };
-   }
+  setAllFilters(v: boolean) {
+    this.filters = { returned: v, onLoan: v, overdue: v };
+  }
 
   onPageChange(page: number) {
     this.page = page;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  clearSearch() {
-    this.page = 1;
+  clearSearch() { this.page = 1; }
+  onSearchChange(term: string) { this.page = 1; }
+
+  // --- Overdue helpers ---
+  isOverdue(dueIso?: string | Date | null): boolean {
+    if (!dueIso) return false;
+    return this.daysDiffFromToday(dueIso) < 0;
   }
 
-  onSearchChange(term: string) {
-    this.page = 1; // jump to first page on any search change
+  daysOverdue(dueIso?: string | Date | null): number {
+    if (!dueIso) return 0;
+    const d = this.daysDiffFromToday(dueIso);
+    return d < 0 ? -d : 0;
+  }
+
+  daysUntil(dueIso?: string | Date | null): number {
+    if (!dueIso) return 0;
+    const d = this.daysDiffFromToday(dueIso);
+    return d > 0 ? d : 0;
+  }
+
+  // Signed whole-day difference: (due - today)
+  private daysDiffFromToday(dateLike: string | Date): number {
+    const due = new Date(dateLike);
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfDue   = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+    const ms = startOfDue.getTime() - startOfToday.getTime();
+    return Math.floor(ms / 86400000);
   }
 }

@@ -76,7 +76,9 @@
     "RETURNING": "Zurückgeben...",
     "NO_LOANS_FOUND": "Keine Ausleihen gefunden.",
     "NO_LOANS_MATCHED": "Keine Ausleihen entsprechen den gewählten Filtern.",
-    "LOAD_FAILED": "Ausleihen konnten nicht geladen werden."
+    "LOAD_FAILED": "Ausleihen konnten nicht geladen werden.",
+    "DUE_IN": "Fällig in",
+    "PAST_DUE": "Überfällig"
   },
   "MEMBERS": {
     "TITLE": "Titel",

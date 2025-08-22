@@ -76,7 +76,9 @@
     "RETURNING": "İade ediliyor...",
     "NO_LOANS_FOUND": "Ödünçte olan kitap bulunamadı.",
     "NO_LOANS_MATCHED": "Filtrelemeye uyan kitap bulunamadı.",
-    "LOAD_FAILED": "Kitaplar yüklenemedi."
+    "LOAD_FAILED": "Kitaplar yüklenemedi.",
+    "DUE_IN": "Kalan:",
+    "PAST_DUE": "Gecikme:"
   },
   "MEMBERS": {
     "TITLE": "Başlık",
