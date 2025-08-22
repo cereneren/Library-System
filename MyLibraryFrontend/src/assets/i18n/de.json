@@ -54,7 +54,9 @@
     "COVER_UPLOAD_FAILED_ROLLBACK": "Hochladen des Umschlags fehlgeschlagen. Das Bild wird nicht unterstützt oder ist größer als 5MB.",
     "COVER_UPLOAD_FAILED_ROLLBACK_FAILED": "Hochladen des Umschlags fehlgeschlagen und Rollback ebenfalls fehlgeschlagen. Bitte Support kontaktieren.",
     "COVER_UNSUPPORTED_TYPE": "Nicht unterstützter Bildtyp. Erlaubt: JPG, PNG, WEBP.",
-    "MATCH_ERROR": "Keine Bücher gefunden "
+    "MATCH_ERROR": "Keine Übereinstimmungen",
+    "SELECT_BOX_MESSAGE": "Wählen Sie ein Mitglied aus",
+    "SELECT_MEMBER": "Bitte wählen Sie ein Mitglied."
   },
   "LOANS": {
     "TITLE": "Titel",

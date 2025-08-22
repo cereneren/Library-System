@@ -51,7 +51,7 @@ export class EditComponent implements OnInit {
       this.member = res.body ?? this.member;
 
       // navigate back to detail (optional)
-      // await this.router.navigate(['../', this.member.id], { relativeTo: this.route });
+      await this.router.navigate(['../', 'detail'], { relativeTo: this.route });
     } catch (e) {
       console.error('Update failed', e);
     } finally {

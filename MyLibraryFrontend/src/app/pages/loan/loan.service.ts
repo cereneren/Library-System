@@ -30,16 +30,16 @@ export class LoanService {
     }
 
   getLoanDetail(id: number): Observable<Loan> {
-    return this.http.get<Loan>(`${this.base}/api/loans/${id}`);
+    return this.http.get<Loan>(`/api/loans/${id}`);
   }
 
   createLoan(memberId: number, bookId: number): Observable<Loan> {
-    return this.http.post<Loan>(`${this.base}/api/loans`, { memberId, bookId });
+    return this.http.post<Loan>(`/api/loans`, { memberId, bookId });
   }
 
   returnLoan(id: number): Observable<string> {
     // If your backend returns plain text ("Book successfully returned")
-    return this.http.post(`${this.base}/api/loans/${id}/return`, {}, { responseType: 'text' });
+    return this.http.post(`/api/loans/${id}/return`, {}, { responseType: 'text' });
   }
 
   getActiveLoanForBook(bookId: number): Observable<Loan | null> {

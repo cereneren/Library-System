@@ -54,7 +54,9 @@
     "COVER_UPLOAD_FAILED_ROLLBACK": "Cover upload failed. The cover image is either unsupported or larger than 5MBs.",
     "COVER_UPLOAD_FAILED_ROLLBACK_FAILED": "Cover upload failed and rollback also failed. Please contact support.",
     "COVER_UNSUPPORTED_TYPE": "Unsupported image type. Allowed: JPG, PNG, WEBP.",
-    "MATCH_ERROR": "No books found "
+    "MATCH_ERROR": "No matches",
+    "SELECT_BOX_MESSAGE": "Select a member",
+    "SELECT_MEMBER": "Please choose a member.",
   },
   "LOANS": {
     "TITLE": "Title",

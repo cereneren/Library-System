@@ -16,8 +16,6 @@ export class MemberService {
     return this.http.get<Member>(`/api/members/${id}`).pipe(catchError(this.handleError));
   }
 
-  // ✅ Return an Observable<HttpResponse<Member>>
-  //    Accept a payload that includes the id
   updateMember(payload: { id: number; fullName: string; email: string }): Observable<HttpResponse<Member>> {
     const body = { fullName: payload.fullName, email: payload.email };
     console.log('PUT /api/members/%s payload:', payload.id, body);

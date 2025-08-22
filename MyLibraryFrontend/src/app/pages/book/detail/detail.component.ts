@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { AuthService } from '../../../services/auth.service';
 import { LoanService } from '../../loan/loan.service';
+import { MemberService } from '../../member/member.service';
 import { Loan } from '../../loan/loan';
+import { Member } from '../../member/member';
 import { Book } from '../book';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
@@ -17,12 +19,22 @@ import { I18nService } from '../../../services/i18n.service';
 })
 export class DetailComponent implements OnInit {
   locale$ = this.i18n.locale$;
+
   book?: Book | null;
   draft!: Book;                 // local editable copy
   editMode = false;
+
+  borrowing = false;
+  borrowSuccess?: string;
+  borrowError?: string;
+
   currentLoan: Loan | null = null;
   loadingLoan = false;
 
+  // List fetched from API (for librarian to pick a borrower etc.)
+  members: Member[] = [];
+
+  // --- UI state ---
   loading = false;
   saving = false;
   deleting = false;
@@ -31,14 +43,14 @@ export class DetailComponent implements OnInit {
 
   private readonly PLACEHOLDER = 'assets/nocover.png';
 
-   current = 'de-DE';
-    data = {
-      selDate: new Date()
-    };
+  // locale demo
+  current = 'de-DE';
+  data = { selDate: new Date() };
+  switch(newLocale: string) { this.current = newLocale; }
 
-    switch(newLocale: string) {
-      this.current = newLocale;
-    }
+  // --- Member picker/search state used by template ---
+  memberQuery = '';
+  selectedMemberId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +58,7 @@ export class DetailComponent implements OnInit {
     private books: BookService,
     private auth: AuthService,
     private loans: LoanService,
+    private memberService: MemberService,          // <-- renamed
     private translate: TranslateService,
     private i18n: I18nService
   ) {}
@@ -72,6 +85,14 @@ export class DetailComponent implements OnInit {
 
     this.loading = true;
 
+    const session = JSON.parse(localStorage.getItem('user') || 'null');
+    if (session?.role === 'LIBRARIAN') {
+      this.getAllMembers();
+    } else if (session?.role === 'MEMBER') {
+      // MEMBER borrows for self
+      this.selectedMemberId = session.id;
+    }
+
     this.books.getBookDetail(id).subscribe({
       next: (b: Book) => {
         this.book = b;
@@ -84,6 +105,7 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
 
   private fetchActiveLoan(): void {
     if (!this.book?.id) return;
@@ -140,7 +162,6 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  // 🧨 SweetAlert2 confirm + toast/error popups for DELETE
   confirmDelete(): void {
     if (!this.book || this.deleting) return;
 
@@ -162,7 +183,6 @@ export class DetailComponent implements OnInit {
       ).subscribe({
         next: () => {
           this.toast.fire({ icon: 'success', title: this.t('BOOKS.DELETE_SUCCESS') });
-          // go back to list; adjust relative path if your routing differs
           this.router.navigate(['../'], {
             relativeTo: this.route,
             queryParams: { deleted: '1' }
@@ -202,14 +222,12 @@ export class DetailComponent implements OnInit {
   get coverUrl(): string {
     const id = this.book?.id;
     if (!id) return this.PLACEHOLDER;
-
     const ts = this.book?.dateUpdated ? Date.parse(this.book.dateUpdated) : Date.now();
     return `/api/books/${id}/cover?ts=${ts}`;
   }
 
   onImgError(ev: Event) {
     const img = ev.target as HTMLImageElement;
-    // prevent infinite loop if placeholder is missing or fails
     if (img.src.includes(this.PLACEHOLDER)) return;
     img.src = this.PLACEHOLDER;
   }
@@ -225,11 +243,9 @@ export class DetailComponent implements OnInit {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0] || null;
 
-    // allow only JPG/PNG/WEBP (adjust if you want)
     const allowed = ['image/jpeg', 'image/png', 'image/webp'];
     const maxBytes = 5 * 1024 * 1024; // 5MB
 
-    // Basic validations
     if (!file) {
       this.selectedCoverFile = null;
       return;
@@ -255,7 +271,6 @@ export class DetailComponent implements OnInit {
       return;
     }
 
-    // Valid file → remember it and immediately upload (no extra button)
     this.selectedCoverFile = file;
     this.autoUploadCover(input);
   }
@@ -270,22 +285,18 @@ export class DetailComponent implements OnInit {
       finalize(() => this.uploadingCover = false)
     ).subscribe({
       next: () => {
-        // clear selection + input element so user can pick same file again if needed
         this.selectedCoverFile = null;
         if (inputEl) inputEl.value = '';
 
-        // toast + message
         this.toast.fire({ icon: 'success', title: this.t('BOOKS.COVER_UPLOADED') || 'Cover uploaded' });
         this.message = { type: 'success', text: this.t('BOOKS.COVER_UPLOADED') };
 
-        // bust cache on the <img> showing the cover
         const img = document.querySelector<HTMLImageElement>('img.book-cover');
         if (img) {
           const base = `/api/books/${this.book!.id!}/cover`;
           img.src = `${base}?ts=${Date.now()}`;
         }
 
-        // touch updated date (optional)
         this.book = {
           ...(this.book as Book),
           dateUpdated: new Date().toISOString()
@@ -301,4 +312,67 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
+  // ---- Members API ----
+  getAllMembers() {
+    this.memberService.getAllMembers().subscribe({
+      next: (members: Member[]) => (this.members = members),
+      error: (error: HttpErrorResponse) => {
+        console.error('Error loading members:', error.message);
+        Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.t('MEMBERS.LIST_LOAD_FAILED') });
+      }
+    });
+  }
+
+  get filteredMembers(): Member[] {
+    const q = this.memberQuery.trim().toLowerCase();
+    if (!q) return this.members;
+    return this.members.filter(m =>
+      (m.fullName || '').toLowerCase().includes(q) ||
+      (m.email || '').toLowerCase().includes(q)
+    );
+  }
+
+  get selectedMemberLabel(): string {
+    const m = this.members.find(x => x.id === this.selectedMemberId);
+    return m ? (m.fullName || m.email || '') : '';
+  }
+
+  chooseMember(m: Member) {
+    this.selectedMemberId = m?.id ?? null;
+  }
+
+
+  // keep your filteredMembers + chooseMember(...) from earlier
+
+  onBorrow(): void {
+    if (this.borrowing) return;
+
+    const memberId = this.isMember
+      ? JSON.parse(localStorage.getItem('user') || 'null')?.id
+      : this.selectedMemberId;
+
+    if (!this.book?.id || !memberId) {
+      this.borrowError = this.t('MEMBERS.BORROW_MISSING_SELECTION') || 'Select a member first.';
+      return;
+    }
+
+    // ✅ Your service uses (memberId, bookId)
+    this.loans.createLoan(memberId, this.book.id).subscribe({
+      next: (loan) => {
+        this.borrowing = false;
+        this.currentLoan = loan;
+        this.book = { ...(this.book as Book), available: false };
+        this.borrowSuccess = this.t('MEMBERS.BORROW_SUCCESS') || 'Borrowed successfully.';
+        this.toast.fire({ icon: 'success', title: this.borrowSuccess });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.borrowing = false;
+        this.borrowError = this.t('MEMBERS.BORROW_FAILED') || 'Borrow failed.';
+        console.error('Borrow error', err);
+        Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.borrowError });
+      }
+    });
+  }
 }
+

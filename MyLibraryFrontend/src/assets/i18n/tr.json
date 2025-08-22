@@ -54,7 +54,9 @@
     "COVER_UPLOAD_FAILED_ROLLBACK": "Kapak yüklemesi başarısız. Yüklenen kapak hatalı formatta veya 5MBdan büyük",
     "COVER_UPLOAD_FAILED_ROLLBACK_FAILED": "Kapak yüklemesi başarısız ve önceki forma geçilemiyor. Lütfen destekle haberleşin",
     "COVER_UNSUPPORTED_TYPE": "Desteklenmeyen resim formatı. Desteklenen: JPG, PNG, WEBP.",
-    "MATCH_ERROR": "Bu kritere uygun kitap bulunamadı "
+    "MATCH_ERROR": "Bu kritere uygun bir sonuç bulunamadı. ",
+    "SELECT_BOX_MESSAGE": "Bir üye seç",
+    "SELECT_MEMBER": "Lütfen bir kitap seçiniz."
   },
   "LOANS": {
     "TITLE": "Başlık",
