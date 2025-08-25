@@ -2,10 +2,10 @@
   <div class="main-body">
 
     <!-- first row: two cards, same height -->
-    <div class="row gutters-sm mt-5 align-items-stretch">
+    <div class="row gutters-sm mt-5 align-items-stretch" *ngIf="librarian">
 
       <!-- left “avatar” card -->
-      <div class="col-md-4 mb-3">
+      <div class="col-md-4 mb-3" >
         <div class="card h-100">
           <div class="card-body d-flex flex-column align-items-center text-center mt-5">
             <img src="assets/profile-icon.png"
@@ -18,7 +18,7 @@
       </div>
 
       <!-- right “details” card -->
-      <div class="col-md-8 mb-3" *ngIf="librarian">
+      <div class="col-md-8 mb-3">
         <div class="card h-100">
           <div class="card-body">
             <div class="row mb-3">

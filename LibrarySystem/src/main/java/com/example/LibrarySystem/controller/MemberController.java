@@ -1,5 +1,7 @@
 package com.example.LibrarySystem.controller;
 
+import com.example.LibrarySystem.dto.MemberDto;
+import com.example.LibrarySystem.dto.UpdateMemberReq;
 import com.example.LibrarySystem.jwt.JwtUtil;
 import com.example.LibrarySystem.model.Loan;
 import com.example.LibrarySystem.model.Member;
@@ -57,13 +59,20 @@ public class MemberController {
     // http://localhost:8080/api/members/1
     @JsonIgnoreProperties(ignoreUnknown = true)
     @PutMapping("/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable("id") long memberId, @RequestBody Member member) {
-        Member updated = memberService.updateMember(member, memberId);
-        String newJwt = jwtUtil.generateToken(updated); // still using email inside for now
-
+    public ResponseEntity<MemberDto> updateMember(@PathVariable long id, @RequestBody UpdateMemberReq req) {
+        var updated = memberService.updateMember(id, req); // handles email/password change
+        String newJwt = jwtUtil.generateToken(
+                org.springframework.security.core.userdetails.User
+                        .withUsername(updated.getEmail())      // <- NEW EMAIL goes here
+                        .password(updated.getPassword())
+                        .authorities(updated.getAuthorities())
+                        .accountExpired(false).accountLocked(false)
+                        .credentialsExpired(false).disabled(!updated.isEnabled())
+                        .build()
+        );
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + newJwt)
-                .body(updated);
+                .header("Authorization", "Bearer " + newJwt)
+                .body(MemberDto.from(updated));
     }
 
 
