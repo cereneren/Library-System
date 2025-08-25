@@ -125,9 +125,17 @@ export class DetailComponent implements OnInit {
 
   loadLoans(memberId: number) {
     this.loansLoading = true;
-    this.memberService.getMemberLoans(memberId).pipe(finalize(() => this.loansLoading = false))
+    this.memberService.getMemberLoans(memberId)
+      .pipe(finalize(() => this.loansLoading = false))
       .subscribe({
-        next: (loans) => this.loans = loans ?? [],
+        next: (loans) => {
+          this.loans = (loans ?? []).sort((a, b) => {
+            const at = a.loanDate ? new Date(a.loanDate).getTime() : 0;
+            const bt = b.loanDate ? new Date(b.loanDate).getTime() : 0;
+            if (bt !== at) return bt - at;           // newest first
+            return (b.id ?? 0) - (a.id ?? 0);        // tie-break by id desc
+          });
+        },
         error: (e) => {
           console.error('Failed to load loans', e);
           Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.t('LOANS.LOAD_FAILED') });

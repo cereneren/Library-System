@@ -116,15 +116,23 @@ export class OverviewComponent implements OnInit {
   }
 
   get filteredLoans() {
-    return this.loans.filter(l => {
-      const isReturned = !!l.returnDate;
-      const overdue    = !isReturned && this.isOverdue(l.dueDate);
-      const onLoan     = !isReturned && !overdue;
+    const filtered = this.loans.filter(l => {
+        const isReturned = !!l.returnDate;
+        const overdue    = !isReturned && this.isOverdue(l.dueDate);
+        const onLoan     = !isReturned && !overdue;
 
-      return (isReturned && this.filters.returned)
-          || (onLoan     && this.filters.onLoan)
-          || (overdue    && this.filters.overdue);
-    });
+        return (isReturned && this.filters.returned)
+            || (onLoan     && this.filters.onLoan)
+            || (overdue    && this.filters.overdue);
+      });
+
+      // newest first (fallback to id desc if dates are equal/missing)
+      return filtered.sort((a, b) => {
+        const at = a.loanDate ? new Date(a.loanDate).getTime() : 0;
+        const bt = b.loanDate ? new Date(b.loanDate).getTime() : 0;
+        if (bt !== at) return bt - at;
+        return (b.id ?? 0) - (a.id ?? 0);
+      });
   }
 
   get allChecked()  { return this.filters.returned && this.filters.onLoan && this.filters.overdue; }

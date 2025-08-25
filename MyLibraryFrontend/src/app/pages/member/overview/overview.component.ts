@@ -24,7 +24,13 @@ export class OverviewComponent implements OnInit {
 
   getAllMembers() {
     this.memberService.getAllMembers().subscribe({
-      next: (members) => this.members = members,
+      next: (members) => {
+        this.members = (members ?? []).sort((a, b) => {
+          const ai = Number(a.id ?? 0);
+          const bi = Number(b.id ?? 0);
+          return bi - ai; // newest first by id
+        });
+      },
       error: (e: HttpErrorResponse) =>
         console.error('Error loading members:', e.message)
     });
