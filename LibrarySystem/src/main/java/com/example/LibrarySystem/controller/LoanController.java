@@ -23,7 +23,7 @@ public class LoanController {
     // build create loan REST API
     @PostMapping
     public ResponseEntity<Loan> createLoan(@RequestBody CreateLoanRequest request) {
-        Loan loan = loanService.createLoan(request.bookId(), request.memberId());
+        Loan loan = loanService.createLoan(request.bookId(), request.memberId(), request.numberOfDays());
         return ResponseEntity.ok(loan);
     }
 

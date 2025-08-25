@@ -139,7 +139,8 @@
     "PASSWORD_TOO_SHORT": "Password must be at least 6 characters.",
     "MISSING_PASSWORD": "Please enter a password.",
     "MISSING_FULL_NAME": "Please enter a name.",
-    "CANNOT_DELETE_ACTIVE_LOANS": "Please return active loans"
+    "CANNOT_DELETE_ACTIVE_LOANS": "Please return active loans",
+    "SELECT_DAYS": "Please select days"
   },
   "COMMON": {
     "INFO": "Info",

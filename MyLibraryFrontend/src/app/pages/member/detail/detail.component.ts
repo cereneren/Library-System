@@ -31,6 +31,8 @@ export class DetailComponent implements OnInit {
 
   selectedMemberId: number | null = null;
   selectedBookId: number | null = null;
+  selectedNumberOfDays: number = 14;
+  days: number[] = Array.from({ length: 30 }, (_, i) => i + 1);
   borrowing = false;
   bookQuery = '';
   selectedBookTitle: string | null = null;
@@ -181,7 +183,7 @@ export class DetailComponent implements OnInit {
     }
 
     this.borrowing = true;
-    this.http.post<Loan>('/api/loans', { memberId, bookId: this.selectedBookId })
+    this.http.post<Loan>('/api/loans', { memberId, bookId: this.selectedBookId, numberOfDays: this.selectedNumberOfDays })
       .pipe(finalize(() => this.borrowing = false))
       .subscribe({
         next: () => {

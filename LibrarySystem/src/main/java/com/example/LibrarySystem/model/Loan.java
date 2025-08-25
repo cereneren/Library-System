@@ -44,25 +44,23 @@ public class Loan {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
-    public Loan(Book book, User member) {
+    public Loan(Book book, User member, Long numberOfDays) {
         if (book == null || member == null) {
             throw new IllegalArgumentException("Book and member cannot be null");
         }
         this.book = book;
         this.member = member;
         this.loanDate = LocalDate.now();
-        calculateDueDate();
+        calculateDueDate(numberOfDays);
     }
 
-    private void calculateDueDate() {
-        this.dueDate = loanDate.plusDays(14);
-    }
-    public boolean isOverdue() {
-        return returnDate == null && LocalDate.now().isAfter(dueDate);
-    }
+    private void calculateDueDate(Long numberOfDays) {
+        if(numberOfDays > 0) {
+            this.dueDate = loanDate.plusDays(numberOfDays);
+        }
+        else{
+            throw new IllegalArgumentException("Return date cannot be 0 or less.");
+        }
 
-    public void markReturned() {
-        this.returnDate = LocalDate.now();
-        book.removeLoan(this);
     }
 }

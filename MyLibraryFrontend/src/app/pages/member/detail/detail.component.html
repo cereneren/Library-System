@@ -229,9 +229,10 @@
                   <label class="form-label">{{ 'MEMBERS.SELECT_BOOK' | translate }}</label>
 
                   <!-- Bootstrap dropdown -->
-                  <div class="dropdown w-100" data-bs-auto-close="outside">
+                  <div class="dropdown w-100" style="width: 260px;" data-bs-auto-close="outside">
                     <button
-                      class="btn btn-light border w-100 d-flex justify-content-between align-items-center"
+                      class="btn btn-light border d-flex justify-content-between align-items-center"
+                      style="width: 260px;"
                       type="button"
                       id="bookDropdown"
                       data-bs-toggle="dropdown"
@@ -256,7 +257,7 @@
                         <button class="btn btn-outline-secondary" type="button" (click)="bookQuery=''">✕</button>
                       </div>
 
-                      <!-- list -->
+                      <!-- book list -->
                       <button
                         *ngFor="let b of filteredBooks"
                         type="button"
@@ -265,10 +266,23 @@
                         {{ b.title }}
                       </button>
 
-                      <div *ngIf="filteredBooks.length === 0" class="dropdown-item text-muted small">
+                    <div *ngIf="filteredBooks.length === 0" class="dropdown-item text-muted small">
                         {{ 'No matches' | translate }}
                       </div>
                     </div>
+                  </div>
+
+                  <!-- Days selector -->
+                  <div class="mb-3 mt-3">
+                    <label class="form-label"> {{ 'MEMBERS.SELECT_DAYS' | translate }} </label>
+                    <select
+                      class="form-select bg-light border"
+                      style="max-width: 16rem;"
+                      [(ngModel)]="selectedNumberOfDays"
+                      name="loanDays"
+                      [disabled]="borrowing">
+                      <option *ngFor="let d of days" [ngValue]="d">{{ d }}</option>
+                    </select>
                   </div>
 
                   <div *ngIf="availableBooks.length === 0" class="text-muted small mt-1">
@@ -290,8 +304,6 @@
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
       </div>

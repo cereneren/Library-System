@@ -23,19 +23,4 @@ public class Member extends User {
     @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
 
-    public void borrow(Book book) {
-        Loan loan = new Loan(book, this);
-        addLoan(loan);
-        book.addLoan(loan);
-    }
-
-    public void returnBook(Loan loan) {
-        loan.markReturned();
-        loans.remove(loan);
-    }
-
-    public void addLoan(Loan loan) {
-        loans.add(loan);
-        loan.setMember(this);
-    }
 }

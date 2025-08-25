@@ -138,7 +138,8 @@
     "PASSWORD_TOO_SHORT": "Das Passwort muss mindestens 6 Zeichen lang sein.",
     "MISSING_PASSWORD": "Bitte geben Sie ein Passwort ein.",
     "MISSING_FULL_NAME": "Bitte geben Sie einen Namen ein.",
-    "CANNOT_DELETE_ACTIVE_LOANS":"Bitte geben Sie aktive Ausleihen zurück."
+    "CANNOT_DELETE_ACTIVE_LOANS":"Bitte geben Sie aktive Ausleihen zurück.",
+    "SELECT_DAYS": "Bitte Tage auswählen"
   },
   "COMMON": {
     "INFO": "Info",

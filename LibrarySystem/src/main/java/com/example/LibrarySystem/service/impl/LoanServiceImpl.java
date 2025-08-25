@@ -25,7 +25,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public Loan createLoan(Long bookId, Long memberId) {
+    public Loan createLoan(Long bookId, Long memberId, Long numberOfDays) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found"));
         User member = userRepository.findById(memberId)
@@ -36,7 +36,7 @@ public class LoanServiceImpl implements LoanService {
             throw new IllegalStateException("Book is not available for loan");
         }
 
-        Loan loan = new Loan(book, member);
+        Loan loan = new Loan(book, member, numberOfDays);
         book.addLoan(loan);
         return loanRepository.save(loan);
     }

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface LoanService {
-    Loan createLoan(Long bookId, Long memberId);
+    Loan createLoan(Long bookId, Long memberId, Long numberOfDays);
     List<Loan> getLoansByMemberId(Long memberId);
     List<Loan> getLoansByBookId(Long bookId);
     Optional<Loan> getActiveLoanForBook(Long bookId);

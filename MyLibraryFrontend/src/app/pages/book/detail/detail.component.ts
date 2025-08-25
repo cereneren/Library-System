@@ -23,6 +23,8 @@ export class DetailComponent implements OnInit {
   book?: Book | null;
   draft!: Book;                 // local editable copy
   editMode = false;
+  selectedNumberOfDays: number = 14;
+  days: number[] = Array.from({ length: 30 }, (_, i) => i + 1);
 
   borrowing = false;
   borrowSuccess?: string;
@@ -357,8 +359,7 @@ export class DetailComponent implements OnInit {
       return;
     }
 
-    // ✅ Your service uses (memberId, bookId)
-    this.loans.createLoan(memberId, this.book.id).subscribe({
+    this.loans.createLoan(memberId, this.book.id, this.selectedNumberOfDays).subscribe({
       next: (loan) => {
         this.borrowing = false;
         this.currentLoan = loan;

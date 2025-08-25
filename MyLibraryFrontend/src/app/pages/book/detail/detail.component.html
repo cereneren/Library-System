@@ -161,9 +161,10 @@
                 <label class="form-label">{{ 'BOOKS.SELECT_MEMBER' | translate }}</label>
 
                 <!-- Bootstrap dropdown (members) -->
-                <div class="dropdown w-100" data-bs-auto-close="outside">
+                <div class="dropdown w-100 " style="width: 260px;" data-bs-auto-close="outside">
                   <button
-                    class="btn btn-light border w-100 d-flex justify-content-between align-items-center"
+                    class="btn btn-light border d-flex justify-content-between align-items-center"
+                    style="width: 240px;"
                     type="button"
                     id="memberDropdown"
                     data-bs-toggle="dropdown"
@@ -201,6 +202,19 @@
                     <div *ngIf="filteredMembers.length === 0" class="dropdown-item text-muted small">
                       {{ 'BOOKS.MATCH_ERROR' | translate }}
                     </div>
+                  </div>
+
+                  <!-- Days selector -->
+                  <div class="mb-3 mt-3">
+                    <label class="form-label"> {{ 'MEMBERS.SELECT_DAYS' | translate }} </label>
+                    <select
+                      class="form-select"
+                      style="max-width: 16rem;"
+                      [(ngModel)]="selectedNumberOfDays"
+                      name="loanDays"
+                      [disabled]="borrowing">
+                      <option *ngFor="let d of days" [ngValue]="d">{{ d }}</option>
+                    </select>
                   </div>
                 </div>
 

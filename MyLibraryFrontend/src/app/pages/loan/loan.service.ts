@@ -21,20 +21,20 @@ export class LoanService {
 
   constructor(private http: HttpClient) {}
 
-   getAllLoans(): Observable<Loan[]> {
-      return this.http.get<Loan[]>('/api/loans');
-    }
+  getAllLoans(): Observable<Loan[]> {
+    return this.http.get<Loan[]>('/api/loans');
+  }
 
-    getLoansForMember(memberId: number): Observable<Loan[]> {
-      return this.http.get<Loan[]>(`/api/members/${memberId}/loans`);
-    }
+  getLoansForMember(memberId: number): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`/api/members/${memberId}/loans`);
+  }
 
   getLoanDetail(id: number): Observable<Loan> {
     return this.http.get<Loan>(`/api/loans/${id}`);
   }
 
-  createLoan(memberId: number, bookId: number): Observable<Loan> {
-    return this.http.post<Loan>(`/api/loans`, { memberId, bookId });
+  createLoan(memberId: number, bookId: number, numberOfDays: number): Observable<Loan> {
+    return this.http.post<Loan>(`/api/loans`, { memberId, bookId, numberOfDays});
   }
 
   returnLoan(id: number): Observable<string> {
