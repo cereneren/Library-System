@@ -149,5 +149,22 @@ export class OverviewComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Add inside the OverviewComponent class
+  asTotal(b: any): number  { return b?.totalCopies ?? b?.total_copies ?? 0; }
+  asAvail(b: any): number  { return b?.availableCopies ?? b?.available_copies ?? 0; }
+
+  statusKey(b: any): string {
+    const t = this.asTotal(b), a = this.asAvail(b);
+    if (t === 0) return 'BOOKS.OUT_OF_STOCK';
+    if (a === 0) return 'BOOKS.LOANED_OUT';
+    return 'BOOKS.AVAILABLE';
+  }
+
+  badgeClass(b: any): string {
+    const t = this.asTotal(b), a = this.asAvail(b);
+    if (t === 0) return 'bg-warning text-dark'; // Out of stock -> yellow
+    if (a === 0) return 'bg-danger';            // Loaned out -> red
+    return 'bg-success';                         // Available -> green
+  }
 
 }

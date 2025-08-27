@@ -24,4 +24,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     int markAsReturned(@Param("loanId") Long loanId, @Param("returnDate") LocalDate returnDate);
 
     Optional<Loan> findFirstByBook_IdAndReturnDateIsNullOrderByDueDateAsc(Long bookId);
+
+    int countActiveByBookId(long id);
 }

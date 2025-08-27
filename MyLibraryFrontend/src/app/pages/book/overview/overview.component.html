@@ -75,9 +75,8 @@
           <h5 class="text-center card-title">{{ book.title }}</h5>
           <p class="text-center card-text flex-grow-1">{{ book.author }}</p>
           <div class="text-center">
-            <span class="badge  mb-3"
-                  [ngClass]="book.available ? 'bg-success' : 'bg-danger'">
-              {{ book.available ? ('BOOKS.AVAILABLE' | translate) : ('BOOKS.LOANED_OUT' | translate) }}
+            <span class="badge mb-3" [ngClass]="badgeClass(book)">
+              {{ statusKey(book) | translate }}
             </span>
           </div>
 

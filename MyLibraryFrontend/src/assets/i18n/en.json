@@ -56,7 +56,10 @@
     "COVER_UNSUPPORTED_TYPE": "Unsupported image type. Allowed: JPG, PNG, WEBP.",
     "MATCH_ERROR": "No matches",
     "SELECT_BOX_MESSAGE": "Select a member",
-    "SELECT_MEMBER": "Please choose a member."
+    "SELECT_MEMBER": "Please choose a member.",
+    "STOCK_TOTAL_BELOW_ON_LOAN": "Total copies cannot be less than active loans ({{count}}).",
+    "TOTAL_STOCK": "Total stock",
+    "OUT_OF_STOCK": "Out of stock"
   },
   "LOANS": {
     "TITLE": "Title",
@@ -64,7 +67,7 @@
     "MEMBER": "Member",
     "LOANED": "Loaned",
     "DUE": "Due",
-    "EXPECTED_DUE": "Expected due date",
+    "EXPECTED_DUE": "Expected closest due date",
     "OVERDUE_BY_DAYS": "Overdue by {{days}} days",
     "STATUS": "Status",
     "RETURNED": "Returned",

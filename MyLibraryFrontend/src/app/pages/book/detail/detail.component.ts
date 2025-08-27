@@ -19,7 +19,7 @@ import { I18nService } from '../../../services/i18n.service';
 })
 export class DetailComponent implements OnInit {
   locale$ = this.i18n.locale$;
-
+  public Math = Math;
   book?: Book | null;
   draft!: Book;                 // local editable copy
   editMode = false;
@@ -134,6 +134,7 @@ export class DetailComponent implements OnInit {
   }
 
   toggleEdit(): void {
+
     if (!this.book) return;
     this.editMode = !this.editMode;
     this.message = null;
@@ -146,12 +147,37 @@ export class DetailComponent implements OnInit {
 
   save(): void {
     if (!this.book) return;
+
+    // how many are currently on loan based on what's on screen
+    const activeLoans = Math.max(0, (this.book.totalCopies || 0) - (this.book.availableCopies || 0));
+    const newTotal = Math.max(0, this.draft.totalCopies || 0);
+
+    // 1) don't allow going below active loans
+    if (newTotal < activeLoans) {
+      Swal.fire({
+        icon: 'error',
+        title: this.t('COMMON.ERROR'),
+        text: this.t('BOOKS.STOCK_TOTAL_BELOW_ON_LOAN', { count: activeLoans })
+              || `Total copies cannot be less than ${activeLoans} (active loans).`
+
+      });
+      return;
+    }
+
     this.saving = true;
     this.message = null;
 
     this.books.updateBook(this.draft).subscribe({
       next: (updated: Book) => {
-        this.book = updated;
+        // 2) recompute available from activeLoans if backend didn't send it
+        const serverAvail = (updated as any).availableCopies;
+        const finalAvail = typeof serverAvail === 'number'
+          ? serverAvail
+          : Math.max(0, (updated.totalCopies || 0) - activeLoans);
+
+        // 3) update the details card and availability flag
+        this.book = { ...updated, availableCopies: finalAvail, available: finalAvail > 0 };
+
         this.editMode = false;
         this.saving = false;
         this.message = { type: 'success', text: this.t('BOOKS.UPDATE_SUCCESS') };
@@ -347,8 +373,17 @@ export class DetailComponent implements OnInit {
 
   // keep your filteredMembers + chooseMember(...) from earlier
 
+  private reloadBook() {
+    if (!this.book?.id) return;
+    this.books.getBookDetail(this.book.id).subscribe({
+      next: (b) => { this.book = b; },
+      error: () => { /* ignore or show toast */ }
+    });
+  }
+
   onBorrow(): void {
     if (this.borrowing) return;
+    this.borrowing = true;
 
     const memberId = this.isMember
       ? JSON.parse(localStorage.getItem('user') || 'null')?.id
@@ -356,24 +391,60 @@ export class DetailComponent implements OnInit {
 
     if (!this.book?.id || !memberId) {
       this.borrowError = this.t('MEMBERS.BORROW_MISSING_SELECTION') || 'Select a member first.';
+      this.borrowing = false;
       return;
     }
 
-    this.loans.createLoan(memberId, this.book.id, this.selectedNumberOfDays).subscribe({
-      next: (loan) => {
-        this.borrowing = false;
-        this.currentLoan = loan;
-        this.book = { ...(this.book as Book), available: false };
-        this.borrowSuccess = this.t('MEMBERS.BORROW_SUCCESS') || 'Borrowed successfully.';
-        this.toast.fire({ icon: 'success', title: this.borrowSuccess });
-      },
-      error: (err: HttpErrorResponse) => {
-        this.borrowing = false;
-        this.borrowError = this.t('MEMBERS.BORROW_FAILED') || 'Borrow failed.';
-        console.error('Borrow error', err);
-        Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.borrowError });
-      }
-    });
+    this.borrowing = true;
+    this.loans.createLoan(memberId, this.book.id, this.selectedNumberOfDays)
+      .subscribe({
+        next: (loan) => {
+          this.borrowing = false;
+          this.currentLoan = loan;
+          this.reloadBook();             // <-- pull fresh total/available from server
+          this.borrowSuccess = this.t('MEMBERS.BORROW_SUCCESS') || 'Borrowed successfully.';
+          this.toast.fire({ icon: 'success', title: this.borrowSuccess });
+        },
+        error: (err) => {
+          this.borrowing = false;
+          this.borrowError = this.t('MEMBERS.BORROW_FAILED') || 'Borrow failed.';
+          Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.borrowError });
+          console.error('Borrow error', err);
+        }
+      });
   }
+
+  // Normalize snake/camel
+  asTotal(b: any): number  { return b?.totalCopies ?? b?.total_copies ?? 0; }
+  asAvail(b: any): number  { return b?.availableCopies ?? b?.available_copies ?? 0; }
+
+  // Current active loans from server values
+  activeLoans(b: any): number { return Math.max(0, this.asTotal(b) - this.asAvail(b)); }
+
+  // Effective numbers for the UI (use draft total while editing)
+  effTotal(b: any): number {
+    return this.editMode ? (this.draft?.totalCopies ?? 0) : this.asTotal(b);
+  }
+  effAvail(b: any): number {
+    return this.editMode
+      ? Math.max(0, (this.draft?.totalCopies ?? 0) - this.activeLoans(b))
+      : this.asAvail(b);
+  }
+
+  // Exact same status keys/classes as overview
+  statusKey(b: any): string {
+    const t = this.effTotal(b), a = this.effAvail(b);
+    if (t === 0) return 'BOOKS.OUT_OF_STOCK';  // yellow
+    if (a === 0) return 'BOOKS.LOANED_OUT';    // red
+    return 'BOOKS.AVAILABLE';                  // green
+  }
+  badgeClass(b: any): string {
+    const t = this.effTotal(b), a = this.effAvail(b);
+    if (t === 0) return 'bg-warning text-dark'; // Out of stock -> yellow
+    if (a === 0) return 'bg-danger';            // Loaned out -> red
+    return 'bg-success';                         // Available -> green
+  }
+
+
 }
 

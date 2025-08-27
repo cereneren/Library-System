@@ -4,6 +4,7 @@ package com.example.LibrarySystem.service.impl;
 import com.example.LibrarySystem.exception.ResourceNotFoundException;
 import com.example.LibrarySystem.model.Book;
 import com.example.LibrarySystem.repository.BookRepository;
+import com.example.LibrarySystem.repository.LoanRepository;
 import com.example.LibrarySystem.service.BookService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
+    private LoanRepository loanRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, LoanRepository loanRepository) {
         super();
         this.bookRepository = bookRepository;
+        this.loanRepository = loanRepository;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book updateBook(Book book, long id) {
         Book existingBook = bookRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Book", "Id", id));
@@ -45,8 +49,20 @@ public class BookServiceImpl implements BookService {
         existingBook.setAuthor(book.getAuthor());
         existingBook.setSummary(book.getSummary());
 
-        bookRepository.save(existingBook);
-        return existingBook;
+        int onLoan = existingBook.getTotalCopies() - existingBook.getAvailableCopies();
+
+        int newTotal = Math.max(0, book.getTotalCopies());
+        existingBook.setTotalCopies(newTotal);
+
+        // Recompute availability
+        int newAvail = newTotal - onLoan;
+        existingBook.setAvailableCopies(newAvail);
+
+        if(existingBook.getTotalCopies() == 0 || existingBook.getAvailableCopies() == 0) {
+            existingBook.setAvailable(false);
+        }
+
+        return bookRepository.save(existingBook);
     }
 
     @Override

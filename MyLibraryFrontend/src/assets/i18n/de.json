@@ -56,7 +56,10 @@
     "COVER_UNSUPPORTED_TYPE": "Nicht unterstützter Bildtyp. Erlaubt: JPG, PNG, WEBP.",
     "MATCH_ERROR": "Keine Übereinstimmungen",
     "SELECT_BOX_MESSAGE": "Wählen Sie ein Mitglied aus",
-    "SELECT_MEMBER": "Bitte wählen Sie ein Mitglied."
+    "SELECT_MEMBER": "Bitte wählen Sie ein Mitglied.",
+    "STOCK_TOTAL_BELOW_ON_LOAN": "Die Gesamtzahl der Exemplare darf nicht weniger als aktive Ausleihen ({{count}}) betragen.",
+    "TOTAL_STOCK": "Gesamtbestand",
+    "OUT_OF_STOCK": "Nicht auf Lager"
   },
   "LOANS": {
     "TITLE": "Titel",
@@ -64,7 +67,7 @@
     "MEMBER": "Mitglied",
     "LOANED": "Ausgeliehen",
     "DUE": "Fällig",
-    "EXPECTED_DUE": "Voraussichtliches Fälligkeitsdatum",
+    "EXPECTED_DUE": "Nächster voraussichtlicher Fälligkeitstermin",
     "OVERDUE_BY_DAYS": "{{days}} Tage überfällig",
     "STATUS": "Status",
     "RETURNED": "Zurückgegeben",

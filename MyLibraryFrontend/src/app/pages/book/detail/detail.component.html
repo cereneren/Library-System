@@ -15,9 +15,19 @@
               style="width:100%; height:100%; object-fit:cover; border-radius:.5rem;"
               loading="lazy">
           </div>
-          <span class="badge mt-3" [ngClass]="book.available ? 'bg-success' : 'bg-danger'">
-          {{ book.available ? ('BOOKS.AVAILABLE' | translate) : ('BOOKS.LOANED_OUT' | translate) }}
-          </span>
+
+          <ng-container *ngIf="book as b">
+            <!-- Status badge (matches overview) -->
+            <span class="badge mt-3" [ngClass]="badgeClass(b)">
+              {{ statusKey(b) | translate }}
+            </span>
+
+            <!-- Numbers badge (same color logic for consistency) -->
+            <span class="badge mt-2" [ngClass]="badgeClass(b)">
+              {{ effAvail(b) }} / {{ effTotal(b) }} {{ 'BOOKS.AVAILABLE' | translate }}
+            </span>
+          </ng-container>
+
         </div>
       </div>
 
@@ -72,17 +82,19 @@
           <!-- Edit form (edit mode) -->
           <form class="mt-4" *ngIf="editMode" (ngSubmit)="save()" #editForm="ngForm" novalidate>
             <div class="row g-3">
-              <div class="col-12">
+              <!-- Title / Author (proper columns directly under .row) -->
+              <div class="col-12 col-md-6">
                 <label class="form-label">{{ 'BOOKS.TITLE' | translate }}</label>
                 <input class="form-control" name="title" [(ngModel)]="draft.title" required minlength="1">
               </div>
 
-              <div class="col-md-6">
+              <div class="col-12 col-md-6">
                 <label class="form-label">{{ 'BOOKS.AUTHOR' | translate }}</label>
                 <input class="form-control" name="author" [(ngModel)]="draft.author" required>
               </div>
 
-              <div class="mb-2">
+              <!-- Cover upload + Total copies side-by-side in the SAME row -->
+              <div class="col-12 col-md-8">
                 <label class="form-label">{{ 'BOOKS.COVER' | translate }}</label>
                 <input
                   type="file"
@@ -91,13 +103,28 @@
                   (change)="onCoverFileSelected($event)"
                   [disabled]="uploadingCover || saving" />
                 <div class="form-text">
-                  {{ 'BOOKS.COVER_HELP' | translate:{ ex:'JPG/PNG/WEBP', size:'5MB' } }}
+                  {{ 'BOOKS.CHOOSE_IMAGE' | translate:{ ex:'JPG/PNG/WEBP', size:'5MB' } }}
                 </div>
                 <div *ngIf="uploadingCover" class="small text-muted mt-1">
                   {{ 'BOOKS.UPLOADING' | translate }}…
                 </div>
               </div>
 
+              <div class="col-12 col-md-4" *ngIf="book as b">
+                <label class="form-label mb-1">{{ 'BOOKS.TOTAL_STOCK' | translate }}</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="totalCopies"
+                  [(ngModel)]="draft.totalCopies"
+                  min="0"
+                  [disabled]="saving" />
+                <small class="text-muted d-block mt-1">
+                  {{ 'BOOKS.AVAILABLE' | translate }}: {{ b.availableCopies }}
+                </small>
+              </div>
+
+              <!-- Summary -->
               <div class="col-12">
                 <label class="form-label">{{ 'BOOKS.SUMMARY' | translate }}</label>
                 <textarea class="form-control" rows="4" name="summary" [(ngModel)]="draft.summary"></textarea>
@@ -105,13 +132,15 @@
             </div>
 
             <div class="d-flex gap-2 mt-4">
-              <button type="submit" class="btn btn-primary"
-                      [disabled]="editForm.invalid || saving">
+              <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || saving">
                 {{ saving ? ('BOOKS.SAVING' | translate) : ('BOOKS.SAVE_CHANGES' | translate) }}
               </button>
-              <button type="button" class="btn btn-light" (click)="toggleEdit()" [disabled]="saving">{{ 'BOOKS.CANCEL' | translate }}</button>
+              <button type="button" class="btn btn-light" (click)="toggleEdit()" [disabled]="saving">
+                {{ 'BOOKS.CANCEL' | translate }}
+              </button>
             </div>
           </form>
+
 
           <!-- Alerts -->
           <div class="mt-3" *ngIf="message">
@@ -124,7 +153,7 @@
     </div>
   </div>
 
-  <div id="toggleGroup">
+  <div *ngIf="!editMode"  id="toggleGroup">
     <div class="row mt-3">
       <div class="col-12">
         <div class="card">
@@ -185,7 +214,8 @@
                         [placeholder]="'Search' | translate"
                         [(ngModel)]="memberQuery"
                         name="memberQuery"
-                        (click)="$event.stopPropagation()" />
+                        (click)="$event.stopPropagation()"
+                        (keydown.enter)="$event.preventDefault()"/>
                       <button class="btn btn-outline-secondary" type="button" (click)="memberQuery=''">✕</button>
                     </div>
 
@@ -225,6 +255,7 @@
 
               <div class="d-flex gap-2 align-items-center">
                 <button
+                  type="button"
                   class="btn btn-primary btn-sm"
                   (click)="onBorrow()"
                   [disabled]="borrowing || !book.id || !selectedMemberId">

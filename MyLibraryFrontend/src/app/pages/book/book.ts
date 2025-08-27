@@ -8,4 +8,6 @@ export interface Book {
   summary: string;
   dateCreated: string;
   dateUpdated: string;
+  totalCopies: number;
+  availableCopies: number;
 }

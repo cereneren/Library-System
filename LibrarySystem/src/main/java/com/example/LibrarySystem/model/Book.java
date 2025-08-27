@@ -31,6 +31,11 @@ public class Book {
     @Column(name = "author")
     private String author;
 
+    @Column(name = "total_copies")
+    private int totalCopies = 1;
+
+    @Column(name = "available_copies")
+    private int availableCopies = 1;
 
     @Column(name = "availability_status")
     private boolean available;
@@ -70,23 +75,46 @@ public class Book {
         this.available = true;
     }
 
-    public Book(String title, String author, byte[] url, String summary) {
+    public Book(String title, String author, byte[] url, String summary, int totalCopies, int availableCopies) {
         this.title = title;
         this.author = author;
+        this.totalCopies = totalCopies;
         this.available = true;
         this.cover = cover != null ? cover.clone() : null;
         this.summary = summary;
+        this.availableCopies = availableCopies;
     }
 
     public void addLoan(Loan loan) {
-        loans.add(loan);
+        if (!this.loans.contains(loan)) { // guard
+            this.loans.add(loan);
+        }
         loan.setBook(this);
-        this.available = false;
     }
 
     public void removeLoan(Loan loan) {
         loans.remove(loan);
         loan.setBook(null);
         this.available = true;
+    }
+
+    public void updateCopiesDecrement() {
+        if(this.availableCopies > 0) {
+            this.availableCopies--;
+        }
+
+        if(this.getAvailableCopies() == 0) {
+            this.setAvailable(false);
+        }
+    }
+
+    public void updateCopiesIncrement() {
+        if(this.availableCopies < this.totalCopies) {
+            this.availableCopies++;
+        }
+
+        if(this.getAvailableCopies() > 0) {
+            this.setAvailable(true);
+        }
     }
 }

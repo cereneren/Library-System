@@ -56,7 +56,10 @@
     "COVER_UNSUPPORTED_TYPE": "Desteklenmeyen resim formatı. Desteklenen: JPG, PNG, WEBP.",
     "MATCH_ERROR": "Bu kritere uygun bir sonuç bulunamadı. ",
     "SELECT_BOX_MESSAGE": "Bir üye seç",
-    "SELECT_MEMBER": "Lütfen bir kitap seçin"
+    "SELECT_MEMBER": "Lütfen bir kitap seçin",
+    "STOCK_TOTAL_BELOW_ON_LOAN": "Toplam stok aktif ödünç alımlardan az olamaz ({{count}}).",
+    "TOTAL_STOCK": "Toplam stok",
+    "OUT_OF_STOCK": "Stokta yok"
   },
   "LOANS": {
     "TITLE": "Başlık",
@@ -64,7 +67,7 @@
     "MEMBER": "Üye",
     "LOANED": "Ödünç verildi",
     "DUE": "Teslim",
-    "EXPECTED_DUE": "Tahmini teslim tarihi",
+    "EXPECTED_DUE": "Tahmini en yakın teslim tarihi",
     "OVERDUE_BY_DAYS": "{{days}} gün gecikme",
     "STATUS": "Durum",
     "RETURNED": "İade edildi",

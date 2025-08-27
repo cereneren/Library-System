@@ -10,7 +10,9 @@ import com.example.LibrarySystem.service.LoanService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,14 +33,18 @@ public class LoanServiceImpl implements LoanService {
         User member = userRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Member not found"));
 
-        // Additional business logic (check if book is available)
-        if (!book.isAvailable()) {
-            throw new IllegalStateException("Book is not available for loan");
+        if (book.getAvailableCopies() <= 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No copies available");
         }
 
         Loan loan = new Loan(book, member, numberOfDays);
-        book.addLoan(loan);
-        return loanRepository.save(loan);
+        book.addLoan(loan);            // just links both sides
+        book.updateCopiesDecrement();  // adjust stock; do NOT flip 'available' here
+
+        loanRepository.save(loan);     // ← persist exactly once
+        bookRepository.save(book);     // ← because counters changed
+
+        return loan;
     }
 
 
@@ -78,6 +84,7 @@ public class LoanServiceImpl implements LoanService {
         // Update book availability
         Book book = loan.getBook();
         book.setAvailable(true);
+        book.updateCopiesIncrement();
 
         // Save changes
         loanRepository.save(loan);
