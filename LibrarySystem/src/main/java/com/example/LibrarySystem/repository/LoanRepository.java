@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,12 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     @Query("UPDATE Loan l SET l.returnDate = :returnDate WHERE l.id = :loanId AND l.returnDate IS NULL")
     int markAsReturned(@Param("loanId") Long loanId, @Param("returnDate") LocalDate returnDate);
 
-    Optional<Loan> findFirstByBook_IdAndReturnDateIsNullOrderByDueDateAsc(Long bookId);
+
+    Optional<Loan> findFirstByBook_IdAndReturnDateIsNullAndDueDateGreaterThanEqualOrderByDueDateAsc(
+            Long bookId, LocalDate today);
+
+    Optional<Loan> findFirstByBook_IdAndReturnDateIsNullAndDueDateLessThanOrderByDueDateDesc(
+            Long bookId, LocalDate today);
 
     int countActiveByBookId(long id);
 }

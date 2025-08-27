@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +66,11 @@ public class LoanServiceImpl implements LoanService {
     }
 
     public Optional<Loan> getActiveLoanForBook(Long bookId) {
-        return loanRepository.findFirstByBook_IdAndReturnDateIsNullOrderByDueDateAsc(bookId);
+        LocalDate today = LocalDate.now();
+
+        return loanRepository
+                .findFirstByBook_IdAndReturnDateIsNullAndDueDateGreaterThanEqualOrderByDueDateAsc(bookId, today)
+                .or(() -> loanRepository.findFirstByBook_IdAndReturnDateIsNullAndDueDateLessThanOrderByDueDateDesc(bookId, today));
     }
 
     @Transactional
