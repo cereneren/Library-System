@@ -61,6 +61,9 @@ public class BookServiceImpl implements BookService {
         if(existingBook.getTotalCopies() == 0 || existingBook.getAvailableCopies() == 0) {
             existingBook.setAvailable(false);
         }
+        if(existingBook.getTotalCopies() != 0 || existingBook.getAvailableCopies() != 0) {
+            existingBook.setAvailable(true);
+        }
 
         return bookRepository.save(existingBook);
     }
