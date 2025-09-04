@@ -34,7 +34,8 @@ export class OverviewComponent implements OnInit {
   // availability filters (assuming Book has boolean `available`)
   filters = {
     available: true,
-    loanedOut: true
+    loanedOut: true,
+    outOfStock: true
   };
 
   constructor(
@@ -46,6 +47,14 @@ export class OverviewComponent implements OnInit {
     this.isMember = this.auth.isMember();
     this.setupSearch();
     this.getAllBooks();
+  }
+
+  private stockState(b: any): 'AVAILABLE' | 'LOANED_OUT' | 'OUT_OF_STOCK' {
+    const t = this.asTotal(b);
+    const a = this.asAvail(b);
+    if (t === 0) return 'OUT_OF_STOCK';
+    if (a === 0) return 'LOANED_OUT';
+    return 'AVAILABLE';
   }
 
   private setupSearch() {
@@ -83,14 +92,17 @@ export class OverviewComponent implements OnInit {
         this.books = books.sort(
           (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
         );
-        this.filteredBooks = [...this.books];
+        // respect current filters & search
+        this.filteredBooks = this.filterBooks(this.query.trim().toLowerCase());
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
+      complete: () => this.loading = false
     });
   }
 
+
   private filterBooks(q: string): Book[] {
-    // 1) filter by search
+    // 1) search
     let result = this.books;
     if (q) {
       result = result.filter(b => {
@@ -100,13 +112,12 @@ export class OverviewComponent implements OnInit {
       });
     }
 
-    // 2) filter by availability
+    // 2) availability (now with out-of-stock)
     result = result.filter(b => {
-      const isAvailable = !!b.available;
-      const isLoanedOut = !isAvailable;
-
-      return (isAvailable && this.filters.available)
-          || (isLoanedOut && this.filters.loanedOut);
+      const state = this.stockState(b);
+      return (state === 'AVAILABLE'   && this.filters.available)
+          || (state === 'LOANED_OUT'  && this.filters.loanedOut)
+          || (state === 'OUT_OF_STOCK'&& this.filters.outOfStock);
     });
 
     return result;

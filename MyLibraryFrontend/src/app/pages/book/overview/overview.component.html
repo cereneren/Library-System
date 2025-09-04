@@ -38,6 +38,14 @@
               <span class="ms-1">{{ 'BOOKS.LOANED_OUT' | translate }}</span>
             </label>
           </a></li>
+          <li><a class="dropdown-item">
+            <label class="form-check mb-0">
+              <input type="checkbox" class="form-check-input"
+                     [(ngModel)]="filters.outOfStock"
+                     (change)="onToggleFilters()">
+              <span class="ms-1">{{ 'BOOKS.OUT_OF_STOCK' | translate }}</span>
+            </label>
+          </a></li>
         </ul>
       </div>
     </div>
