@@ -59,7 +59,8 @@
     "SELECT_MEMBER": "Bitte wählen Sie ein Mitglied.",
     "STOCK_TOTAL_BELOW_ON_LOAN": "Die Gesamtzahl der Exemplare darf nicht weniger als aktive Ausleihen ({{count}}) betragen.",
     "TOTAL_STOCK": "Gesamtbestand",
-    "OUT_OF_STOCK": "Nicht auf Lager"
+    "OUT_OF_STOCK": "Nicht auf Lager",
+    "NO_LOANS": "Keine Ausleihen für dieses Buch."
   },
   "LOANS": {
     "TITLE": "Titel",

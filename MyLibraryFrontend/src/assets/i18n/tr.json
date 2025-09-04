@@ -59,7 +59,8 @@
     "SELECT_MEMBER": "Lütfen bir kitap seçin",
     "STOCK_TOTAL_BELOW_ON_LOAN": "Toplam stok aktif ödünç alımlardan az olamaz ({{count}}).",
     "TOTAL_STOCK": "Toplam stok",
-    "OUT_OF_STOCK": "Stokta yok"
+    "OUT_OF_STOCK": "Stokta yok",
+    "NO_LOANS": "Bu kitap için ödünç işlemi bulunamadı."
   },
   "LOANS": {
     "TITLE": "Başlık",

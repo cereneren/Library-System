@@ -8,10 +8,12 @@ import { Loan } from '../../loan/loan';
 import { Member } from '../../member/member';
 import { Book } from '../book';
 import Swal from 'sweetalert2';
-import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '../../../services/i18n.service';
+import { of } from 'rxjs';
+import { concatMap, map, finalize } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-detail',
@@ -70,6 +72,17 @@ export class DetailComponent implements OnInit {
     private i18n: I18nService
   ) {}
 
+  previewUrl?: string;            // local preview for edit mode
+  private revokePreview() {
+    if (this.previewUrl?.startsWith('blob:')) URL.revokeObjectURL(this.previewUrl);
+    this.previewUrl = undefined;
+  }
+
+  clearSelectedCover() {
+    this.selectedCoverFile = null;
+    this.revokePreview();
+  }
+
   // --- i18n + toast helpers ---
   private t(key: string, params?: Record<string, any>) {
     return this.translate.instant(key, params);
@@ -84,6 +97,10 @@ export class DetailComponent implements OnInit {
 
   get isMember(): boolean {
     return this.auth.isMember();
+  }
+
+  ngOnDestroy() {
+    this.revokePreview();
   }
 
   ngOnInit(): void {
@@ -114,7 +131,6 @@ export class DetailComponent implements OnInit {
     });
   }
 
-
   private fetchActiveLoan(): void {
     if (!this.book?.id) return;
     this.loadingLoan = true;
@@ -135,7 +151,6 @@ export class DetailComponent implements OnInit {
   }
 
   toggleEdit(): void {
-
     if (!this.book) return;
     this.editMode = !this.editMode;
     this.message = null;
@@ -143,24 +158,24 @@ export class DetailComponent implements OnInit {
     if (this.editMode) {
       this.draft = { ...this.book };
       this.draft.available = this.draft.available ?? false;
+    } else {
+      // leaving edit mode without saving → discard pending file & preview
+      this.selectedCoverFile = null;
+      this.revokePreview();
     }
   }
 
   save(): void {
     if (!this.book) return;
 
-    // how many are currently on loan based on what's on screen
     const activeLoans = Math.max(0, (this.book.totalCopies || 0) - (this.book.availableCopies || 0));
     const newTotal = Math.max(0, this.draft.totalCopies || 0);
-
-    // 1) don't allow going below active loans
     if (newTotal < activeLoans) {
       Swal.fire({
         icon: 'error',
         title: this.t('COMMON.ERROR'),
         text: this.t('BOOKS.STOCK_TOTAL_BELOW_ON_LOAN', { count: activeLoans })
               || `Total copies cannot be less than ${activeLoans} (active loans).`
-
       });
       return;
     }
@@ -168,28 +183,50 @@ export class DetailComponent implements OnInit {
     this.saving = true;
     this.message = null;
 
-    this.books.updateBook(this.draft).subscribe({
+    this.books.updateBook(this.draft).pipe(
+      // optionally upload cover after update
+      concatMap((updated: Book) => {
+        const maybeUpload$ = this.selectedCoverFile
+          ? this.books.uploadCover(updated.id!, this.selectedCoverFile).pipe(
+              // propagate updated book down the stream
+              map(() => updated)
+            )
+          : of(updated);
+
+        return maybeUpload$;
+      }),
+      finalize(() => { this.saving = false; })
+    ).subscribe({
       next: (updated: Book) => {
-        // 2) recompute available from activeLoans if backend didn't send it
         const serverAvail = (updated as any).availableCopies;
         const finalAvail = typeof serverAvail === 'number'
           ? serverAvail
           : Math.max(0, (updated.totalCopies || 0) - activeLoans);
 
-        // 3) update the details card and availability flag
+        // update UI
         this.book = { ...updated, availableCopies: finalAvail, available: finalAvail > 0 };
-
         this.editMode = false;
-        this.saving = false;
         this.message = { type: 'success', text: this.t('BOOKS.UPDATE_SUCCESS') };
+
+        // clear the pending file and refresh cover image
+        if (this.selectedCoverFile) {
+          this.selectedCoverFile = null;
+          this.revokePreview(); // clear local preview after successful save
+        }
+        // After successful save (+ optional upload)
+        if (this.book?.id) {
+          const img = document.querySelector<HTMLImageElement>('img.book-cover');
+          if (img) img.src = `/api/books/${this.book.id}/cover?ts=${Date.now()}`;
+        }
+
       },
       error: (err) => {
-        this.saving = false;
         this.message = { type: 'error', text: this.t('BOOKS.UPDATE_FAILED') };
-        console.error('Update error', err);
+        console.error('Save (update or cover upload) failed', err);
       }
     });
   }
+
 
   confirmDelete(): void {
     if (!this.book || this.deleting) return;
@@ -273,74 +310,26 @@ export class DetailComponent implements OnInit {
     const file = input.files?.[0] || null;
 
     const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    const maxBytes = 5 * 1024 * 1024; // 5MB
+    const maxBytes = 5 * 1024 * 1024;
 
-    if (!file) {
-      this.selectedCoverFile = null;
-      return;
-    }
+    if (!file) { this.selectedCoverFile = null; this.revokePreview(); return; }
     if (!allowed.includes(file.type)) {
-      Swal.fire({
-        icon: 'error',
-        title: this.t('COMMON.ERROR'),
-        text: this.t('BOOKS.COVER_UNSUPPORTED_TYPE') || 'Unsupported image type. Allowed: JPG, PNG, WEBP.'
-      });
-      this.selectedCoverFile = null;
-      input.value = '';
-      return;
+      Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'),
+        text: this.t('BOOKS.COVER_UNSUPPORTED_TYPE') || 'Unsupported image type.' });
+      this.selectedCoverFile = null; input.value = ''; this.revokePreview(); return;
     }
     if (file.size > maxBytes) {
-      Swal.fire({
-        icon: 'error',
-        title: this.t('COMMON.ERROR'),
-        text: this.t('BOOKS.COVER_TOO_LARGE') || 'File is larger than 5MB.'
-      });
-      this.selectedCoverFile = null;
-      input.value = '';
-      return;
+      Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'),
+        text: this.t('BOOKS.COVER_TOO_LARGE') || 'File is larger than 5MB.' });
+      this.selectedCoverFile = null; input.value = ''; this.revokePreview(); return;
     }
 
+    // keep for Save and show local preview
     this.selectedCoverFile = file;
-    this.autoUploadCover(input);
+    this.revokePreview();                 // revoke previous blob if any
+    this.previewUrl = URL.createObjectURL(file);
   }
 
-  private autoUploadCover(inputEl?: HTMLInputElement) {
-    if (!this.book?.id || !this.selectedCoverFile || this.uploadingCover) return;
-
-    this.uploadingCover = true;
-    this.message = null;
-
-    this.books.uploadCover(this.book.id, this.selectedCoverFile).pipe(
-      finalize(() => this.uploadingCover = false)
-    ).subscribe({
-      next: () => {
-        this.selectedCoverFile = null;
-        if (inputEl) inputEl.value = '';
-
-        this.toast.fire({ icon: 'success', title: this.t('BOOKS.COVER_UPLOADED') || 'Cover uploaded' });
-        this.message = { type: 'success', text: this.t('BOOKS.COVER_UPLOADED') };
-
-        const img = document.querySelector<HTMLImageElement>('img.book-cover');
-        if (img) {
-          const base = `/api/books/${this.book!.id!}/cover`;
-          img.src = `${base}?ts=${Date.now()}`;
-        }
-
-        this.book = {
-          ...(this.book as Book),
-          dateUpdated: new Date().toISOString()
-        };
-      },
-      error: (err) => {
-        const text =
-          err?.error?.message ||
-          (typeof err?.error === 'string' ? err.error : this.t('BOOKS.COVER_UPLOAD_FAILED') || 'Cover upload failed.');
-        this.message = { type: 'error', text };
-        Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text });
-        console.error('Upload cover error', err);
-      }
-    });
-  }
 
   // ---- Members API ----
   getAllMembers() {

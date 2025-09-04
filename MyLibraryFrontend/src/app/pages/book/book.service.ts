@@ -56,15 +56,19 @@ export class BookService {
   uploadCover(id: number, file: File) {
     const form = new FormData();
     form.append('file', file);
-    return this.http.put(`${this.api}/api/books/${id}/cover`, form, { responseType: 'text' });
+    return this.http.put(`./api/books/${id}/cover`, form, { responseType: 'text' });
   }
 
   uploadCoverFromUrl(id: number, url: string) {
     const params = new HttpParams().set('url', url);
-    return this.http.put(`/api/books/${id}/cover-url`, null, { params, responseType: 'text' });
+    return this.http.put(`./api/books/${id}/cover-url`, null, { params, responseType: 'text' });
   }
 
   getBookLoans(id: number) {
     return this.http.get<Loan[]>(`/api/members/${id}/loans`);
+  }
+
+  getCoverBlob(id: number) {
+    return this.http.get(`${this.api}/books/${id}/cover`, { responseType: 'blob' });
   }
 }

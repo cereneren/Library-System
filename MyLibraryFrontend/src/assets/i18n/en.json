@@ -59,7 +59,8 @@
     "SELECT_MEMBER": "Please choose a member.",
     "STOCK_TOTAL_BELOW_ON_LOAN": "Total copies cannot be less than active loans ({{count}}).",
     "TOTAL_STOCK": "Total stock",
-    "OUT_OF_STOCK": "Out of stock"
+    "OUT_OF_STOCK": "Out of stock",
+    "NO_LOANS": "No loans for this book."
   },
   "LOANS": {
     "TITLE": "Title",
