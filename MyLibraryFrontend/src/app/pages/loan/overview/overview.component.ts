@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LoanService, Loan } from '../loan.service';
+import { LoanService } from '../loan.service';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { I18nService } from '../../../services/i18n.service';
+import { Loan } from '../loan'
 
 type Role = 'LIBRARIAN' | 'MEMBER';
 

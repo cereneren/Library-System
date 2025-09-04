@@ -184,6 +184,136 @@
             </div>
           </div>
 
+          <!-- Loans collapse -->
+          <div class="collapse" id="loansCollapse" data-bs-parent="#toggleGroup">
+            <div class="card card-body">
+              <div *ngIf="loansLoading" class="text-muted">Loading loans…</div>
+
+              <div *ngIf="!loansLoading && loans.length === 0" class="text-muted">
+                No loans for this book.
+              </div>
+
+              <div *ngIf="!loansLoading && loans.length > 0" class="table-responsive">
+                <table class="table table-sm align-middle">
+                  <thead>
+                  <!-- stats row (same style as your example) -->
+                  <div class="d-flex flex-wrap gap-4 mb-2 m-1">
+                    <div class="fw-semibold">
+                      {{ 'MEMBERS.TOTAL_LOANS' | translate }}:
+                      <span class="fw-normal">{{ totalLoans }}</span>
+                    </div>
+                    <div class="fw-semibold">
+                      {{ 'MEMBERS.ACTIVE_LOANS' | translate }}:
+                      <span class="fw-normal">{{ activeLoansCount }}</span>
+                    </div>
+                    <div class="fw-semibold text-danger">
+                      {{ 'MEMBERS.OVERDUE' | translate }}:
+                      <span class="fw-normal">{{ overdueLoansCount }}</span>
+                    </div>
+                  </div>
+
+                  <tr>
+                    <th>{{ 'MEMBERS.MEMBER' | translate }}</th>
+                    <th>{{ 'LOANS.LOANED' | translate }}</th>
+                    <th>{{ 'LOANS.DUE' | translate }}</th>
+                    <th>{{ 'MEMBERS.STATUS' | translate }}</th>
+                    <th class="text-end"></th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr *ngFor="let loan of loans | paginate: { id: 'loansPager', itemsPerPage: 10, currentPage: page }">
+                    <ng-container *ngIf="locale$ | async as locale">
+                      <td>{{ loan.member?.fullName || loan.member?.email || '—' }}</td>
+                      <td>{{ loan.loanDate | date:'mediumDate':undefined:locale }}</td>
+                      <td>{{ loan.dueDate   | date:'mediumDate':undefined:locale }}</td>
+                      <td>
+                <span *ngIf="loan.returnDate" class="badge bg-success">
+                  {{ 'MEMBERS.RETURNED' | translate }}
+                  {{ loan.returnDate | date:'mediumDate':undefined:locale }}
+                </span>
+                        <span *ngIf="!loan.returnDate && isOverdue(loan)" class="badge bg-danger">
+                  Overdue
+                </span>
+                        <span *ngIf="!loan.returnDate && !isOverdue(loan)" class="badge bg-warning text-dark">
+                  {{ 'MEMBERS.ON_LOAN' | translate }}
+                </span>
+                      </td>
+                    </ng-container>
+
+                    <td class="text-end">
+                      <button
+                        *ngIf="!loan.returnDate"
+                        class="btn btn-outline-primary btn-sm"
+                        (click)="onReturn(loan)"
+                        [disabled]="returning[loan.id]">
+                        {{ returning[loan.id] ? ('MEMBERS.RETURNING' | translate) : ('MEMBERS.RETURN' | translate) }}
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- pagination-template wired to the same id and using onPageChange -->
+              <pagination-template
+                *ngIf="loans.length > 10"
+                #api="paginationApi"
+                [id]="'loansPager'"
+                (pageChange)="onPageChange($event)">
+
+                <nav class="d-flex justify-content-center mt-3" aria-label="Loans pagination">
+                  <ul class="pagination mb-0">
+                    <!-- First -->
+                    <li class="page-item" [class.disabled]="api.isFirstPage()">
+                      <button class="page-link" (click)="api.setCurrent(1)">
+                        <i class="bi bi-chevron-double-left" aria-hidden="true"></i>
+                        <span class="visually-hidden">First</span>
+                      </button>
+                    </li>
+
+                    <!-- Prev -->
+                    <li class="page-item" [class.disabled]="api.isFirstPage()">
+                      <button class="page-link" (click)="api.previous()">
+                        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                    </li>
+
+                    <!-- Numbers -->
+                    <li class="page-item"
+                        *ngFor="let pg of api.pages"
+                        [class.active]="api.getCurrent() === pg.value">
+                      <button class="page-link" (click)="api.setCurrent(pg.value)">
+                        {{ pg.label }}
+                      </button>
+                    </li>
+
+                    <!-- Next -->
+                    <li class="page-item" [class.disabled]="api.isLastPage()">
+                      <button class="page-link" (click)="api.next()">
+                        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                        <span class="visually-hidden">Next</span>
+                      </button>
+                    </li>
+
+                    <!-- Last -->
+                    <li class="page-item" [class.disabled]="api.isLastPage()">
+                      <button class="page-link" (click)="api.setCurrent(api.getLastPage())">
+                        <i class="bi bi-chevron-double-right" aria-hidden="true"></i>
+                        <span class="visually-hidden">Last</span>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </pagination-template>
+
+            </div>
+          </div>
+
+
+
+          <!-- Borrow Collapse -->
           <div class="collapse" id="borrowCollapse" data-bs-parent="#toggleGroup">
             <div class="card card-body border border-light-subtle shadow-sm">
               <div class="mb-3">

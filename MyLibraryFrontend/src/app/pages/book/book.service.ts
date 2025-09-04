@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpParams  } from '@angular/common/http
 import { Observable, catchError, throwError } from 'rxjs';
 import { Book } from './book';
 import { environment } from '../../../environments/environment';
+import { Loan } from '../loan/loan'
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +62,9 @@ export class BookService {
   uploadCoverFromUrl(id: number, url: string) {
     const params = new HttpParams().set('url', url);
     return this.http.put(`/api/books/${id}/cover-url`, null, { params, responseType: 'text' });
+  }
+
+  getBookLoans(id: number) {
+    return this.http.get<Loan[]>(`/api/members/${id}/loans`);
   }
 }

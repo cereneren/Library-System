@@ -4,6 +4,7 @@ import { Member } from '../member/member';
 export interface Loan {
   id: number;
   book: Book;
+  member: Member;
   loanDate: string;   // ISO
   dueDate: string;    // ISO
   returnDate?: string | null;

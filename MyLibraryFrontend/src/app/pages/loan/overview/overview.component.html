@@ -74,7 +74,7 @@
       <tr *ngFor="let l of filteredLoans | paginate: { id: 'loansPager', itemsPerPage: 10, currentPage: page }">
         <td class="fw-semibold">{{ l.book.title }}</td>
         <td>{{ l.book.author || '-' }}</td>
-        <td *ngIf="isLibrarian">{{ l.member?.fullName || '—' }}</td>
+        <td *ngIf="isLibrarian">{{ l.member.fullName || '—' }}</td>
         <td>{{ l.loanDate | date:'mediumDate':undefined:locale }}</td>
         <td>{{ l.dueDate | date:'mediumDate':undefined:locale }}</td>
 

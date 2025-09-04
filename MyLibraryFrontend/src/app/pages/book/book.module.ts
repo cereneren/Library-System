@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BookService }        from './book.service';
 import { BookComponent } from './book.component';
 import { FormsModule} from '@angular/forms'
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { FormsModule} from '@angular/forms'
     HttpClientModule,     // for any HTTP calls
     BookRoutingModule,   // your routes.forChild(...)
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    NgxPaginationModule,
   ],
   providers: [
     BookService         // so constructor(public bookService) works

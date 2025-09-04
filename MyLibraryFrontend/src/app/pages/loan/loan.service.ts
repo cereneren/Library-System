@@ -4,15 +4,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Book } from '../book/book';
-
-export interface Loan {
-  id: number;
-  loanDate: string;
-  dueDate: string;
-  returnDate?: string | null;
-  book: Book;
-  member?: { id: number; fullName: string };
-}
+import { Member } from '../member/member';
+import { Loan } from './loan'
 
 @Injectable({ providedIn: 'root' })
 export class LoanService {
@@ -27,6 +20,10 @@ export class LoanService {
 
   getLoansForMember(memberId: number): Observable<Loan[]> {
     return this.http.get<Loan[]>(`/api/members/${memberId}/loans`);
+  }
+
+  getLoansForBook(bookId: number): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`/api/books/${bookId}/loans`);
   }
 
   getLoanDetail(id: number): Observable<Loan> {

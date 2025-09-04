@@ -18,6 +18,7 @@ import { I18nService } from '../../../services/i18n.service';
   templateUrl: './detail.component.html',
 })
 export class DetailComponent implements OnInit {
+  trackLoan = (_: number, l: Loan) => l.id!;
   locale$ = this.i18n.locale$;
   public Math = Math;
   book?: Book | null;
@@ -25,6 +26,10 @@ export class DetailComponent implements OnInit {
   editMode = false;
   selectedNumberOfDays: number = 14;
   days: number[] = Array.from({ length: 30 }, (_, i) => i + 1);
+  loans: Loan[] = [];
+  loansLoading = false;
+  returning: Record<number, boolean> = {};
+  page: number = 1;
 
   borrowing = false;
   borrowSuccess?: string;
@@ -59,7 +64,7 @@ export class DetailComponent implements OnInit {
     private router: Router,
     private books: BookService,
     private auth: AuthService,
-    private loans: LoanService,
+    private loanService: LoanService,
     private memberService: MemberService,          // <-- renamed
     private translate: TranslateService,
     private i18n: I18nService
@@ -100,6 +105,7 @@ export class DetailComponent implements OnInit {
         this.book = b;
         this.loading = false;
         this.fetchActiveLoan();
+        this.loadLoans();
       },
       error: () => {
         this.loading = false;
@@ -112,15 +118,10 @@ export class DetailComponent implements OnInit {
   private fetchActiveLoan(): void {
     if (!this.book?.id) return;
     this.loadingLoan = true;
-    this.loans.getActiveLoanForBook(this.book.id).subscribe({
+    this.loanService.getActiveLoanForBook(this.book.id).subscribe({
       next: loan => { this.currentLoan = loan; this.loadingLoan = false; },
       error: _ =>   { this.currentLoan = null; this.loadingLoan = false; }
     });
-  }
-
-  isOverdue(dueIso?: string | null): boolean {
-    if (!dueIso) return false;
-    return new Date(dueIso).getTime() < Date.now();
   }
 
   daysOverdue(dueIso?: string | null): number {
@@ -381,38 +382,37 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  onBorrow(): void {
-    if (this.borrowing) return;
-    this.borrowing = true;
+    onBorrow(): void {
+      if (this.borrowing) return;
+      this.borrowing = true;
 
-    const memberId = this.isMember
-      ? JSON.parse(localStorage.getItem('user') || 'null')?.id
-      : this.selectedMemberId;
+      const memberId = this.isMember
+        ? JSON.parse(localStorage.getItem('user') || 'null')?.id
+        : this.selectedMemberId;
 
-    if (!this.book?.id || !memberId) {
-      this.borrowError = this.t('MEMBERS.BORROW_MISSING_SELECTION') || 'Select a member first.';
-      this.borrowing = false;
-      return;
+      if (!this.book?.id || !memberId) {
+        this.borrowError = this.t('MEMBERS.BORROW_MISSING_SELECTION') || 'Select a member first.';
+        this.borrowing = false;
+        return;
+      }
+
+      this.loanService.createLoan(memberId, this.book.id, this.selectedNumberOfDays)
+        .pipe(finalize(() => this.borrowing = false))
+        .subscribe({
+          next: (loan) => {
+            this.currentLoan = loan;
+            this.reloadBook();
+            this.loadLoans(); // ✨ refresh list
+            this.borrowSuccess = this.t('MEMBERS.BORROW_SUCCESS') || 'Borrowed successfully.';
+            this.toast.fire({ icon: 'success', title: this.borrowSuccess });
+          },
+          error: (err) => {
+            this.borrowError = this.t('MEMBERS.BORROW_FAILED') || 'Borrow failed.';
+            Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.borrowError });
+            console.error('Borrow error', err);
+          }
+        });
     }
-
-    this.borrowing = true;
-    this.loans.createLoan(memberId, this.book.id, this.selectedNumberOfDays)
-      .subscribe({
-        next: (loan) => {
-          this.borrowing = false;
-          this.currentLoan = loan;
-          this.reloadBook();             // <-- pull fresh total/available from server
-          this.borrowSuccess = this.t('MEMBERS.BORROW_SUCCESS') || 'Borrowed successfully.';
-          this.toast.fire({ icon: 'success', title: this.borrowSuccess });
-        },
-        error: (err) => {
-          this.borrowing = false;
-          this.borrowError = this.t('MEMBERS.BORROW_FAILED') || 'Borrow failed.';
-          Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.borrowError });
-          console.error('Borrow error', err);
-        }
-      });
-  }
 
   // Normalize snake/camel
   asTotal(b: any): number  { return b?.totalCopies ?? b?.total_copies ?? 0; }
@@ -445,6 +445,70 @@ export class DetailComponent implements OnInit {
     return 'bg-success';                         // Available -> green
   }
 
+  get totalLoans(): number { return this.loans.length; }
+  get activeLoansCount(): number { return this.loans.filter((l: Loan) => !l.returnDate).length; }
+  get overdueLoansCount(): number {
+    const today = new Date();
+    return this.loans.filter((l: Loan) => !l.returnDate && new Date(l.dueDate) < today).length;
+  }
 
+
+  isOverdue(x?: Loan | string | null): boolean {
+    if (!x) return false;
+    if (typeof x === 'string') {
+      return new Date(x).getTime() < Date.now();   // due date string
+    }
+    // it's a Loan
+    return !x.returnDate && new Date(x.dueDate).getTime() < Date.now();
+  }
+
+  private loadLoans(): void {
+    if (!this.book?.id) return;
+    this.loansLoading = true;  // <-- was loanServiceLoading
+    this.loanService.getLoansForBook(this.book.id)
+      .pipe(finalize(() => this.loansLoading = false))
+      .subscribe({
+        next: (loans: Loan[]) => {
+          this.loans = (loans ?? []).sort((a: Loan, b: Loan) => {
+            const at = a.loanDate ? new Date(a.loanDate).getTime() : 0;
+            const bt = b.loanDate ? new Date(b.loanDate).getTime() : 0;
+            if (bt !== at) return bt - at;      // newest first
+            return (b.id ?? 0) - (a.id ?? 0);   // tie-break by id desc
+          });
+        },
+        error: (e: any) => {
+          console.error('Failed to load book loans', e);
+          Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: this.t('LOANS.LOAD_FAILED') });
+        }
+      });
+  }
+
+  onReturn(loan: Loan) {
+    if (!loan?.id) return;
+    this.returning[loan.id] = true;
+    this.loanService.returnLoan(loan.id)
+      .pipe(finalize(() => (this.returning[loan.id] = false)))
+      .subscribe({
+        next: () => {
+          this.toast.fire({ icon: 'success', title: this.t('MEMBERS.RETURN_SUCCESS') });
+          this.fetchActiveLoan(); // the active-loan strip
+          this.reloadBook();      // copies/availability
+          this.loadLoans();       // ✨ refresh list
+        },
+        error: (e: HttpErrorResponse) => {
+          const msg = typeof e.error === 'string'
+            ? e.error
+            : e.error?.message || this.t('MEMBERS.RETURN_FAILED');
+          Swal.fire({ icon: 'error', title: this.t('COMMON.ERROR'), text: msg });
+        }
+      });
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
+    setTimeout(() => {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    }, 0);
+  }
 }
 
