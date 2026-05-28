@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RecommendationsComponent } from './recommendations/recommendations.component';
 import { MemberComponent }       from './member.component';
 import { LibrarianGuard } from '../../../core/guards/librarian.guard';
 import { MemberGuard } from '../../../core/guards/member.guard';
@@ -23,6 +24,11 @@ const routes: Routes = [
     path: 'info', canActivate: [MemberGuard],
     loadChildren: () =>
       import('../../member/member-routing.module').then(m => m.MemberRoutingModule)
+  },
+  {
+    path: 'recommendations',
+    component: RecommendationsComponent,
+    canActivate: [MemberGuard]
   },
 
 

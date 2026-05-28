@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '../../../services/i18n.service';
 import { of } from 'rxjs';
 import { concatMap, map, finalize } from 'rxjs/operators';
+import { ReviewService, ReviewResponse } from '../review.service';
 
 
 @Component({
@@ -32,6 +33,15 @@ export class DetailComponent implements OnInit {
   loansLoading = false;
   returning: Record<number, boolean> = {};
   page: number = 1;
+
+  reviews: ReviewResponse[] = [];
+  averageRating = 0;
+  reviewRating = 5;
+  reviewComment = '';
+  reviewLoading = false;
+  reviewSubmitting = false;
+  reviewError?: string;
+  reviewSuccess?: string;
 
   borrowing = false;
   borrowSuccess?: string;
@@ -67,7 +77,8 @@ export class DetailComponent implements OnInit {
     private books: BookService,
     private auth: AuthService,
     private loanService: LoanService,
-    private memberService: MemberService,          // <-- renamed
+    private memberService: MemberService,
+    private reviewService: ReviewService,
     private translate: TranslateService,
     private i18n: I18nService
   ) {}
@@ -123,10 +134,72 @@ export class DetailComponent implements OnInit {
         this.loading = false;
         this.fetchActiveLoan();
         this.loadLoans();
+        this.loadReviews();
       },
       error: () => {
         this.loading = false;
         this.message = { type: 'error', text: this.t('BOOKS.LOAD_FAILED') };
+      }
+    });
+  }
+
+  loadReviews(): void {
+    if (!this.book?.id) return;
+
+    this.reviewLoading = true;
+
+    this.reviewService.getReviewsByBook(this.book.id).subscribe({
+      next: (data) => {
+        this.reviews = data;
+        this.reviewLoading = false;
+      },
+      error: () => {
+        this.reviewLoading = false;
+        this.reviewError = 'Could not load reviews.';
+      }
+    });
+
+    this.reviewService.getAverageRating(this.book.id).subscribe({
+      next: (avg) => {
+        this.averageRating = avg || 0;
+      },
+      error: () => {
+        this.averageRating = 0;
+      }
+    });
+  }
+
+  submitReview(): void {
+    if (!this.book?.id || !this.selectedMemberId) {
+      this.reviewError = 'You must be logged in as a member to review this book.';
+      return;
+    }
+
+    if (this.reviewRating < 1 || this.reviewRating > 5) {
+      this.reviewError = 'Rating must be between 1 and 5.';
+      return;
+    }
+
+    this.reviewSubmitting = true;
+    this.reviewError = undefined;
+    this.reviewSuccess = undefined;
+
+    this.reviewService.addReview({
+      bookId: this.book.id,
+      memberId: this.selectedMemberId,
+      rating: Number(this.reviewRating),
+      comment: this.reviewComment
+    }).subscribe({
+      next: () => {
+        this.reviewSubmitting = false;
+        this.reviewSuccess = 'Review submitted successfully.';
+        this.reviewComment = '';
+        this.reviewRating = 5;
+        this.loadReviews();
+      },
+      error: (err) => {
+        this.reviewSubmitting = false;
+        this.reviewError = err.error?.message || 'Could not submit review.';
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BookService } from '../book.service';
 import { Book } from '../book';
 import { AuthService } from '../../../services/auth.service';
@@ -12,7 +12,11 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css'] // <-- plural
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnChanges {
+
+  @Input() externalBooks: Book[] | null = null;
+  @Input() hideHeader = false;
+
   books: Book[] = [];
   filteredBooks: Book[] = []; // keep the array approach
   isMember = false;
@@ -44,6 +48,11 @@ export class OverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.externalBooks) {
+      this.books = this.externalBooks;
+      this.filteredBooks = this.externalBooks;
+      return;
+    }
     this.isMember = this.auth.isMember();
     this.setupSearch();
     this.getAllBooks();
@@ -177,5 +186,13 @@ export class OverviewComponent implements OnInit {
     if (a === 0) return 'bg-danger';            // Loaned out -> red
     return 'bg-success';                         // Available -> green
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['externalBooks'] && this.externalBooks) {
+      this.books = this.externalBooks;
+      this.filteredBooks = this.externalBooks;
+      this.currentPage = 1;
+    }
+}
 
 }

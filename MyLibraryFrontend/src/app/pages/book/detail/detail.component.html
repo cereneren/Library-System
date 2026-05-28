@@ -79,6 +79,78 @@
             <p class="mb-0" [class.text-muted]="!book.summary">{{ book.summary || ('BOOKS.NO_SUMMARY' | translate) }}</p>
           </div>
 
+          <!-- Reviews -->
+          <div class="mt-4" *ngIf="!editMode">
+            <h6 class="text-secondary fw-semibold mb-2">Reviews</h6>
+
+            <p class="mb-2">
+              Average rating:
+              <strong>{{ averageRating | number:'1.1-1' }} / 5</strong>
+            </p>
+
+            <div *ngIf="reviewLoading" class="text-muted">
+              Loading reviews...
+            </div>
+
+            <div *ngIf="!reviewLoading && reviews.length === 0" class="text-muted">
+              No reviews yet.
+            </div>
+
+            <div *ngFor="let review of reviews" class="border rounded p-2 mb-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>{{ review.memberName || 'Member' }}</strong>
+                  <span class="ms-2 badge bg-warning text-dark">{{ review.rating }} / 5</span>
+                </div>
+                <small class="text-muted">{{ review.createdAt | date:'medium' }}</small>
+              </div>
+
+              <p class="mb-1 mt-2">{{ review.comment }}</p>
+            </div>
+
+            <div *ngIf="isMember" class="card mt-3">
+              <div class="card-body">
+                <h6 class="fw-semibold">Write a Review</h6>
+
+                <div class="mb-3">
+                  <label class="form-label">Rating</label>
+                  <select class="form-select" [(ngModel)]="reviewRating">
+                    <option [ngValue]="1">1</option>
+                    <option [ngValue]="2">2</option>
+                    <option [ngValue]="3">3</option>
+                    <option [ngValue]="4">4</option>
+                    <option [ngValue]="5">5</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Comment</label>
+                  <textarea
+                    class="form-control"
+                    rows="3"
+                    [(ngModel)]="reviewComment"
+                    placeholder="Write your opinion about this book...">
+                  </textarea>
+                </div>
+
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="submitReview()"
+                  [disabled]="reviewSubmitting">
+                  {{ reviewSubmitting ? 'Submitting...' : 'Submit Review' }}
+                </button>
+
+                <div *ngIf="reviewSuccess" class="alert alert-success mt-3">
+                  {{ reviewSuccess }}
+                </div>
+
+                <div *ngIf="reviewError" class="alert alert-danger mt-3">
+                  {{ reviewError }}
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Edit form (edit mode) -->
           <form class="mt-4" *ngIf="editMode" (ngSubmit)="save()" #editForm="ngForm" novalidate>
             <div class="row g-3">

@@ -32,6 +32,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
     TranslateModule,
     NgxPaginationModule,
   ],
+  exports: [
+    OverviewComponent
+  ],
   providers: [
     BookService         // so constructor(public bookService) works
   ]
