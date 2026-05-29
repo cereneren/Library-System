@@ -1,8 +1,9 @@
 {
   "NAVBAR": {
-    "TITLE": "Kütüphanem",
+    "TITLE": "LibraSphere",
     "BOOKS": "Kitaplar",
     "MEMBERS": "Üyeler",
+    "RECOMMENDATIONS": "Tavsiye Edilenler",
     "LOANS": "Ödünç İşlemleri",
     "MY_LOANS": "Ödünç Alımlarım",
     "LIBRARIAN": "Kütüphaneci",
@@ -161,7 +162,7 @@
     "DATE_UPDATED": "Düzenlenme tarihi"
   },
   "LOGIN": {
-    "TITLE": "Kütüphanem",
+    "TITLE": "LibraSphere",
     "TEXT": "Hesabınıza giriş yapın.",
     "EMAIL_ADRESS": "Email adresi",
     "PASSWORD": "Şifre",

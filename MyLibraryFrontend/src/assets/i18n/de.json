@@ -1,9 +1,10 @@
 {
   "NAVBAR": {
-    "TITLE": "Meine Bibliothek",
+    "TITLE": "LibraSphere",
     "BOOKS": "Bücher",
     "MEMBERS": "Mitglieder",
     "LOANS": "Ausleihen",
+    "RECOMMENDATIONS": "Empfehlungen",
     "MY_LOANS": "Meine Ausleihen",
     "LIBRARIAN": "Bibliothekar",
     "MEMBER": "Mitglied",
@@ -160,7 +161,7 @@
     "DATE_UPDATED": "Aktualisierungsdatum"
   },
   "LOGIN": {
-    "TITLE": "Meine Bibliothek",
+    "TITLE": "LibraSphere",
     "TEXT": "Melden Sie sich bei Ihrem Konto an.",
     "EMAIL_ADRESS": "E-Mail-Adresse",
     "PASSWORD": "Passwort",
